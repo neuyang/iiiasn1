@@ -24,11 +24,7 @@ AUTOMAKE_OPTIONS = dist-zip
 ACLOCAL = @ACLOCAL@ -I config
 
 config_FIELS = config/ac_cxx_have_new_iostream.m4\
-               config/ac_cxx_have_stl.m4\
-	       config/acx_pthread.m4\
-               config/iii_check_stlport.m4\
                config/iii_cross_tools.m4\
-               config/iii_enable_stl_thread.m4\
 	       config/config.guess\
 	       config/config.sub\
 	       config/install-sh\
