@@ -25,73 +25,11 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): Huang-Ming Huang
- *
  * The code is adapted from asner.h of PWLib, but the dependancy on PWLib has
  * been removed. 
  *
- * $Log: asn1.h,v $
- * Revision 1.15  2002/08/20 22:35:54  mangelo
- * Add MSVC DLL support
- *
- * Revision 1.14  2002/07/18 06:53:33  btrummer
- * Added range checks for PEREncoder's encodeLength(), encodeUnsigned()
- * and encodeConstrainedLength(). Encoding an object which violates its
- * length constraint will fail now.
- *
- * Revision 1.13  2002/07/17 11:17:51  btrummer
- * Check for the macro __IBMCPP__ rather than _AIX for the last AiX-fix.
- *
- * Revision 1.12  2002/07/11 08:34:08  btrummer
- * Added AiX-fix for the initialization of Constrained_INTEGER::theInfo.
- *
- * Revision 1.11  2002/07/11 07:51:07  btrummer
- * Added some InfoType typedefs needed for AiX.
- *
- * Revision 1.10  2002/07/11 06:22:19  btrummer
- * Fixed the constructor
- * OBJECT_IDENTIFIER(InputIterator, InputIterator, const void*),
- * which raised an internal compiler error on Windows.
- *
- * Revision 1.9  2002/07/04 03:47:22  mangelo
- * added explicit wstring typedef for GCC 2.95.x
- *
- * Revision 1.8  2002/07/03 06:15:26  btrummer
- * Added a range-check for PERDecoder::rollback(), so beginPosition will
- * never be set outside of endPosition.
- *
- * Revision 1.7  2002/07/02 04:45:13  mangelo
- * Modify for VC.Net and GCC 3.1
- *
- * Revision 1.6  2001/11/13 16:40:12  mangelo
- * Fixed the missing retrun in OCTET_STRING::operator=(const char*)
- *
- * Revision 1.5  2001/10/25 02:47:56  mangelo
- * fixed the wrong declaration of SEQUNCE_OF::InfoType.type
- *
- * Revision 1.4  2001/10/05 18:51:18  mangelo
- * Fixed wrong declarations of AbstractString.TpyeInfo.type and BMPString.TypeInfo.type. Added tagMode() to SEQUENCE
- *
- * Revision 1.3  2001/08/29 15:47:34  mangelo
- * Fixed the declaration of SizeConstraint class template
- *
- * Revision 1.2  2001/08/03 07:43:10  mangelo
- * Fixed isValid() bugs
- *
- *
- * 2001/07/26 Huang-Ming Huang
- * Fixed INTEGER::isStrictValid() when the lowerLimit() >=0 and value > INT_MAX.
- *
- * 2001/07/26 Huang-Ming Huang
- * Added custom memory manager using boost/pool.
- *
- * 2001/07/16 Huang-Ming Huang
- * Optional components of SEQUENCE is now created on demand.
- *
- * 2001/06/26 Huang-Ming Huang 
- * Version 2.1 Reimplemented to minimize the code size.
- *
  */
+
 #ifndef _ASN1_H
 #define _ASN1_H
 

@@ -21,18 +21,6 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): 
- *
- * $Log: AVNDecoder.cxx,v $
- * Revision 1.2  2002/07/02 04:45:13  mangelo
- * Modify for VC.Net and GCC 3.1
- *
- * 2001/07/16 Huang-Ming Huang
- * Optional components of SEQUENCE is now created on demand.
- *
- * 2001/06/26 Huang-Ming Huang 
- * Version 2.1 Reimplemented to minimize the code size.
- *
  */
 
 #ifdef HAVE_CONFIG_H

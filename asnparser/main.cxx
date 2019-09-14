@@ -30,38 +30,6 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): ___________________.
- *
- * $Log: main.cxx,v $
- * Revision 1.4  2002/08/20 22:35:54  mangelo
- * Add MSVC DLL support
- *
- * Revision 1.3  2002/07/02 02:03:25  mangelo
- * Remove Pwlib dependency
- *
- * Revision 1.2  2001/09/07 22:39:28  mangelo
- * add Log keyword substitution
- *
- *
- * 2001/07/25 Huang-Ming Huang
- *   Added code to generate "#undef ERROR"
- *
- * 2001/07/18 Huang-Ming Huang
- *   Fixed the bug of generating non-static info for SEQUENCE_OF type.
- *
- * 2001/07/18 Huang-Ming Huang
- *   The includeOptionalField has been changed to take two parameter in 
- *   accordance with the ASN1 library.
- *
- * 2001/06/26 Huang-Ming Huang 
- *   Version 2.1 Reimplemented to minimize the generated code size.
- *
- * 2001/05/03 Huang-Ming Huang
- *   Fixed the problem with my wrong interpretation to varaible constraint.
- * 
- * March, 2001  Huang-Ming Huang
- *   Add support for Information Object Class and generate code that follows
- *   X/Open ASN.1/C++ interface.
  */
 
 #include <unistd.h>

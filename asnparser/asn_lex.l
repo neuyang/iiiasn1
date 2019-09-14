@@ -32,19 +32,6 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- *
- * Contributor(s): ___________________.
- *
- * $Log: asn_lex.l,v $
- * Revision 1.4  2002/07/02 02:03:25  mangelo
- * Remove Pwlib dependency
- *
- * Revision 1.3  2001/09/07 22:36:49  mangelo
- * add Log keyword substitution
- *
- *
- * March, 2001. Huang-Ming Huang
- *            Add support for Information Object Class.
  */
 
 #include "main.h"

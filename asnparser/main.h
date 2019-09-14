@@ -30,23 +30,6 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): ___________________.
- *
- * $Log: main.h,v $
- * Revision 1.3  2002/07/02 02:03:26  mangelo
- * Remove Pwlib dependency
- *
- * Revision 1.2  2001/09/07 22:39:17  mangelo
- * add Log keyword substitution
- *
- *
- * May 3, 2001 Huang-Ming Huang
- *   Fixed the problem with my wrong interpretation to varaible constraint.
- *
- * March, 2001 Huang-Ming Huang
- *            Add support for Information Object Class and generate code that follows
- *            X/Open ASN.1/C++ interface.
- *
  */
 
 #ifndef _MAIN_H

@@ -10,6 +10,7 @@
  * warranty, and with no claim as to its suitability for any purpose.
  *
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

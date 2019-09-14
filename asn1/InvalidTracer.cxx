@@ -21,16 +21,8 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): Huang-Ming Huang 
- *
- * $Log: InvalidTracer.cxx,v $
- * Revision 1.3  2002/07/02 04:45:13  mangelo
- * Modify for VC.Net and GCC 3.1
- *
- * Revision 1.2  2001/08/03 07:42:00  mangelo
- * Add InvalidTracer
- *
  */
+
 #ifdef ASN1_HAS_IOSTREAM
 #include "asn1.h"
 

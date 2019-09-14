@@ -21,11 +21,6 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): Huang-Ming Huang 
- *
- * 2001/06/26 Huang-Ming Huang 
- * Version 2.1 Reimplemented to minimize the code size.
- *
  */
 
 

@@ -25,40 +25,9 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): Huang-Ming Huang 
- *
  * The code is adapted from asner.cxx of PWLib, but the dependancy on PWLib has
  * been removed.
  *
- * $Log: asn1.cxx,v $
- * Revision 1.7  2002/07/03 06:01:59  btrummer
- * Fixed two buffer overflows in OBJECT_IDENTIFIER::decodeCommon(),
- * that may occur, when decoding invalid (random) data.
- *
- * Revision 1.6  2002/07/02 04:45:13  mangelo
- * Modify for VC.Net and GCC 3.1
- *
- * Revision 1.5  2002/01/11 05:43:12  mangelo
- * Fixed OBJECT_IDENTIFIER::decodeCommon (Thanks to George Biro)
- *
- * Revision 1.4  2001/10/09 16:39:11  mangelo
- * fixed the problem when vector<char*>::iterator is not char*
- *
- * Revision 1.3  2001/10/05 19:15:11  mangelo
- * Change Log Sequence
- *
- * Revision 1.2  2001/10/05 19:00:37  mangelo
- * Added Log
- *
- * 2001/07/16 Huang-Ming Huang
- * Optional components of SEQUENCE is now created on demand.
- *
- * 2001/06/26 Huang-Ming Huang 
- * Version 2.1 Reimplemented to minimize the code size.
- *
- * 2001/05/01 Huang-Ming Huang 
- * Fixed problem with unconstrained PASN_NumericString coding in 8 bits
- *   instead of 4 in accordance with PWLib asner.cxx Revision 1.39.
  */
 
 #ifdef _MSC_VER

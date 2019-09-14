@@ -9,8 +9,6 @@
  * the Free Software Foundation; either version 1, or (at your option)
  * any later version.
  *
- * 2001/07/27 Huang-Ming Huang
- * Fixed the problem which the parser mistakes the Q.931 message for H.245 message.
  */
 
 #define H323_MESSAGES_CXX

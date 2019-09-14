@@ -9,14 +9,6 @@
  * the Free Software Foundation; either version 1, or (at your option)
  * any later version.
  *
- * $Log: perattacher.h,v $
- * Revision 1.1.1.1  2001/08/01 07:38:53  mangelo
- * Import to SourceForge
- *
- * Revision 1.1.1.1  2001/05/05 15:16:34  angelo
- * First CVS Version
- *
- *
  */
 
 #ifndef PERATTACHER_H

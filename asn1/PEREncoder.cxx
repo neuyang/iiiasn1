@@ -25,41 +25,8 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): Huang-Ming Huang
- *
  * The code is adapted from asner.cxx of PWLib, but the dependancy on PWLib has
  * been removed.
- *
- * $Log: PEREncoder.cxx,v $
- * Revision 1.7  2002/07/19 05:48:07  btrummer
- * If an illegal character is found in do_visit(const AbstractString&),
- * false is returned now to abort the encoding.
- *
- * Revision 1.6  2002/07/19 05:43:39  btrummer
- * Aaargh! If encodeConstrainedLength() fails in do_visit(const OCTET_STRING&),
- * false must be returned rather than true.
- *
- * Revision 1.5  2002/07/18 10:42:17  btrummer
- * Removed the assert statement from do_visit(const OCTET_STRING& value).
- * Replaced the assert in do_visit(const CHOICE& value) with an if-clause.
- *
- * Revision 1.4  2002/07/18 06:53:33  btrummer
- * Added range checks for PEREncoder's encodeLength(), encodeUnsigned()
- * and encodeConstrainedLength(). Encoding an object which violates its
- * length constraint will fail now.
- *
- * Revision 1.3  2002/07/02 04:45:13  mangelo
- * Modify for VC.Net and GCC 3.1
- *
- * Revision 1.2  2001/10/05 19:11:50  mangelo
- * Added Log
- *
- * 2001/06/26 Huang-Ming Huang 
- * Version 2.1 Reimplemented to minimize the code size.
- *
- * 2001/05/01
- * Fixed problem with en/decoding more than 16 extension fields in a sequence 
- * in accordance with PWLib asner.cxx Revision 1.41.
  * 
  */
 

@@ -25,20 +25,8 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): Huang-Ming Huang
- *
  * The code is adapted from asner.cxx of PWLib, but the dependancy on PWLib has
  * been removed.
- *
- * $Log: BEREncoder.cxx,v $
- * Revision 1.4  2002/07/02 04:45:13  mangelo
- * Modify for VC.Net and GCC 3.1
- *
- * Revision 1.3  2001/10/05 19:08:12  mangelo
- * Added Log
- *
- * 2001/06/26 Huang-Ming Huang 
- * Version 2.1 Reimplemented to minimize the code size.
  *
  */
 

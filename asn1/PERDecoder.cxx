@@ -25,38 +25,9 @@
  * Portions are Copyright (C) 1993 Free Software Foundation, Inc.
  * All Rights Reserved.
  *
- * Contributor(s): Huang-Ming Huang
- *
  * The code is adapted from asner.cxx of PWLib, but the dependancy on PWLib has
  * been removed.
  *
- * $Log: PERDecoder.cxx,v $
- * Revision 1.6  2002/07/10 07:25:48  btrummer
- * Minor simplification at the end of PERDecoder::decodeChoicePreamle().
- *
- * Revision 1.5  2002/07/03 08:15:30  btrummer
- * Fixed the assignment to beginPosition in PERDecoder::setPosition().
- *
- * Revision 1.4  2002/07/03 06:26:38  btrummer
- * Introduced an upper bound for the size of strings and arrays,
- * like PWLib's PERDecoder does. Otherwise, broken data may make the
- * PERDecoder allocate hundrets of Megabytes RAM...
- *
- * Revision 1.3  2002/07/02 04:45:13  mangelo
- * Modify for VC.Net and GCC 3.1
- *
- * Revision 1.2  2001/10/05 19:10:42  mangelo
- * Added Log
- *
- * 2001/07/16 Huang-Ming Huang
- * Optional components of SEQUENCE is now created on demand.
- *
- * 2001/06/26 Huang-Ming Huang 
- * Version 2.1 Reimplemented to minimize the code size.
- *
- * 2001/05/01
- * Fixed problem with en/decoding more than 16 extension fields in a sequence 
- *   in accordance with PWLib asner.cxx Revision 1.41.
  */
 
 #ifdef HAVE_CONFIG_H

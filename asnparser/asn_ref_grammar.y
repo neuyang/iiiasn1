@@ -24,16 +24,6 @@
  *
  * The Initial Developer of the Original Code is Institute for Information Industry
  *
- * Contributor(s): ___________________.
- *
- * $Log: asn_ref_grammar.y,v $
- * Revision 1.3  2002/07/02 02:03:25  mangelo
- * Remove Pwlib dependency
- *
- * Revision 1.2  2001/09/07 22:38:28  mangelo
- * add Log keyword substitution
- *
- *
  */
 
 #undef malloc

@@ -1,4 +1,3 @@
-
 /*
  * Q931pdu.cpp
  * 
@@ -9,13 +8,6 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 1, or (at your option)
  * any later version.
- *
- * 2001/07/27 Huang-Ming Huang
- * Fixed Progress indicator and Call state information element identifier coding.
- *
- * 2001/07/16 Huang-Ming Huang
- * Fixed the bug when parsing CallingPartyNumber and add ConnectedPartyNumberInformationElement
- * Thanks to Danail Kirov for providing this patch.
  *
  */
 
