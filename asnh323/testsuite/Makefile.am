@@ -22,8 +22,6 @@
 
 AUTOMAKE_OPTIONS = dist-zip
 
-EXTRA_DIST		= 
-
 TESTS = h323test
 check_PROGRAMS = h323test
 

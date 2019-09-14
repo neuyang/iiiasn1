@@ -24,9 +24,6 @@
 
 AUTOMAKE_OPTIONS = dist-zip
 
-
-EXTRA_DIST		= asn1.dtf
-
 INCLUDES		= @PIPEFLAG@ @DEBUGFLAG@ 
 
 # specify the header files that should be installed

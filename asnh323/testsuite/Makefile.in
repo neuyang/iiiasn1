@@ -117,8 +117,6 @@ install_sh = @install_sh@
 
 AUTOMAKE_OPTIONS = dist-zip
 
-EXTRA_DIST = 
-
 TESTS = h323test
 check_PROGRAMS = h323test
 
@@ -303,7 +301,7 @@ check-TESTS: $(TESTS)
 	  echo "$$dashes"; \
 	  test "$$failed" -eq 0; \
 	else :; fi
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS)
 
 top_distdir = ../..
 distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
