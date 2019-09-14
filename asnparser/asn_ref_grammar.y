@@ -170,7 +170,7 @@ typedef std::vector<std::string> StringList;
 %type <slst> SymbolList
 
 %union {
-  boost::int64_t              ival;
+  std::int64_t              ival;
   std::string				* sval;
   StringList				* slst;
   struct {

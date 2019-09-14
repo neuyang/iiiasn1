@@ -5120,7 +5120,7 @@ void BooleanValue::GenerateCplusplus(std::ostream &, std::ostream & cxx, std::os
 
 /////////////////////////////////////////////////////////
 
-IntegerValue::IntegerValue(boost::int64_t newVal)
+IntegerValue::IntegerValue(std::int64_t newVal)
 {
   value = newVal;
 }

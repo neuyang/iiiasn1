@@ -409,7 +409,7 @@ static std::string * ConcatNames(std::string * s1, char c, std::string * s2)
 %type <slst> AtNotations
 
 %union {
-  boost::int64_t       ival;
+  std::int64_t       ival;
   std::string	        * sval;
   StringList	    * slst;
   TypeBase	        * tval;

@@ -44,7 +44,7 @@
 #include <string>
 #include <iostream>
 #include <boost/smart_ptr.hpp>
-#include <boost/cstdint.hpp>
+#include <cinttypes>
 
 extern unsigned lineNumber;
 extern std::string  fileName;
@@ -1287,15 +1287,15 @@ class BooleanValue : public ValueBase
 class IntegerValue : public ValueBase
 {
   public:
-    IntegerValue(boost::int64_t newVal);
+    IntegerValue(std::int64_t newVal);
     void PrintOn(std::ostream &) const;
     virtual void GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const;
 
-    operator boost::int64_t() const { return value; }
+    operator std::int64_t() const { return value; }
     operator long() const { return (long)value; }
 
   protected:
-    boost::int64_t value;
+    std::int64_t value;
 };
 
 
