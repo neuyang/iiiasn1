@@ -73,9 +73,6 @@
 /* Version number of package */
 #undef VERSION
 
-/* define if the GLIB need the flag to turn on wstring support */
-#undef _GLIBCPP_USE_WCHAR_T
-
 /* enable STLport thread support */
 #undef _REENTRANT
 
