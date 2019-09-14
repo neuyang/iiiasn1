@@ -3704,52 +3704,6 @@ ac_config_headers="$ac_config_headers config.h"
 
 
 
-if test "$ac_cv_cxx_compiler_gnu" = yes; then
-echo "$as_me:$LINENO: checking whether the environment variable CPLUS_INCLUDE_PATH work correctly" >&5
-echo $ECHO_N "checking whether the environment variable CPLUS_INCLUDE_PATH work correctly... $ECHO_C" >&6
-if test "${iii_cv_cplus_include_path+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-
-
-
-ac_ext=cc
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-
-
-iii_cv_cplus_include_path_backup=${CPLUS_INCLUDE_PATH}
-export CPLUS_INCLUDE_PATH=.
-cat > vector << EOF
-yes_yes_yes
-EOF
-cat >conftest.$ac_ext <<_ACEOF
-#line $LINENO "configure"
-#include "confdefs.h"
- #include <vector>
-_ACEOF
-if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "yes_yes_yes" >/dev/null 2>&1; then
-  iii_cv_cplus_include_path=yes
-else
-  iii_cv_cplus_include_path=no
-fi
-rm -f conftest*
-
-export CPLUS_INCLUDE_PATH=$iii_cv_cplus_include_path_backup
-rm vector
-
-fi
-echo "$as_me:$LINENO: result: $iii_cv_cplus_include_path" >&5
-echo "${ECHO_T}$iii_cv_cplus_include_path" >&6
-fi
-
-if test "$iii_cv_cplus_include_path" = no && test -n "$CPLUS_INCLUDE_PATH"; then
-CPPFLAGS="`echo -I$CPLUS_INCLUDE_PATH | sed 's/:/ -I/g'` $CPPFLAGS"
-fi
 
 
 echo "$as_me:$LINENO: checking whether the compiler supports Standard Template Library" >&5

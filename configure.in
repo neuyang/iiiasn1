@@ -46,13 +46,6 @@ dnl
 AM_CONFIG_HEADER(config.h)
 
 dnl
-dnl Checks whether the environment variable CPLUS_INCLUDE_PATH work correctly
-dnl This is bug specific to cygwin 1.3.x
-dnl
-
-III_CHECK_CXX_INCLUDE_PATH
-
-dnl
 dnl Check if STL is present
 dnl
 
