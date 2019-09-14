@@ -103,10 +103,6 @@
 #error Please Use /GR compiler option for debug version. In Visual Stdio, check the Enable RTTI box under C++ Language of C/C++ Tab in Project/Settings
 #endif
 
-#ifdef ASN1_ALLOCATOR
-#include <boost/pool/singleton_pool.hpp>
-#endif
-
 #ifdef min
 #undef min
 #endif
@@ -171,7 +167,7 @@ struct int_to_type
 template <class T>
 struct Allocator
 {
-#ifdef ASN1_ALLOCATOR
+#ifdef ASN1_ALLOCATOR	//TODO REMOVE
     static void* operator new (std::size_t sz) 
     {
 		assert(sizeof(T) == sz);

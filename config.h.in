@@ -1,8 +1,5 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
-/* enable custom memory manager */
-#undef ASN1_ALLOCATOR
-
 /* enable AVN support */
 #undef ASN1_HAS_IOSTREAM
 

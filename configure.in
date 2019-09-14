@@ -111,53 +111,6 @@ else
 fi
 
 dnl
-dnl Enable custom memory manager or not
-dnl
-
-AC_ARG_ENABLE(allocator, [
-  --enable-allocator         enable custom memory allocator (default)
-  --disable-allocator        disable custom memory allocator], [
-  iii_cv_enable_allocator=$enableval
-], [
-  if test "$host_os" != cygwin; then
-  	iii_cv_enable_allocator=yes
-  else
-    iii_cv_enable_allocator=no
-  fi
-])
-
-if test x"$iii_cv_enable_allocator" = xyes; then
-
-  AC_CACHE_CHECK([whether the compiler supports boost/pool Library],
-    iii_cv_boost_pool, [
-		AC_LANG_SAVE
-		AC_LANG_CPLUSPLUS
-		AC_TRY_COMPILE([
-			#include <boost/pool/singleton_pool.hpp>
-			struct Tag {};
-		],[
-			void* p = boost::singleton_pool<Tag,sizeof(int)>::malloc();
-			boost::singleton_pool<Tag,sizeof(int)>::free(p);
-			return 0;
-		], [
-			iii_cv_boost_pool=yes	
-		], [
-			iii_cv_boost_pool=no	
-		])
-		AC_LANG_RESTORE
-	])
-
-	if test x"$iii_cv_boost_pool" = xyes; then
-		AC_DEFINE(ASN1_ALLOCATOR, ,[enable custom memory manager])
-	else
-		AC_MSG_WARN([This compiler does not support boost/pool Library, custom memory manager disabled])
-		iii_cv_enable_allocator=no
-	fi
-fi
-
-
-
-dnl
 dnl 
 dnl 
 
