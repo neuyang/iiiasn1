@@ -23,16 +23,6 @@
 AUTOMAKE_OPTIONS = dist-zip
 ACLOCAL = @ACLOCAL@ -I config
 
-H323Parser_FILES = h323parser/perattacher.h\
-				   h323parser/perattacher.cpp\
-				   h323parser/Q931pdu.h\
-				   h323parser/Q931pdu.cpp\
-				   h323parser/pointainer.h\
-				   h323parser/H323Parser.cpp\
-				   h323parser/H323.def\
-				   h323parser/h225.sed
-				   
-				  
 config_FIELS = config/ac_cxx_have_new_iostream.m4\
                config/ac_cxx_have_stl.m4\
 	       config/acx_pthread.m4\
@@ -47,7 +37,7 @@ config_FIELS = config/ac_cxx_have_new_iostream.m4\
 	       config/mkinstalldirs  
 	  
 				   
-EXTRA_DIST = configure mpl-1.0.htm $(H323Parser_FILES) $(config_FIELS)
+EXTRA_DIST = configure mpl-1.0.htm $(config_FIELS)
 
 SUBDIRS = asnparser asn1 @asnh323dir@
 
