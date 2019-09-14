@@ -1,0 +1,10 @@
+LIBRARY         IIIH323Parser
+DESCRIPTION     "III Network Monitor H.323 Parser DLL.
+
+VERSION         2.0
+
+EXPORTS         ParserAutoInstallInfo
+
+
+
+
