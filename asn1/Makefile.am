@@ -25,7 +25,7 @@
 AUTOMAKE_OPTIONS = dist-zip
 
 
-EXTRA_DIST		= dllmain.cxx asn1.dtf
+EXTRA_DIST		= asn1.dtf
 
 INCLUDES		= @PIPEFLAG@ @DEBUGFLAG@ 
 
