@@ -90,6 +90,3 @@
 
 /* enable libstdc++ WIN32 thread support */
 #undef __STL_WIN32THREADS
-
-/* throw std::bad_alloc when memory is exhausted */
-#undef __THROW_BAD_ALLOC

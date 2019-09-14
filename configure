@@ -4733,55 +4733,6 @@ if test x"$iii_cv_with_asnh323" = xyes; then
 fi
 
 
-if test x"$ac_cv_cxx_compiler_gnu" = xyes && test x"$iii_cv_have_stlport" = xno ; then
-# assume using libstdc++, avoid linking cerr
-		if test "$cross_compiling" = yes; then
-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling" >&5
-echo "$as_me: error: cannot run test program while cross compiling" >&2;}
-   { (exit 1); exit 1; }; }
-else
-  cat >conftest.$ac_ext <<_ACEOF
-#line $LINENO "configure"
-#include "confdefs.h"
-
-			#include <vector>
-			int main(){
-			#ifndef __THROW_BAD_ALLOC
-			return 0;
-			#else
-			return 1;
-			#endif
-			}
-
-_ACEOF
-rm -f conftest$ac_exeext
-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-
-
-cat >>confdefs.h <<\_ACEOF
-#define __THROW_BAD_ALLOC
-_ACEOF
-
-
-else
-  echo "$as_me: program exited with status $ac_status" >&5
-echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-fi
-rm -f core core.* *.core conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
-fi
-fi
-
-
 
 echo "$as_me:$LINENO: checking whether the compiler has ASNI compliant iostream" >&5
 echo $ECHO_N "checking whether the compiler has ASNI compliant iostream... $ECHO_C" >&6

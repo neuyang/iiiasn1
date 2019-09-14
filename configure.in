@@ -127,27 +127,6 @@ if test x"$iii_cv_with_asnh323" = xyes; then
   asnh323dir=asnh323
 fi
 
-dnl
-dnl If using GNU stdc++ library, without defineing __THROW_BAD_ALLOC, it would
-dnl link "cerr", which is undesirable when iostream is not to be used.
-dnl
-
-if test x"$ac_cv_prog_gxx" = xyes && test x"$iii_cv_have_stlport" = xno ; then
-# assume using libstdc++, avoid linking cerr
-		AC_TRY_RUN([
-			#include <vector>
-			int main(){
-			#ifndef __THROW_BAD_ALLOC
-			return 0;
-			#else
-			return 1;
-			#endif
-			}
-		], [
-			AC_DEFINE(__THROW_BAD_ALLOC, ,[throw std::bad_alloc when memory is exhausted])	
-		])
-fi
-
 
 dnl
 dnl Test if the new style iostream is present
