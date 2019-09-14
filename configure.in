@@ -53,12 +53,6 @@ dnl
 III_CHECK_CXX_INCLUDE_PATH
 
 dnl
-dnl Check if the compiler support namespace 
-dnl
-
-AC_CXX_NAMESPACES
-
-dnl
 dnl Check if STL is present
 dnl
 
@@ -66,10 +60,6 @@ AC_CXX_HAVE_STL
 
 if test "$ac_cv_cxx_have_stl" = no; then
 	AC_MSG_ERROR(This compiler does not have STL)
-fi
-
-if test  "$ac_cv_cxx_namespaces" = no; then
-	AC_MSG_ERROR(This compiler does not support namespace)
 fi
 
 dnl

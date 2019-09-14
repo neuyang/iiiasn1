@@ -8,8 +8,7 @@ dnl
 AC_DEFUN([AC_CXX_HAVE_NEW_IOSTREAM],
 [AC_CACHE_CHECK(whether the compiler has ASNI compliant iostream,
 ac_cv_cxx_have_new_iostream,
-[AC_REQUIRE([AC_CXX_NAMESPACES])
- AC_LANG_SAVE
+[AC_LANG_SAVE
  AC_LANG_CPLUSPLUS
  AC_TRY_COMPILE([#include <ios>
 using namespace std;
