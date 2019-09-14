@@ -3,9 +3,6 @@
 /* enable AVN support */
 #undef ASN1_HAS_IOSTREAM
 
-/* disable multithreading for boost/pool */
-#undef BOOST_NO_MT
-
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
@@ -69,12 +66,3 @@
 
 /* Version number of package */
 #undef VERSION
-
-/* enable STLport thread support */
-#undef _REENTRANT
-
-/* enable libstdc++ pthread support */
-#undef __STL_PTHREADS
-
-/* enable libstdc++ WIN32 thread support */
-#undef __STL_WIN32THREADS

@@ -87,12 +87,6 @@ if test x"$iii_cv_enable_thread" = xyes && test "$host_os" != cygwin; then
 	])
 fi 
 
-if test x"$iii_cv_enable_thread" = xyes ; then
-  III_ENABLE_STL_THREAD
-else
-  AC_DEFINE(BOOST_NO_MT, , [disable multithreading for boost/pool])
-fi
-
 dnl
 dnl 
 dnl 

@@ -4550,42 +4550,6 @@ fi
 
 fi
 
-if test x"$iii_cv_enable_thread" = xyes ; then
-
-
-  if test x"$ac_cv_cxx_compiler_gnu" = xyes; then
-        if test x"$iii_cv_have_stlport" = xno; then
-        # assume using libstdc++
-                if test x"$host_os" = xcygwin ; then
-
-cat >>confdefs.h <<\_ACEOF
-#define __STL_WIN32THREADS
-_ACEOF
-
-                else
-
-cat >>confdefs.h <<\_ACEOF
-#define __STL_PTHREADS
-_ACEOF
-
-                fi
-        else
-        # using stlport
-
-cat >>confdefs.h <<\_ACEOF
-#define _REENTRANT
-_ACEOF
-
-        fi
-  fi
-
-else
-
-cat >>confdefs.h <<\_ACEOF
-#define BOOST_NO_MT
-_ACEOF
-
-fi
 
 
 
