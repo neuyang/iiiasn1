@@ -45,12 +45,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* define if the compiler has wstring */
-#undef HAVE_WSTRING
-
-/* define if explicit wstring typedef is needed */
-#undef NEED_WSTRING_TYPEDEF
-
 /* Name of package */
 #undef PACKAGE
 

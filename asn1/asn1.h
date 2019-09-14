@@ -133,12 +133,6 @@
 #define AVN_ONLY(x) 
 #endif
 
-#ifdef NEED_WSTRING_TYPEDEF
-namespace std {
-  typedef basic_string<wchar_t> wstring;
-}
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 
 namespace ASN1 {
