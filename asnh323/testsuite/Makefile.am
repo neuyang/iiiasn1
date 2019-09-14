@@ -22,7 +22,7 @@
 
 AUTOMAKE_OPTIONS = dist-zip
 
-EXTRA_DIST		= h323test.dsp h323test.vcproj
+EXTRA_DIST		= 
 
 TESTS = h323test
 check_PROGRAMS = h323test

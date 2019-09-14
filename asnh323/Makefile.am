@@ -22,7 +22,7 @@
 
 AUTOMAKE_OPTIONS = dist-zip
 
-EXTRA_DIST	= asnh323.dsp asnh323.vcproj asnh323_dll.dsp asnh323_dll.vcproj asnh323.dtf asnh323.ignore ro.sed $(asn_sources)
+EXTRA_DIST	= asnh323.dtf asnh323.ignore ro.sed $(asn_sources)
 
 lib_LIBRARIES = libasnh323.a
 

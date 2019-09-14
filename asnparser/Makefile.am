@@ -22,7 +22,7 @@
 
 AUTOMAKE_OPTIONS = dist-zip
 
-EXTRA_DIST		= asnparser.dsp asnparser.vcproj unistd.h getopt.c\
+EXTRA_DIST		= unistd.h getopt.c\
 			  asn_grammar.y asn_lex.l asn_ref_grammar.y asn_ref_lex.l\
 			  main.cxx
 
