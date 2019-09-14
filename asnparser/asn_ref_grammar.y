@@ -37,11 +37,6 @@ extern int idlex();
 
 typedef std::vector<std::string> StringList;
 
-#ifdef _MSC_VER
-#pragma warning(disable:4701)
-#define MSDOS
-#endif
-
 #define VALUEREFERENCE  (TYPEREFERENCE+2)
 #define OBJECTREFERENCE (TYPEREFERENCE+3)
 #define OBJECTSETREFERENCE (TYPEREFERENCE+4)

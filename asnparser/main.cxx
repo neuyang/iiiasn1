@@ -336,8 +336,6 @@ std::ostream& operator << (std::ostream& os, const std::vector<boost::shared_ptr
 //
 
 int verbose=0;
-std::string dllMacroExport;
-std::string dllMacroStatic;
 
 int main(int argc, char** argv)
 {
@@ -368,12 +366,6 @@ int main(int argc, char** argv)
 			break;
 		case 'v':
 			++verbose;
-			break;
-		case 'm':
-			dllMacroExport = optarg;
-            dllMacroExport += "_EXPORT ";
-            dllMacroStatic = optarg;
-            dllMacroStatic += "_STATIC";
 			break;
 	  }
   }
@@ -1835,7 +1827,7 @@ void TypeBase::EndGenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std:
 void TypeBase::GenerateInfo(const TypeBase* type, std::ostream & hdr, std::ostream& cxx)
 {
   Indent indent(hdr.precision()+4) ;
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+  hdr << indent << "static const InfoType theInfo;\n";
   cxx << GetTemplatePrefix()
       << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
       << "    " << GetAncestorClass() << "::create,\n"
@@ -2502,7 +2494,7 @@ void IntegerType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std:
 void IntegerType::GenerateInfo(const TypeBase* type, std::ostream& hdr , std::ostream& cxx)
 {
     Indent indent(hdr.precision()+4);
-    hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+    hdr << indent << "static const InfoType theInfo;\n";
 	if ( !allowedValues.empty()  )
     {
 		hdr	<< indent -2 << "private:\n"
@@ -2800,7 +2792,7 @@ void EnumeratedType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::
 	  << "#endif\n\n";
 
    Indent indent(hdr.precision()+4);
-   hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+   hdr << indent << "static const InfoType theInfo;\n";
    cxx << GetTemplatePrefix()
 	   << "const " << type->GetClassNameString() << "::InfoType " << type->GetClassNameString() << "::theInfo = {\n"
        << "    ASN1::ENUMERATED::create,\n"
@@ -2880,7 +2872,7 @@ std::string BitStringType::GetTypeName() const
 void BitStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
     Indent indent(hdr.precision() + 4);
-    hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+    hdr << indent << "static const InfoType theInfo;\n";
     cxx << type->GetTemplatePrefix()
         << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
         << "    " ;
@@ -2959,7 +2951,7 @@ void OctetStringType::GenerateConstructors(std::ostream & hdr, std::ostream & cx
 void OctetStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
     Indent indent(hdr.precision() + 4);
-    hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+    hdr << indent << "static const InfoType theInfo;\n";
     cxx << type->GetTemplatePrefix()
         << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
         << "    " ;
@@ -3450,7 +3442,7 @@ void SequenceType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::os
   int nExtensions=0;
   bool hasNonOptionalFields=false;
 
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n"
+  hdr << indent << "static const InfoType theInfo;\n"
       << "  private:\n";
 
   size_t nTotalFields = fields.size();
@@ -3786,7 +3778,7 @@ TypeBase::RemoveReuslt SequenceOfType::CanRemoveType(const TypeBase& type)
 void SequenceOfType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
     Indent indent(hdr.precision() + 4);
-    hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+    hdr << indent << "static const InfoType theInfo;\n";
     cxx << type->GetTemplatePrefix()
         << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
         << "    " ;
@@ -4078,7 +4070,7 @@ void ChoiceType::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::ostre
   size_t nFields = fields.size();
   Indent indent(hdr.precision()+4);
 
-  hdr << indent << dllMacroExport << "static const InfoType theInfo;\n"
+  hdr << indent << "static const InfoType theInfo;\n"
       << indent -2 << "private:\n";
 
   bool autoTag = true;
@@ -4344,7 +4336,7 @@ static size_t CountBits(unsigned range)
 void StringTypeBase::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::ostream& cxx)
 {
 	Indent indent(hdr.precision()+4);
-	hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+	hdr << indent << "static const InfoType theInfo;\n";
 	cxx << type->GetTemplatePrefix()
         << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
 		<< "    ASN1::AbstractString::create,\n"
@@ -4444,7 +4436,7 @@ void BMPStringType::GenerateOperators(std::ostream & hdr, std::ostream & , const
 void BMPStringType::GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx)
 {
 	Indent indent(hdr.precision()+4);
-	hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+	hdr << indent << "static const InfoType theInfo;\n";
 	cxx << type->GetTemplatePrefix()
         << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
 		<< "    ASN1::BMPString::create,\n"
@@ -4900,7 +4892,7 @@ void ObjectClassFieldType::GenerateInfo(const TypeBase* type, std::ostream& hdr,
   if (constrainedType.size())
   {
       Indent indent(hdr.precision()+4) ;
-      hdr << indent << dllMacroExport << "static const InfoType theInfo;\n";
+      hdr << indent << "static const InfoType theInfo;\n";
       cxx << GetTemplatePrefix()
 		  << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
           << "    TypeConstrainedOpenData::create,\n"
@@ -5132,17 +5124,6 @@ IntegerValue::IntegerValue(boost::int64_t newVal)
 {
   value = newVal;
 }
-
-#if defined(_MSC_VER) && (_MSC_VER <=1200)
-
-std::ostream& operator << (std::ostream& os, __int64 n)
-{
-	char str[40];
-	os << _i64toa(n, str, 10);
-	return os;
-}
-
-#endif
 
 void IntegerValue::PrintOn(std::ostream & strm) const
 {
@@ -5777,18 +5758,6 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 		  hdrFile << "#include \"" << subModules[i]->GetFileName() << ".h\"\n";
 	  
 
-     if (dllMacroStatic.size() > 0)
-     {
-        hdrFile << '\n'
-			    << "#ifndef " << dllMacroExport << '\n'
-                << "#if !defined( " << dllMacroStatic << ") && defined(_MSC_VER)\n" 
-                << "#define " << dllMacroExport << " __declspec(dllimport)\n"
-				<< "#else\n"
-				<< "#define " << dllMacroExport << '\n'
-			    << "#endif //" << dllMacroStatic << '\n'
-                << "#endif //"<< dllMacroExport << "\n\n";
-     }
-	  
 	  hdrFile << "namespace " << cModuleName << " {\n"
 		  "\n";
 	  for_all(imports, boost::bind(&ImportModule::GenerateUsingDirectives, 
@@ -5971,9 +5940,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
 	  hdrFile << "}; // class Module \n";
 
 	  tmpcxx << std::ends;
-	  cxxFile << "#ifdef _MSC_VER\n"
-              << "#pragma warning(disable: 4355)\n"
-              << "#endif\n\n"
+	  cxxFile << "\n"
               << tmpcxx.str()
               << "Module::Module(";
 

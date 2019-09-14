@@ -33,14 +33,6 @@
 #ifndef _ASN1_H
 #define _ASN1_H
 
-#if defined(_MSC_VER) && (_MSC_VER <= 1200)
-#pragma warning(disable: 4786)
-#endif
-
-#if defined(_MSC_VER) && !defined(NDEBUG) && !defined(_CPPRTTI)
-#error Please Use /GR compiler option for debug version. In Visual Stdio, check the Enable RTTI box under C++ Language of C/C++ Tab in Project/Settings
-#endif
-
 #ifdef min
 #undef min
 #endif
@@ -55,14 +47,6 @@
 #include <time.h>
 #include <boost/iterator.hpp>
 #include "AssocVector.h"
-
-
-#if !defined(ASN1_STATIC) && defined(_MSC_VER)
-#define ASN1_EXPORT __declspec(dllimport)
-#else
-#define ASN1_EXPORT 
-#endif 
-
 
 #ifdef ASN1_HAS_IOSTREAM
 #include <sstream>
@@ -335,7 +319,7 @@ class Null : public AbstractData , public detail::Allocator<Null>
 	bool operator >  (const Null& ) const { return false; } 
 	bool operator <= (const Null& ) const { return false; } 
 	bool operator >= (const Null& ) const { return false; } 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -394,7 +378,7 @@ class BOOLEAN : public AbstractData, public detail::Allocator<BOOLEAN>
 	bool operator >  (bool rhs) const { return value >  rhs ; } 
 	bool operator <= (bool rhs) const { return value <= rhs ; } 
 	bool operator >= (bool rhs) const { return value >= rhs ; } 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -488,7 +472,7 @@ public:
     int_type operator * (int_type rhs) { int_type t(getValue()); return t*=rhs;}
     int_type operator / (int_type rhs) { int_type t(getValue()); return t/=rhs;}
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -744,11 +728,7 @@ class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_I
     OBJECT_IDENTIFIER(const void* info) : AbstractData(info) {}
   public:
     OBJECT_IDENTIFIER() : AbstractData(&theInfo) {}
-#if defined(_MSC_VER) && (_MSC_VER <= 1200)
-    typedef unsigned* InputIterator;
-#else
     template <class InputIterator>
-#endif
     OBJECT_IDENTIFIER(InputIterator first, InputIterator last, const void* info = &theInfo)
       : AbstractData(info),value(first, last) 
     { }
@@ -790,7 +770,7 @@ class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_I
 	bool operator <= (const OBJECT_IDENTIFIER& rhs) const { return value <= rhs.value; } 
 	bool operator >= (const OBJECT_IDENTIFIER& rhs) const { return value >= rhs.value; } 
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -875,7 +855,7 @@ class BIT_STRING : public ConstrainedObject, public detail::Allocator<BIT_STRING
 
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
-        ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
   private:
     friend class BERDecoder;
     friend class PERDecoder;
@@ -997,7 +977,7 @@ class OCTET_STRING : public ConstrainedObject, public std::vector<char>, public 
 
     operator std::string () const { return std::string(begin(), end()); }
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -1165,7 +1145,7 @@ public:
     static AbstractData* create();
 	void swap(NumericString& other) { base_string::swap(other); }
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
@@ -1185,7 +1165,7 @@ public:
 	PrintableString * clone() const { return static_cast<PrintableString *>(AbstractString::clone()); } 
     static AbstractData* create();
 	void swap(PrintableString& other) { base_string::swap(other); }
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
@@ -1206,7 +1186,7 @@ public:
     static AbstractData* create();
 	void swap(VisibleString& other) { base_string::swap(other); }
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
@@ -1227,7 +1207,7 @@ public:
     static AbstractData* create();
 	void swap(IA5String& other) { base_string::swap(other); }
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
@@ -1248,7 +1228,7 @@ public:
     static AbstractData* create();
 	void swap(GeneralString& other) { base_string::swap(other); }
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
@@ -1327,7 +1307,7 @@ class BMPString : public ConstrainedObject, public std::wstring
         return align ? info()->charSetAlignedBits : info()->charSetUnalignedBits; 
     }
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 	size_type first_illegal_at() const;
@@ -1399,7 +1379,7 @@ public:
     static AbstractData* create(const void* info);
 	bool isStrictlyValid() const;
 
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -1626,7 +1606,7 @@ public:
     BitMap optionMap;
     BitMap extensionMap;
 
-    ASN1_EXPORT static const unsigned defaultTag;
+	static const unsigned defaultTag;
 
 	struct InfoType
 	{
@@ -1998,12 +1978,11 @@ class SEQUENCE_OF : public SEQUENCE_OF_Base
      */
 	iterator    insert(iterator position, pointer x) { return iterator(container.insert(position.base(), x));}
     void insert(iterator position, size_type n, const T& x) { SEQUENCE_OF_Base::insert(position.base(), n, x);}
-#if !defined(_MSC_VER) 
     void insert(iterator position, const_iterator first, const_iterator last)
     {
         SEQUENCE_OF_Base::insert(position.base(), first.base(), last.base());
     }
-#endif
+
     template <class InputIterator>
 	void insert(iterator position, InputIterator first, InputIterator last) {
 #if 1//defined(__GNUC__) && (__GNUC__ <= 2) 
@@ -2264,7 +2243,7 @@ public:
 	bool operator <= (const OpenData& rhs) const { return do_compare(rhs) <= 0; }
 	bool operator >= (const OpenData& rhs) const { return do_compare(rhs) >= 0; }
     
-   ASN1_EXPORT static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -3035,7 +3014,6 @@ public:
 		return decode(reinterpret_cast<const char*>(first), reinterpret_cast<const char*>(last), val, defered);
 	}
 
-#if !defined(_MSC_VER) || (_MSC_VER > 1200)
     template <class InputIterator>
 	bool decode(InputIterator first, InputIterator last, AbstractData& val, bool defered)
     {
@@ -3050,7 +3028,6 @@ public:
         OpenBuf buf(first, last);
 		return decode((const char*)&buf[0], (const char*)&*buf.end(), val, defered);
     }
-#endif
 
 protected:
 	EncodingRules encodingRule;

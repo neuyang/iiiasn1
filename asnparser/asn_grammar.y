@@ -72,10 +72,6 @@ static std::string * ConcatNames(std::string * s1, char c, std::string * s2)
   return s1;
 }
 
-#ifdef _MSC_VER
-#pragma warning(disable:4701)
-#endif
-
 %}
 
 %token MODULEREFERENCE 

@@ -35,9 +35,6 @@
 #ifndef _MAIN_H
 #define _MAIN_H
 
-#if defined(_MSC_VER) && (_MSC_VER <=1200)
-#pragma warning(disable:4786)
-#endif
 #include <stdio.h>
 #include <vector>
 #include <list>
