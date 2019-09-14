@@ -117,7 +117,7 @@ install_sh = @install_sh@
 
 AUTOMAKE_OPTIONS = dist-zip
 
-EXTRA_DIST = asnh323.dtf asnh323.ignore ro.sed $(asn_sources)
+EXTRA_DIST = ro.sed $(asn_sources)
 
 lib_LIBRARIES = libasnh323.a
 
