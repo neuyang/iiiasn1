@@ -34,11 +34,11 @@ namespace ASN1 {
 class StrictlyValidChecker : public ConstVisitor
 {
 public:
-    bool do_visit(const Null& value) { return true;}
-    bool do_visit(const BOOLEAN& value) { return true;}
-    bool do_visit(const INTEGER& value) { return value.isStrictlyValid(); }
-    bool do_visit(const ENUMERATED& value) { return value.isStrictlyValid(); }
-    bool do_visit(const OBJECT_IDENTIFIER& value) { return value.isStrictlyValid(); }
+	bool do_visit(const Null& value) { return true;}
+	bool do_visit(const BOOLEAN& value) { return true;}
+	bool do_visit(const INTEGER& value) { return value.isStrictlyValid(); }
+	bool do_visit(const ENUMERATED& value) { return value.isStrictlyValid(); }
+	bool do_visit(const OBJECT_IDENTIFIER& value) { return value.isStrictlyValid(); }
 	bool do_visit(const BIT_STRING& value) { return value.isStrictlyValid(); }
 	bool do_visit(const OCTET_STRING& value) { return value.isStrictlyValid(); }
 	bool do_visit(const AbstractString& value) { return value.isStrictlyValid(); }
@@ -49,11 +49,11 @@ public:
 	bool do_visit(const SEQUENCE_OF_Base& value){ return value.isStrictlyValid(); }
 
 	bool visitExtensionRoot(const SEQUENCE& value, int index) { 
-        return value.getField(index)->isStrictlyValid(); 
-    }
+		return value.getField(index)->isStrictlyValid(); 
+	}
 	bool visitKnownExtension(const SEQUENCE& value, int index) { 
-        return value.getField(index)->isStrictlyValid(); 
-    }
+		return value.getField(index)->isStrictlyValid(); 
+	}
 };
 
 class ValidChecker : public ConstVisitor
@@ -74,35 +74,34 @@ public:
 	bool do_visit(const SEQUENCE_OF_Base& value){ return value.isValid(); }
 
 	bool visitExtensionRoot(const SEQUENCE& value, int index) { 
-        return value.getField(index)->isValid(); 
-    }
+		return value.getField(index)->isValid(); 
+	}
 	bool visitKnownExtension(const SEQUENCE& value, int index) { 
-        return value.getField(index)->isValid(); 
-    }
+		return value.getField(index)->isValid(); 
+	}
 };
 
 bool AbstractData::isValid() const
 {
-    ValidChecker checker;
-    return accept(checker);
+	ValidChecker checker;
+	return accept(checker);
 }
 
 bool AbstractData::isStrictlyValid() const 
 {
-    StrictlyValidChecker checker;
-    return accept(checker);
+	StrictlyValidChecker checker;
+	return accept(checker);
 }
 
 bool INTEGER::isStrictValid() const
 {
 	if (getLowerLimit() >= 0)
-    {
-        int v = static_cast<int>(value);
-        return  v >= getLowerLimit() && value <= getUpperLimit();
-    }
-	else {
-      int v = static_cast<int>(value);
-      return  v >= getLowerLimit() && value <= static_cast<signed>(getUpperLimit());
+	{
+		int v = static_cast<int>(value);
+		return  v >= getLowerLimit() && value <= getUpperLimit();
+	} else {
+		int v = static_cast<int>(value);
+		return  v >= getLowerLimit() && value <= static_cast<signed>(getUpperLimit());
 	}
 }
 
@@ -123,13 +122,13 @@ bool AbstractString::isStrictlyValid() const
 
 bool BMPString::legalCharacter(wchar_t ch) const
 {
-  if (ch < getFirstChar())
-    return false;
+	if (ch < getFirstChar())
+		return false;
 
-  if (ch > getLastChar())
-    return false;
+	if (ch > getLastChar())
+		return false;
 
-  return true;
+	return true;
 }
 
 BMPString::size_type BMPString::first_illegal_at() const

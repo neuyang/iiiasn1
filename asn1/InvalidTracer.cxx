@@ -43,11 +43,11 @@ public:
 		return os << tracer.strm.str();
 	}
 private:
-    bool do_visit(const Null& value);
-    bool do_visit(const BOOLEAN& value);
-    bool do_visit(const INTEGER& value);
-    bool do_visit(const ENUMERATED& value);
-    bool do_visit(const OBJECT_IDENTIFIER& value);
+	bool do_visit(const Null& value);
+	bool do_visit(const BOOLEAN& value);
+	bool do_visit(const INTEGER& value);
+	bool do_visit(const ENUMERATED& value);
+	bool do_visit(const OBJECT_IDENTIFIER& value);
 	bool do_visit(const BIT_STRING& value) ;
 	bool do_visit(const OCTET_STRING& value);
 	bool do_visit(const AbstractString& value);
@@ -60,7 +60,7 @@ private:
 	bool visitExtensionRoot(const SEQUENCE& value, int index);
 	bool visitKnownExtension(const SEQUENCE& value, int index);
 
-    std::stringstream strm;
+	std::stringstream strm;
 };
 
 
