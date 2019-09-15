@@ -34,24 +34,24 @@ namespace ASN1 {
 class StrictlyValidChecker : public ConstVisitor
 {
 public:
-	bool do_visit(const Null& value) { return true;}
-	bool do_visit(const BOOLEAN& value) { return true;}
-	bool do_visit(const INTEGER& value) { return value.isStrictlyValid(); }
-	bool do_visit(const ENUMERATED& value) { return value.isStrictlyValid(); }
-	bool do_visit(const OBJECT_IDENTIFIER& value) { return value.isStrictlyValid(); }
-	bool do_visit(const BIT_STRING& value) { return value.isStrictlyValid(); }
-	bool do_visit(const OCTET_STRING& value) { return value.isStrictlyValid(); }
-	bool do_visit(const AbstractString& value) { return value.isStrictlyValid(); }
-	bool do_visit(const BMPString& value) { return value.isStrictlyValid(); }
-	bool do_visit(const CHOICE& value) { return value.isStrictlyValid(); }
-	bool do_visit(const OpenData& value){ return value.isStrictlyValid(); }
-	bool do_visit(const GeneralizedTime& value)  { return value.isStrictlyValid(); }
-	bool do_visit(const SEQUENCE_OF_Base& value){ return value.isStrictlyValid(); }
+	bool do_encode(const Null& value) { return true;}
+	bool do_encode(const BOOLEAN& value) { return true;}
+	bool do_encode(const INTEGER& value) { return value.isStrictlyValid(); }
+	bool do_encode(const ENUMERATED& value) { return value.isStrictlyValid(); }
+	bool do_encode(const OBJECT_IDENTIFIER& value) { return value.isStrictlyValid(); }
+	bool do_encode(const BIT_STRING& value) { return value.isStrictlyValid(); }
+	bool do_encode(const OCTET_STRING& value) { return value.isStrictlyValid(); }
+	bool do_encode(const AbstractString& value) { return value.isStrictlyValid(); }
+	bool do_encode(const BMPString& value) { return value.isStrictlyValid(); }
+	bool do_encode(const CHOICE& value) { return value.isStrictlyValid(); }
+	bool do_encode(const OpenData& value){ return value.isStrictlyValid(); }
+	bool do_encode(const GeneralizedTime& value)  { return value.isStrictlyValid(); }
+	bool do_encode(const SEQUENCE_OF_Base& value){ return value.isStrictlyValid(); }
 
-	bool visitExtensionRoot(const SEQUENCE& value, int index) { 
+	bool encodeExtensionRoot(const SEQUENCE& value, int index) { 
 		return value.getField(index)->isStrictlyValid(); 
 	}
-	bool visitKnownExtension(const SEQUENCE& value, int index) { 
+	bool encodeKnownExtension(const SEQUENCE& value, int index) { 
 		return value.getField(index)->isStrictlyValid(); 
 	}
 };
@@ -59,24 +59,24 @@ public:
 class ValidChecker : public ConstVisitor
 {
 public:
-	bool do_visit(const Null& value){ return true;}
-	bool do_visit(const BOOLEAN& value){ return true;}
-	bool do_visit(const INTEGER& value){ return value.isValid(); }
-	bool do_visit(const ENUMERATED& value){ return value.isValid(); }
-	bool do_visit(const OBJECT_IDENTIFIER& value){ return value.isValid(); }
-	bool do_visit(const BIT_STRING& value){ return value.isValid(); }
-	bool do_visit(const OCTET_STRING& value){ return value.isValid(); }
-	bool do_visit(const AbstractString& value){ return value.isValid(); }
-	bool do_visit(const BMPString& value){ return value.isValid(); }
-	bool do_visit(const CHOICE& value){ return value.isValid(); }
-	bool do_visit(const OpenData& value){ return value.isValid(); }
-	bool do_visit(const GeneralizedTime& value){ return value.isValid(); }
-	bool do_visit(const SEQUENCE_OF_Base& value){ return value.isValid(); }
+	bool do_encode(const Null& value){ return true;}
+	bool do_encode(const BOOLEAN& value){ return true;}
+	bool do_encode(const INTEGER& value){ return value.isValid(); }
+	bool do_encode(const ENUMERATED& value){ return value.isValid(); }
+	bool do_encode(const OBJECT_IDENTIFIER& value){ return value.isValid(); }
+	bool do_encode(const BIT_STRING& value){ return value.isValid(); }
+	bool do_encode(const OCTET_STRING& value){ return value.isValid(); }
+	bool do_encode(const AbstractString& value){ return value.isValid(); }
+	bool do_encode(const BMPString& value){ return value.isValid(); }
+	bool do_encode(const CHOICE& value){ return value.isValid(); }
+	bool do_encode(const OpenData& value){ return value.isValid(); }
+	bool do_encode(const GeneralizedTime& value){ return value.isValid(); }
+	bool do_encode(const SEQUENCE_OF_Base& value){ return value.isValid(); }
 
-	bool visitExtensionRoot(const SEQUENCE& value, int index) { 
+	bool encodeExtensionRoot(const SEQUENCE& value, int index) { 
 		return value.getField(index)->isValid(); 
 	}
-	bool visitKnownExtension(const SEQUENCE& value, int index) { 
+	bool encodeKnownExtension(const SEQUENCE& value, int index) { 
 		return value.getField(index)->isValid(); 
 	}
 };
@@ -84,13 +84,13 @@ public:
 bool AbstractData::isValid() const
 {
 	ValidChecker checker;
-	return accept(checker);
+	return encode(checker);
 }
 
 bool AbstractData::isStrictlyValid() const 
 {
 	StrictlyValidChecker checker;
-	return accept(checker);
+	return encode(checker);
 }
 
 bool INTEGER::isStrictValid() const

@@ -43,39 +43,37 @@ public:
 		return os << tracer.strm.str();
 	}
 private:
-	bool do_visit(const Null& value);
-	bool do_visit(const BOOLEAN& value);
-	bool do_visit(const INTEGER& value);
-	bool do_visit(const ENUMERATED& value);
-	bool do_visit(const OBJECT_IDENTIFIER& value);
-	bool do_visit(const BIT_STRING& value) ;
-	bool do_visit(const OCTET_STRING& value);
-	bool do_visit(const AbstractString& value);
-	bool do_visit(const BMPString& value);
-	bool do_visit(const CHOICE& value);
-	bool do_visit(const OpenData& value);
-	bool do_visit(const GeneralizedTime& value);
-	bool do_visit(const SEQUENCE_OF_Base& value);
+	bool do_encode(const Null& value);
+	bool do_encode(const BOOLEAN& value);
+	bool do_encode(const INTEGER& value);
+	bool do_encode(const ENUMERATED& value);
+	bool do_encode(const OBJECT_IDENTIFIER& value);
+	bool do_encode(const BIT_STRING& value) ;
+	bool do_encode(const OCTET_STRING& value);
+	bool do_encode(const AbstractString& value);
+	bool do_encode(const BMPString& value);
+	bool do_encode(const CHOICE& value);
+	bool do_encode(const OpenData& value);
+	bool do_encode(const GeneralizedTime& value);
+	bool do_encode(const SEQUENCE_OF_Base& value);
 
-	bool visitExtensionRoot(const SEQUENCE& value, int index);
-	bool visitKnownExtension(const SEQUENCE& value, int index);
+	bool encodeExtensionRoot(const SEQUENCE& value, int index);
+	bool encodeKnownExtension(const SEQUENCE& value, int index);
 
 	std::stringstream strm;
 };
 
-
-bool InvalidTracer::do_visit(const Null& value) 
+bool InvalidTracer::do_encode(const Null& value) 
 { 
 	return true;
 }
 
-bool InvalidTracer::do_visit(const BOOLEAN& value) 
+bool InvalidTracer::do_encode(const BOOLEAN& value) 
 { 
 	return true;
 }
 
-
-bool InvalidTracer::do_visit(const INTEGER& value) { 
+bool InvalidTracer::do_encode(const INTEGER& value) { 
     if (value.getLowerLimit() >= 0)
     {
         unsigned v = static_cast<unsigned>(value.getValue());
@@ -98,7 +96,7 @@ bool InvalidTracer::do_visit(const INTEGER& value) {
     return false;
 }
 
-bool InvalidTracer::do_visit(const ENUMERATED& value)
+bool InvalidTracer::do_encode(const ENUMERATED& value)
 { 
     if (value.asInt() > value.getMaximum())
     {
@@ -108,7 +106,7 @@ bool InvalidTracer::do_visit(const ENUMERATED& value)
     return true; 
 }
 
-bool InvalidTracer::do_visit(const OBJECT_IDENTIFIER& value) 
+bool InvalidTracer::do_encode(const OBJECT_IDENTIFIER& value) 
 { 
     if (value.levels() == 0)
     {
@@ -118,7 +116,7 @@ bool InvalidTracer::do_visit(const OBJECT_IDENTIFIER& value)
     return true; 
 }
 
-bool InvalidTracer::do_visit(const BIT_STRING& value) 
+bool InvalidTracer::do_encode(const BIT_STRING& value) 
 { 
     if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
     {
@@ -134,7 +132,7 @@ bool InvalidTracer::do_visit(const BIT_STRING& value)
     return false; 
 }
 
-bool InvalidTracer::do_visit(const OCTET_STRING& value) 
+bool InvalidTracer::do_encode(const OCTET_STRING& value) 
 { 
     if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
     {
@@ -150,7 +148,7 @@ bool InvalidTracer::do_visit(const OCTET_STRING& value)
     return false; 
 }
 
-bool InvalidTracer::do_visit(const AbstractString& value)
+bool InvalidTracer::do_encode(const AbstractString& value)
 { 
     int pos;
     if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
@@ -171,7 +169,7 @@ bool InvalidTracer::do_visit(const AbstractString& value)
     return false; 
 }
 
-bool InvalidTracer::do_visit(const BMPString& value)
+bool InvalidTracer::do_encode(const BMPString& value)
 {
     unsigned pos;
     if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
@@ -192,7 +190,7 @@ bool InvalidTracer::do_visit(const BMPString& value)
     return false; 
 }
 
-bool InvalidTracer::do_visit(const CHOICE& value)
+bool InvalidTracer::do_encode(const CHOICE& value)
 {
     if (value.currentSelection() == CHOICE::unselected_)
         strm << " This CHOICE is not selected";
@@ -201,15 +199,15 @@ bool InvalidTracer::do_visit(const CHOICE& value)
     else 
     {
         strm << "." << value.getSelectionName();
-        return value.getSelection()->accept(*this);
+        return value.getSelection()->encode(*this);
     }
     return false;
 }
 
-bool InvalidTracer::do_visit(const OpenData& value)
+bool InvalidTracer::do_encode(const OpenData& value)
 { 
     if (value.has_data())
-        return value.get_data().accept(*this);
+        return value.get_data().encode(*this);
 
     if (!value.has_buf())
     {
@@ -220,7 +218,7 @@ bool InvalidTracer::do_visit(const OpenData& value)
     return true; 
 }
 
-bool InvalidTracer::do_visit(const GeneralizedTime& value)  
+bool InvalidTracer::do_encode(const GeneralizedTime& value)  
 { 
     if (value.isStrictlyValid())
     {
@@ -230,7 +228,7 @@ bool InvalidTracer::do_visit(const GeneralizedTime& value)
     return true;
 }
 
-bool InvalidTracer::do_visit(const SEQUENCE_OF_Base& value)
+bool InvalidTracer::do_encode(const SEQUENCE_OF_Base& value)
 { 
     if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
     {
@@ -248,7 +246,7 @@ bool InvalidTracer::do_visit(const SEQUENCE_OF_Base& value)
     for (; first != last; ++first)
     {
 		InvalidTracer tracer;
-        if (! (*first)->accept(tracer))
+        if (! (*first)->encode(tracer))
         {
             strm << "[" << first- value.begin() << "]" << tracer;
             return false;
@@ -257,10 +255,10 @@ bool InvalidTracer::do_visit(const SEQUENCE_OF_Base& value)
     return true;
 }
 
-bool InvalidTracer::visitExtensionRoot(const SEQUENCE& value, int index)
+bool InvalidTracer::encodeExtensionRoot(const SEQUENCE& value, int index)
 { 
    InvalidTracer tracer;
-   if (!value.getField(index)->accept(tracer))
+   if (!value.getField(index)->encode(tracer))
    {
        strm <<  "." << value.getFieldName(index) << tracer;
        return false;
@@ -268,15 +266,15 @@ bool InvalidTracer::visitExtensionRoot(const SEQUENCE& value, int index)
    return true; 
 }
 
-bool InvalidTracer::visitKnownExtension(const SEQUENCE& value, int index) 
+bool InvalidTracer::encodeKnownExtension(const SEQUENCE& value, int index) 
 { 
-    return visitExtensionRoot(value, index); 
+    return encodeExtensionRoot(value, index); 
 }
 
 bool trace_invalid(std::ostream& os, const char* str, const AbstractData& data)
 {
 	InvalidTracer tracer;
-	if (!data.accept(tracer))
+	if (!data.encode(tracer))
 	{
 		os << str << tracer << std::endl;
 		return false;

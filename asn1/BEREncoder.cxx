@@ -43,30 +43,30 @@ extern unsigned CountBits(unsigned range);
 class PrimitiveChecker : public ConstVisitor
 {
 private:
-	bool do_visit(const AbstractData& value) { return true; }
-	bool do_visit(const CHOICE& value) { 
+	bool do_encode(const AbstractData& value) { return true; }
+	bool do_encode(const CHOICE& value) { 
 		assert(value.currentSelection() >= 0) ;
-		return value.getSelection()->accept(*this);
+		return value.getSelection()->encode(*this);
 	}
-	bool do_visit(const OpenData& value) { 
+	bool do_encode(const OpenData& value) { 
 		assert(value.has_data());
-		return value.get_data().accept(*this); 
+		return value.get_data().encode(*this); 
 	}
-	bool do_visit(const SEQUENCE_OF_Base& value) { return false; }
-	bool preVisitExtensionRoots(const SEQUENCE& value) { return false; }
+	bool do_encode(const SEQUENCE_OF_Base& value) { return false; }
+	bool preEncodeExtensionRoots(const SEQUENCE& value) { return false; }
 };
 
 unsigned getIntegerDataLength(int value)
 {
-  // create a mask which is the top nine bits of a DWORD, or 0xFF800000
-  // on a big endian machine
-  int shift = (sizeof(value)-1)*8-1;
+	// create a mask which is the top nine bits of a DWORD, or 0xFF800000
+	// on a big endian machine
+	int shift = (sizeof(value)-1)*8-1;
 
-  // remove all sequences of nine 0's or 1's at the start of the value
-  while (shift > 0 && ((value >> shift)&0x1ff) == (value < 0 ? 0x1ff : 0))
-    shift -= 8;
+	// remove all sequences of nine 0's or 1's at the start of the value
+	while (shift > 0 && ((value >> shift)&0x1ff) == (value < 0 ? 0x1ff : 0))
+		shift -= 8;
 
-  return (shift+9)/8;
+	return (shift+9)/8;
 }
 
 unsigned getDataLength(const AbstractData& data);
@@ -76,13 +76,13 @@ class DataLengthCounter : public ConstVisitor
 {
 public:
 	DataLengthCounter() : length(0) {}
-    unsigned getDataLen() const { 
+	unsigned getDataLen() const { 
 		return length; 
 	}
 	unsigned getObjectLen(unsigned tag) const {
 		int len = 1;
 		
-        unsigned tagVal = tag & 0xFFFF;
+		unsigned tagVal = tag & 0xFFFF;
 		if (tagVal >= 31)
 			len += (CountBits(tagVal)+6)/7;
 		
@@ -94,61 +94,60 @@ public:
 			len += (CountBits(dataLen)+7)/8 + 1;
 		
 		return len + dataLen;
-		
 	}
 private:
-	bool do_visit(const Null& value) {
+	bool do_encode(const Null& value) {
 		return true; 
 	}
-	bool do_visit(const BOOLEAN& value) { 
+	bool do_encode(const BOOLEAN& value) { 
 		++length;
 		return true; 
 	}
-	bool do_visit(const INTEGER& value) { 
+	bool do_encode(const INTEGER& value) { 
 		length += getIntegerDataLength(value.getValue());
 		return true; 
 	}
-	bool do_visit(const ENUMERATED& value) { 
+	bool do_encode(const ENUMERATED& value) { 
 		length += getIntegerDataLength(value.asInt());
 		return true; 
 	}
-	bool do_visit(const OBJECT_IDENTIFIER& value) { 
+	bool do_encode(const OBJECT_IDENTIFIER& value) { 
 		std::vector<char> dummy;
 		value.encodeCommon(dummy);
 		length += dummy.size();
 		return true; 
 	}
-	bool do_visit(const BIT_STRING& value) { 
-	    length += (value.size()+7)/8 + 1;
+	bool do_encode(const BIT_STRING& value) { 
+		length += (value.size()+7)/8 + 1;
 		return true; 
 	}
-	bool do_visit(const OCTET_STRING& value) {
+	bool do_encode(const OCTET_STRING& value) {
 		length += value.size();
 		return true;
 	}
-	bool do_visit(const AbstractString& value) { 
+	bool do_encode(const AbstractString& value) { 
 		length += value.size();
 		return true; 
 	}
-	bool do_visit(const BMPString& value) { 
+	bool do_encode(const BMPString& value) { 
 		length += value.size()*2;
 		return true; 
 	}
-	bool do_visit(const CHOICE& value) { 
-	  if (value.currentSelection() >=0 )  {
-		length +=  getObjectLength(*value.getSelection(),value.getSelectionTag());
-	  }
-	  return true; 
+	bool do_encode(const CHOICE& value) { 
+		if (value.currentSelection() >=0 ) {
+			length +=  getObjectLength(*value.getSelection(),value.getSelectionTag());
+		}
+		return true; 
 	}
-	bool do_visit(const OpenData& value) { 
+	bool do_encode(const OpenData& value) { 
 		length += (value.has_data() ? getDataLength(value.get_data()) : 0);
 		return true; 
 	}
-	bool do_visit(const GeneralizedTime& value) { 
+	bool do_encode(const GeneralizedTime& value) { 
 		length += value.get().size();
 		return true; 
 	}
-	bool do_visit(const SEQUENCE_OF_Base& value) {
+	bool do_encode(const SEQUENCE_OF_Base& value) {
 
 		SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
 		for (; first != last; ++first)
@@ -156,17 +155,17 @@ private:
 		return true; 
 	}
 
-	bool preVisitExtensionRoots(const SEQUENCE& value) { 
+	bool preEncodeExtensionRoots(const SEQUENCE& value) { 
 		return true; 
 	}
-	bool visitExtensionRoot(const SEQUENCE& value, int index) {
+	bool encodeExtensionRoot(const SEQUENCE& value, int index) {
 		length += ASN1::getObjectLength(*value.getField(index), value.getFieldTag(index));
 		return true; 
 	}
-	bool VisitExtensions(const SEQUENCE& value) { 
+	bool preEncodeExtensions(const SEQUENCE& value) { //???
 		return true;
 	}
-	bool visitKnownExtension(const SEQUENCE& value, int index) { 
+	bool encodeKnownExtension(const SEQUENCE& value, int index) { 
 		length += ASN1::getObjectLength(*value.getField(index), value.getFieldTag(index));
 		return true; 
 	}
@@ -177,210 +176,207 @@ private:
 unsigned getDataLength(const AbstractData& data)
 {
 	DataLengthCounter counter;
-	data.accept(counter);
+	data.encode(counter);
 	return counter.getDataLen();
 }
 
 unsigned getObjectLength(const AbstractData& data, unsigned tag)
 {
 	DataLengthCounter counter;
-	data.accept(counter);
+	data.encode(counter);
 	if (tag == 0 || (tag ==0xffffffff && data.getTag() ==0))
-			return counter.getDataLen();
+		return counter.getDataLen();
 	return counter.getObjectLen(tag);
 }
 
 inline void BEREncoder::encodeByte(unsigned value)
 {
-  encodedBuffer.push_back(value);
+	encodedBuffer.push_back(value);
 }
 
 inline void BEREncoder::encodeBlock(const char * bufptr, unsigned nBytes)
 {
-  encodedBuffer.insert(encodedBuffer.end(), bufptr, bufptr + nBytes);
+	encodedBuffer.insert(encodedBuffer.end(), bufptr, bufptr + nBytes);
 }
 
-bool BEREncoder::do_visit(const Null& value)
+bool BEREncoder::do_encode(const Null& value)
 {
-  encodeHeader(value);
-  return true;
+	encodeHeader(value);
+	return true;
 }
 
-bool BEREncoder::do_visit(const BOOLEAN& value)
+bool BEREncoder::do_encode(const BOOLEAN& value)
 {
-  encodeHeader(value);
-  encodeByte(!value ? '\x00' : '\xff');
-  return true;
+	encodeHeader(value);
+	encodeByte(!value ? '\x00' : '\xff');
+	return true;
 }
 
-
-
-bool BEREncoder::do_visit(const INTEGER& value)
+bool BEREncoder::do_encode(const INTEGER& value)
 {
-  encodeHeader(value);
-  // output the integer bits
-  for (int count = getIntegerDataLength(value.getValue())-1; count >= 0; count--)
-    encodeByte(value.getValue() >> (count*8));
-  return true;
+	encodeHeader(value);
+	// output the integer bits
+	for (int count = getIntegerDataLength(value.getValue())-1; count >= 0; count--)
+		encodeByte(value.getValue() >> (count*8));
+	return true;
 }
 
-bool BEREncoder::do_visit(const ENUMERATED& value)
+bool BEREncoder::do_encode(const ENUMERATED& value)
 {
-  encodeHeader(value);
-  // output the integer bits
-  for (int count = getIntegerDataLength(value.asInt())-1; count >= 0; count--)
-    encodeByte(value.asInt() >> (count*8));
-  return true;
+	encodeHeader(value);
+	// output the integer bits
+	for (int count = getIntegerDataLength(value.asInt())-1; count >= 0; count--)
+		encodeByte(value.asInt() >> (count*8));
+	return true;
 }
 
 
-bool BEREncoder::do_visit(const OBJECT_IDENTIFIER& value)
+bool BEREncoder::do_encode(const OBJECT_IDENTIFIER& value)
 {
-  encodeHeader(value);
-  std::vector<char> data;
-  value.encodeCommon(data);
-  encodeBlock(&data.front(), data.size());  
-  return true;
+	encodeHeader(value);
+	std::vector<char> data;
+	value.encodeCommon(data);
+	encodeBlock(&data.front(), data.size());  
+	return true;
 }
 
-bool BEREncoder::do_visit(const BIT_STRING& value)
+bool BEREncoder::do_encode(const BIT_STRING& value)
 {
-  encodeHeader(value);
-  if (value.size() == 0)
-    encodeByte(0);
-  else {
-    encodeByte(8-value.size()%8);
-    encodeBlock(&*value.getData().begin(), (value.size()+7)/8);
-  }
-  return true;
+	encodeHeader(value);
+	if (value.size() == 0)
+		encodeByte(0);
+	else {
+		encodeByte(8-value.size()%8);
+		encodeBlock(&*value.getData().begin(), (value.size()+7)/8);
+	}
+	return true;
 }
 
-bool BEREncoder::do_visit(const OCTET_STRING& value)
+bool BEREncoder::do_encode(const OCTET_STRING& value)
 {
-  encodeHeader(value);
-  encodeBlock(&value[0], value.size());
-  return true;
+	encodeHeader(value);
+	encodeBlock(&value[0], value.size());
+	return true;
 }
 
-
-bool BEREncoder::do_visit(const AbstractString& value)
+bool BEREncoder::do_encode(const AbstractString& value)
 {
-  encodeHeader(value);
-  encodeBlock((const char*)value.c_str(), value.size());
-  return true;
+	encodeHeader(value);
+	encodeBlock((const char*)value.c_str(), value.size());
+	return true;
 }
 
-bool BEREncoder::do_visit(const BMPString& value)
+bool BEREncoder::do_encode(const BMPString& value)
 {
-  encodeHeader(value);
-  for (unsigned i = 0; i < value.size(); ++i)
-  {
-    encodeByte(value[i] >> 8);
-    encodeByte(value[i]);
-  }
-  return true;
+	encodeHeader(value);
+	for (unsigned i = 0; i < value.size(); ++i)
+	{
+		encodeByte(value[i] >> 8);
+		encodeByte(value[i]);
+	}
+	return true;
 }
 
-bool BEREncoder::do_visit(const CHOICE& value)
+bool BEREncoder::do_encode(const CHOICE& value)
 {
 	if (value.currentSelection() != CHOICE::unselected_)
 	{
 		if (tag != 0 && (tag!=0xffffffff || value.getTag() !=0))
 			encodeHeader(value);
 		tag = value.getSelectionTag();
-		return value.getSelection()->accept(*this);
+		return value.getSelection()->encode(*this);
 	}
 	return false;
 }
 
-bool BEREncoder::do_visit(const SEQUENCE_OF_Base& value)
+bool BEREncoder::do_encode(const SEQUENCE_OF_Base& value)
 {
-  encodeHeader(value);
-  SEQUENCE_OF_Base::const_iterator first 
-      = value.begin(), last = value.end();
+	encodeHeader(value);
+	SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
 	for (; first != last; ++first)
 	{
 		tag = 0xFFFFFFFF;
-		if (!(*first)->accept(*this))
+		if (!(*first)->encode(*this))
 			return false;
 	}
-  return true;
+	return true;
 }
 
-bool BEREncoder::do_visit(const OpenData& value)
+bool BEREncoder::do_encode(const OpenData& value)
 {
-    if (tag == 0xFFFFFFFF) 
-        tag = value.getTag();
-    if (tag != 0)
-        encodeHeader(value);
-    tag = 0xFFFFFFFF;
+	if (tag == 0xFFFFFFFF) 
+		tag = value.getTag();
+	if (tag != 0)
+		encodeHeader(value);
+	tag = 0xFFFFFFFF;
     
-    if (value.has_data())
-        return value.get_data().accept(*this);
-    else if (value.has_buf())
-    {
-        encodeBlock(&*value.get_buf().begin(), value.get_buf().size());
-        return true;
-    }
-    return false;
+	if (value.has_data())
+		return value.get_data().encode(*this);
+	else if (value.has_buf())
+	{
+		encodeBlock(&*value.get_buf().begin(), value.get_buf().size());
+		return true;
+	}
+	return false;
 }
 
-bool BEREncoder::do_visit(const GeneralizedTime& value)
+bool BEREncoder::do_encode(const GeneralizedTime& value)
 {
-  encodeHeader(value);
-  std::string data(value.get());
-  encodeBlock((const char*)data.c_str(), data.size());
-  return true;
+	encodeHeader(value);
+	std::string data(value.get());
+	encodeBlock((const char*)data.c_str(), data.size());
+	return true;
 }
 
-bool BEREncoder::preVisitExtensionRoots(const SEQUENCE& value) 
+bool BEREncoder::preEncodeExtensionRoots(const SEQUENCE& value) 
 {
 	encodeHeader(value);
 	return true;
 }
 
-bool BEREncoder::visitExtensionRoot(const SEQUENCE& value, int index)
+bool BEREncoder::encodeExtensionRoot(const SEQUENCE& value, int index)
 {
-    tag = value.getFieldTag(index);
-	return value.getField(index)->accept(*this);
+	tag = value.getFieldTag(index);
+	return value.getField(index)->encode(*this);
 }
 
-bool BEREncoder::visitKnownExtension(const SEQUENCE& value, int index)
+bool BEREncoder::encodeKnownExtension(const SEQUENCE& value, int index)
 {
-    tag = value.getFieldTag(index);
-	return value.getField(index)->accept(*this);
+	tag = value.getFieldTag(index);
+	return value.getField(index)->encode(*this);
 }
 
 void BEREncoder::encodeHeader(const AbstractData & obj)
 {
-  unsigned obj_tag = (tag == 0xFFFFFFFF) ? obj.getTag() : tag;
+	unsigned obj_tag = (tag == 0xFFFFFFFF) ? obj.getTag() : tag;
 
-  char ident = (char)(obj_tag >> 16);
-  PrimitiveChecker checker;
-  if (!obj.accept(checker))
-    ident |= 0x20;
+	char ident = (char)(obj_tag >> 16);
 
-  unsigned tagNumber = obj_tag & 0xffff;
+	PrimitiveChecker checker;
+	if (!obj.encode(checker))
+		ident |= 0x20;
 
-  if (tagNumber < 31)
-    encodeByte(ident|tagNumber);
-  else {
-    encodeByte(ident|31);
-    unsigned count = (CountBits(tagNumber)+6)/7;
-    while (count-- > 1)
-      encodeByte((tagNumber >> (count*7))&0x7f);
-    encodeByte(tagNumber & 0x7f);
-  }
+	unsigned tagNumber = obj_tag & 0xffff;
 
-  unsigned len = getDataLength(obj);
-  if (len < 128)
-    encodeByte(len);
-  else {
-    unsigned count = (CountBits(len+1)+7)/8;
-    encodeByte(count|0x80);
-    while (count-- > 0)
-      encodeByte(len >> (count*8));
-  }
+	if (tagNumber < 31)
+		encodeByte(ident|tagNumber);
+	else {
+		encodeByte(ident|31);
+		unsigned count = (CountBits(tagNumber)+6)/7;
+		while (count-- > 1)
+			encodeByte((tagNumber >> (count*7))&0x7f);
+		encodeByte(tagNumber & 0x7f);
+	}
+
+	unsigned len = getDataLength(obj);
+	if (len < 128)
+		encodeByte(len);
+	else {
+		unsigned count = (CountBits(len+1)+7)/8;
+		encodeByte(count|0x80);
+		while (count-- > 0)
+			encodeByte(len >> (count*8));
+	}
 }
 
 

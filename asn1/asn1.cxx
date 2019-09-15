@@ -135,9 +135,9 @@ bool Null::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool Null::do_accept(ConstVisitor& visitor) const
+bool Null::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 AbstractData * Null::do_clone() const
@@ -189,9 +189,9 @@ bool BOOLEAN::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool BOOLEAN::do_accept(ConstVisitor& visitor) const
+bool BOOLEAN::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 AbstractData * BOOLEAN::do_clone() const
@@ -247,9 +247,9 @@ bool INTEGER::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool INTEGER::do_accept(ConstVisitor& visitor) const
+bool INTEGER::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 
@@ -289,9 +289,9 @@ bool IntegerWithNamedNumber::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool IntegerWithNamedNumber::do_accept(ConstVisitor& visitor) const
+bool IntegerWithNamedNumber::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 
@@ -321,9 +321,9 @@ bool ENUMERATED::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool ENUMERATED::do_accept(ConstVisitor& visitor) const
+bool ENUMERATED::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 AbstractData * ENUMERATED::do_clone() const
@@ -368,9 +368,9 @@ bool OBJECT_IDENTIFIER::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool OBJECT_IDENTIFIER::do_accept(ConstVisitor& visitor) const
+bool OBJECT_IDENTIFIER::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 bool OBJECT_IDENTIFIER::decodeCommon(const char* strm, unsigned dataLen)
@@ -535,9 +535,9 @@ bool BIT_STRING::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool BIT_STRING::do_accept(ConstVisitor& visitor) const
+bool BIT_STRING::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 AbstractData* BIT_STRING::do_clone() const
@@ -597,9 +597,9 @@ bool OCTET_STRING::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool OCTET_STRING::do_accept(ConstVisitor& visitor) const
+bool OCTET_STRING::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 
@@ -641,9 +641,9 @@ bool AbstractString::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool AbstractString::do_accept(ConstVisitor& visitor) const
+bool AbstractString::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 
@@ -826,9 +826,9 @@ bool BMPString::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool BMPString::do_accept(ConstVisitor& visitor) const
+bool BMPString::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 AbstractData * BMPString::do_clone() const
@@ -937,9 +937,9 @@ bool GeneralizedTime::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool GeneralizedTime::do_accept(ConstVisitor& visitor) const
+bool GeneralizedTime::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 void GeneralizedTime::swap(GeneralizedTime& other)
@@ -1037,9 +1037,9 @@ bool CHOICE::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool CHOICE::do_accept(ConstVisitor& visitor) const
+bool CHOICE::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 
@@ -1241,9 +1241,9 @@ bool SEQUENCE::do_accept(Visitor& visitor)
     return visitor.visit(*this);
 }
 
-bool SEQUENCE::do_accept(ConstVisitor& visitor) const
+bool SEQUENCE::do_encode(ConstVisitor& visitor) const
 {
-    return visitor.visit(*this);
+    return visitor.encode(*this);
 }
 
 
@@ -1330,9 +1330,9 @@ bool SEQUENCE_OF_Base::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool SEQUENCE_OF_Base::do_accept(ConstVisitor& visitor) const
+bool SEQUENCE_OF_Base::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 
@@ -1440,9 +1440,9 @@ bool OpenData::do_accept(Visitor& visitor)
 	return visitor.visit(*this);
 }
 
-bool OpenData::do_accept(ConstVisitor& visitor) const
+bool OpenData::do_encode(ConstVisitor& visitor) const
 {
-	return visitor.visit(*this);
+	return visitor.encode(*this);
 }
 
 
@@ -1518,41 +1518,41 @@ bool Visitor::visit(SEQUENCE& value)
   return visitUnknownExtensions(value);
 }
 
-bool ConstVisitor::visit(const SEQUENCE& value)
+bool ConstVisitor::encode(const SEQUENCE& value)
 {
-  if (!preVisitExtensionRoots(value))
-	  return false;
+	if (!preEncodeExtensionRoots(value))
+		return false;
 
-  unsigned i;
-  int lastOptionalId = -1;	
-  for (i = 0; i < value.info()->numFields ; ++i)
-  {
-	  int optionalId = value.info()->ids[i];
-	  if (optionalId == -1 || value.hasOptionalField(optionalId))
-	  {
-		  assert(value.fields[i]);
-		  if (!visitExtensionRoot(value, i))
-			  return false;
-	  }
-	  lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
-  }
+	unsigned i;
+	int lastOptionalId = -1;	
+	for (i = 0; i < value.info()->numFields ; ++i)
+	{
+		int optionalId = value.info()->ids[i];
+		if (optionalId == -1 || value.hasOptionalField(optionalId))
+		{
+			assert(value.fields[i]);
+			if (!encodeExtensionRoot(value, i))
+				return false;
+		}
+		lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
+	}
 
-  if (value.extensionMap.size())
-  {
-	  assert(value.extendable());
+	if (value.extensionMap.size())
+	{
+		assert(value.extendable());
 	  
-	  if (!preVisitExtensions(value))
-		  return false;
+		if (!preEncodeExtensions(value))
+			return false;
 	  
-	  for (; i < value.fields.size(); ++i)
-		  if (value.hasOptionalField(++lastOptionalId)) 
-		  {
-			  assert(value.fields[i]);
-			  if (!visitKnownExtension(value, i))
-				  return false;
-		  }
-  }
-  return afterVisitSequence(value);
+		for (; i < value.fields.size(); ++i)
+			if (value.hasOptionalField(++lastOptionalId)) 
+			{
+				assert(value.fields[i]);
+				if (!encodeKnownExtension(value, i))
+					return false;
+			}
+	}
+	return afterEncodeSequence(value);
 }
 
 } // namespace ASN1
