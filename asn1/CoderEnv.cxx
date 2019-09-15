@@ -34,20 +34,20 @@ namespace ASN1 {
 bool CoderEnv::decode(const char* first, const char* last, AbstractData& val, bool defered)
 {
 	if (get_encodingRule() == per_Basic_Aligned)
-    {
-        PERDecoder decoder(first, last, defered ? NULL : this);
+	{
+		PERDecoder decoder(first, last, defered ? NULL : this);
 		return val.accept(decoder);
-    }
+	}
 	if (get_encodingRule() == ber)
-    {
-        BERDecoder decoder(first, last, defered ? NULL : this);
+	{
+		BERDecoder decoder(first, last, defered ? NULL : this);
 		return val.accept(decoder);
-    }
+	}
 #ifdef ASN1_HAS_IOSTREAM
 	if (get_encodingRule() == avn)
 	{
 		std::istringstream strm(std::string(first, last));
-    	AVNDecoder decoder(strm);
+		AVNDecoder decoder(strm);
 		return val.accept(decoder);
 	}
 #endif

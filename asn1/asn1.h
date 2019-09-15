@@ -185,7 +185,7 @@ class AbstractData
 	 * An ASN.1 tag has two parts, tag class and tag number. 
 	 * The return value of getTag() is (tagClass << 16 | tagNumber).
 	 */
-    unsigned getTag() const { return info()->tag; }
+	unsigned getTag() const { return info()->tag; }
 
 	/**
 	 * Accept a \c Visitor which implement a fragment of algorithm or request for
@@ -194,7 +194,7 @@ class AbstractData
 	 * @param v The \c Visitor.
 	 * @return true if the operation has been successfully executed.
 	 */
-    bool accept(Visitor& v) { return do_accept(v) ;}
+	bool accept(Visitor& v) { return do_accept(v) ;}
 	/**
 	 * Accept a \c Visitor which implement a fragment of algorithm or request for
 	 * each corresponding class of ASN.1 object structure.
@@ -202,7 +202,7 @@ class AbstractData
 	 * @param v The \c ConstVisitor.
 	 * @return true if the operation has been successfully executed.
 	 */
-    bool accept(ConstVisitor& v) const { return do_accept(v); }
+	bool accept(ConstVisitor& v) const { return do_accept(v); }
 
 	/**
 	 * Create a AbstractData object based on the \c info structure.
@@ -225,9 +225,9 @@ class AbstractData
 	virtual bool do_accept(ConstVisitor&) const =0;
 
   protected:
-	  AbstractData(const void* info);
+	AbstractData(const void* info);
 	  
-	  typedef AbstractData* (*CreateFun)(const void*);
+	typedef AbstractData* (*CreateFun)(const void*);
 
 	  struct InfoType
 	  {
@@ -253,8 +253,8 @@ class AbstractData
       AbstractData & obj        // Object to retrive from the stream.
     );
 
-    std::ios_base::iostate get_from(std::istream &);
-    std::ios_base::iostate print_on(std::ostream &) const ;
+	std::ios_base::iostate get_from(std::istream &);
+	std::ios_base::iostate print_on(std::ostream &) const ;
 
 	/**
 	 * 	Set the AbstractData object from a string containing ASN.1 value notation. 
@@ -278,15 +278,15 @@ class AbstractData
 */
 class ConstrainedObject : public AbstractData
 {
-  public:
-    ConstrainedObject(const void* info) : AbstractData(info){}
-    bool extendable() const { return info()->type == ExtendableConstraint; } 
-    bool constrained() const { return info()->type != Unconstrained; }
+public:
+	ConstrainedObject(const void* info) : AbstractData(info){}
+	bool extendable() const { return info()->type == ExtendableConstraint; } 
+	bool constrained() const { return info()->type != Unconstrained; }
 	unsigned getConstraintType() const { return info()->type; }
-    int getLowerLimit() const { return info()->lowerLimit; }
-    unsigned getUpperLimit() const { return info()->upperLimit; }
+	int getLowerLimit() const { return info()->lowerLimit; }
+	unsigned getUpperLimit() const { return info()->upperLimit; }
 
-  protected:
+protected:
 	  struct InfoType 
 	  {
 		  CreateFun create;    
@@ -295,22 +295,22 @@ class ConstrainedObject : public AbstractData
 		  int lowerLimit;
 		  unsigned upperLimit;
 	  };
-	  const InfoType* info() const  { return static_cast<const InfoType*>(info_);}
+	const InfoType* info() const  { return static_cast<const InfoType*>(info_);}
 };
 
 /** Class for ASN Null type.
 */
 class Null : public AbstractData , public detail::Allocator<Null>
 {
-    Null(const void* info) : AbstractData(info){}
+	Null(const void* info) : AbstractData(info){}
   public:
-    Null() : AbstractData(&theInfo){}
+	Null() : AbstractData(&theInfo){}
 
 	bool isValid() const { return true;}
  	bool isStrictlyValid() const { return true;}
 
-    Null * clone() const { return static_cast<Null*>(do_clone()); } 
-    static AbstractData* create(const void* info);
+	Null * clone() const { return static_cast<Null*>(do_clone()); } 
+	static AbstractData* create(const void* info);
 	void swap(Null& that) { /* do nothing */}
 
 	bool operator == (const Null& ) const { return true;  } 
@@ -336,12 +336,12 @@ class Null : public AbstractData , public detail::Allocator<Null>
 class BOOLEAN : public AbstractData, public detail::Allocator<BOOLEAN>
 {
   protected:
-    BOOLEAN(const void* info);
+	BOOLEAN(const void* info);
   public:
 	typedef bool value_type;
 	typedef bool& reference;
 	typedef bool const_reference;
-    BOOLEAN() : AbstractData(&theInfo), value(false) {}
+	BOOLEAN() : AbstractData(&theInfo), value(false) {}
 	BOOLEAN(bool b , const void* info= &theInfo);
 
 	BOOLEAN(const BOOLEAN& that); 
@@ -352,8 +352,8 @@ class BOOLEAN : public AbstractData, public detail::Allocator<BOOLEAN>
 	bool isValid() const { return true;}
  	bool isStrictlyValid() const { return true;}
 
-    BOOLEAN * clone() const { return static_cast<BOOLEAN*>(do_clone()); } 
-    static AbstractData* create(const void*);
+	BOOLEAN * clone() const { return static_cast<BOOLEAN*>(do_clone()); } 
+	static AbstractData* create(const void*);
 	void swap(BOOLEAN& that) { std::swap(value, that.value); }
 
 	bool operator == (const BOOLEAN& rhs) const { return value == rhs.value ; } 
@@ -372,7 +372,7 @@ class BOOLEAN : public AbstractData, public detail::Allocator<BOOLEAN>
 	friend bool operator >= (bool lhs, const BOOLEAN& rhs) { return lhs >= rhs.value ; } 
 #endif
 
-    bool operator == (bool rhs) const { return value == rhs ; } 
+	bool operator == (bool rhs) const { return value == rhs ; } 
 	bool operator != (bool rhs) const { return value != rhs ; } 
 	bool operator <  (bool rhs) const { return value <  rhs ; } 
 	bool operator >  (bool rhs) const { return value >  rhs ; } 
@@ -387,7 +387,7 @@ class BOOLEAN : public AbstractData, public detail::Allocator<BOOLEAN>
 	virtual AbstractData* do_clone() const ;
 	virtual bool do_accept(Visitor&);
 	virtual bool do_accept(ConstVisitor&) const;
-    bool value;
+	bool value;
 };
 
 /** Class for ASN Integer type.
@@ -395,15 +395,15 @@ class BOOLEAN : public AbstractData, public detail::Allocator<BOOLEAN>
 class INTEGER : public ConstrainedObject, public detail::Allocator<INTEGER>
 {
 protected:
-    INTEGER(const void* info);
+	INTEGER(const void* info);
 public:
 	typedef int int_type;
-    typedef int value_type;
+	typedef int value_type;
 	typedef int_type& reference;
 	typedef int_type const_reference;
 
-    INTEGER() : ConstrainedObject(&theInfo), value(0){}
-    INTEGER(int_type val, const void* info = &theInfo); 
+	INTEGER() : ConstrainedObject(&theInfo), value(0){}
+	INTEGER(int_type val, const void* info = &theInfo); 
 	INTEGER(const INTEGER& other); 
 	
 	INTEGER& operator = (const INTEGER& val) { setValue(val.value) ; return *this;}
@@ -414,7 +414,7 @@ public:
 	bool isStrictValid() const;
 
 	INTEGER* clone() const { return static_cast<INTEGER*>(do_clone()); } 
-    static AbstractData* create(const void*);
+	static AbstractData* create(const void*);
 	void swap(INTEGER& that) { std::swap(value, that.value); }
 	
 	bool operator == (const INTEGER& rhs) const { return getValue() == rhs.getValue(); } 
@@ -522,9 +522,9 @@ class IntegerWithNamedNumber : public INTEGER
 		  AVN_ONLY(const NameEntry* nameEntries;)
 		  AVN_ONLY(unsigned entryCount;)
 	  };
-  	  const InfoType* info() const { return static_cast<const InfoType*>(info_); }
+	const InfoType* info() const { return static_cast<const InfoType*>(info_); }
   private:
-  	virtual bool do_accept(Visitor&);
+	virtual bool do_accept(Visitor&);
 	virtual bool do_accept(ConstVisitor&) const;
 #ifdef ASN1_HAS_IOSTREAM
   public:
@@ -600,20 +600,20 @@ class Constrained_INTEGER : public INTEGER
 	friend bool operator >= (int_type lhs, const ThisType& rhs) { return lhs >= rhs.getValue(); } 
 #endif
 
-    bool operator == (int_type rhs) const { return getValue() == rhs; } 
+	bool operator == (int_type rhs) const { return getValue() == rhs; } 
 	bool operator != (int_type rhs) const { return getValue() != rhs; } 
 	bool operator <  (int_type rhs) const { return getValue() <  rhs; } 
 	bool operator >  (int_type rhs) const { return getValue() >  rhs; } 
 	bool operator <= (int_type rhs) const { return getValue() <= rhs; } 
 	bool operator >= (int_type rhs) const { return getValue() >= rhs; } 
 
-    ThisType& operator += (int_type val) { value += val; assert(isValid()); return *this; }
+	ThisType& operator += (int_type val) { value += val; assert(isValid()); return *this; }
 	ThisType& operator -= (int_type val) { value -= val; assert(isValid()); return *this; }
 	ThisType& operator *= (int_type val) { value *= val; assert(isValid()); return *this; }
 	ThisType& operator /= (int_type val) { value /= val; assert(isValid()); return *this; }
 	ThisType& operator %= (int_type val) { value %= val; assert(isValid()); return *this; }
 	
-    ThisType& operator += (const ThisType& val) { value += val.getValue(); assert(isValid()); return *this; }
+	ThisType& operator += (const ThisType& val) { value += val.getValue(); assert(isValid()); return *this; }
 	ThisType& operator -= (const ThisType& val) { value -= val.getValue(); assert(isValid()); return *this; }
 	ThisType& operator *= (const ThisType& val) { value *= val.getValue(); assert(isValid()); return *this; }
 	ThisType& operator /= (const ThisType& val) { value /= val.getValue(); assert(isValid()); return *this; }
@@ -624,25 +624,25 @@ class Constrained_INTEGER : public INTEGER
 	ThisType& operator -- () { -- value  ; assert(isValid()); return *this;}
 	ThisType  operator -- (int){ ThisType result(getValue()); --value; assert(isValid()); return result;}
 	
-    ThisType* clone() const { return static_cast<ThisType*>(INTEGER::clone()); } 
+	ThisType* clone() const { return static_cast<ThisType*>(INTEGER::clone()); } 
 	void swap(ThisType& that) { std::swap(value, that.value); }
 
-    int_type operator + (const ThisType& rhs) const { int_type t(getValue()); return t+=rhs.getValue();}
-    int_type operator - (const ThisType& rhs) const { int_type t(getValue()); return t-=rhs.getValue();}
-    int_type operator * (const ThisType& rhs) const { int_type t(getValue()); return t*=rhs.getValue();}
-    int_type operator / (const ThisType& rhs) const { int_type t(getValue()); return t/=rhs.getValue();}
+	int_type operator + (const ThisType& rhs) const { int_type t(getValue()); return t+=rhs.getValue();}
+	int_type operator - (const ThisType& rhs) const { int_type t(getValue()); return t-=rhs.getValue();}
+	int_type operator * (const ThisType& rhs) const { int_type t(getValue()); return t*=rhs.getValue();}
+	int_type operator / (const ThisType& rhs) const { int_type t(getValue()); return t/=rhs.getValue();}
 
-    friend int_type operator + (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t+=rhs.getValue();}
-    friend int_type operator - (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t-=rhs.getValue();}
-    friend int_type operator * (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t*=rhs.getValue();}
-    friend int_type operator / (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t/=rhs.getValue();}
+	friend int_type operator + (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t+=rhs.getValue();}
+	friend int_type operator - (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t-=rhs.getValue();}
+	friend int_type operator * (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t*=rhs.getValue();}
+	friend int_type operator / (int_type lhs, const ThisType& rhs) { int_type t(lhs); return t/=rhs.getValue();}
 
-    int_type operator + (int_type rhs) const { int_type t(getValue()); return t+=rhs;}
-    int_type operator - (int_type rhs) const { int_type t(getValue()); return t-=rhs;}
-    int_type operator * (int_type rhs) const { int_type t(getValue()); return t*=rhs;}
-    int_type operator / (int_type rhs) const { int_type t(getValue()); return t/=rhs;}
+	int_type operator + (int_type rhs) const { int_type t(getValue()); return t+=rhs;}
+	int_type operator - (int_type rhs) const { int_type t(getValue()); return t-=rhs;}
+	int_type operator * (int_type rhs) const { int_type t(getValue()); return t*=rhs;}
+	int_type operator / (int_type rhs) const { int_type t(getValue()); return t/=rhs;}
 
-    static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -668,19 +668,19 @@ const typename Constrained_INTEGER<contraint, lower, upper>::InfoType Constraine
 class ENUMERATED : public AbstractData, public detail::Allocator<ENUMERATED>
 {
   protected:
-    ENUMERATED(const void* info);
+	ENUMERATED(const void* info);
   public:
-    ENUMERATED(const ENUMERATED& that);  
-    ENUMERATED& operator = (const ENUMERATED& that); 
+	ENUMERATED(const ENUMERATED& that);  
+	ENUMERATED& operator = (const ENUMERATED& that); 
 	
 	// ENUMERATED specific methods
-    int asInt() const { return value; }
-    void setFromInt(int val) { value = val; }
+	int asInt() const { return value; }
+	void setFromInt(int val) { value = val; }
 	
    	bool isValid() const { return extendable() || isStrictlyValid() ;}
 	bool isStrictlyValid() const { return value <= getMaximum();}
 	
-    int getMaximum() const { return info()->maxEnumValue; }
+	int getMaximum() const { return info()->maxEnumValue; }
 	
 	bool operator == (int rhs) const { return value == rhs; } 
 	bool operator != (int rhs) const { return value != rhs; } 
@@ -689,8 +689,8 @@ class ENUMERATED : public AbstractData, public detail::Allocator<ENUMERATED>
 	bool operator <= (int rhs) const { return value <= rhs; } 
 	bool operator >= (int rhs) const { return value >= rhs; } 
 	
-    static AbstractData* create(const void* info);
-    bool extendable() const { return info()->extendableFlag; }
+	static AbstractData* create(const void* info);
+	bool extendable() const { return info()->extendableFlag; }
   protected:
 	struct InfoType
 	{
@@ -725,16 +725,16 @@ class ENUMERATED : public AbstractData, public detail::Allocator<ENUMERATED>
 class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_IDENTIFIER>
 {
   protected:
-    OBJECT_IDENTIFIER(const void* info) : AbstractData(info) {}
+	OBJECT_IDENTIFIER(const void* info) : AbstractData(info) {}
   public:
-    OBJECT_IDENTIFIER() : AbstractData(&theInfo) {}
+	OBJECT_IDENTIFIER() : AbstractData(&theInfo) {}
     template <class InputIterator>
     OBJECT_IDENTIFIER(InputIterator first, InputIterator last, const void* info = &theInfo)
       : AbstractData(info),value(first, last) 
     { }
 
-    OBJECT_IDENTIFIER(const OBJECT_IDENTIFIER & other); 
-    OBJECT_IDENTIFIER & operator=(const OBJECT_IDENTIFIER & other) 
+	OBJECT_IDENTIFIER(const OBJECT_IDENTIFIER & other); 
+	OBJECT_IDENTIFIER & operator=(const OBJECT_IDENTIFIER & other) 
 	{ 
 		// extensibility and tags are not to be assigned, 
 		// therefore the parent assignment operator	is not called
@@ -743,15 +743,15 @@ class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_I
 	} 
 
 
-    OBJECT_IDENTIFIER * clone() const { return static_cast<OBJECT_IDENTIFIER*>(do_clone());}
-    static AbstractData* create(const void* info);
+	OBJECT_IDENTIFIER * clone() const { return static_cast<OBJECT_IDENTIFIER*>(do_clone());}
+	static AbstractData* create(const void* info);
 	void swap(OBJECT_IDENTIFIER& that) { value.swap(that.value); }
 
 	bool isValid() const { return value.size() != 0;}
  	bool isStrictlyValid() const { return value.size() != 0;}
 
-    unsigned levels() const { return value.size(); }
-    const unsigned operator[](unsigned idx) const { return value[idx]; }
+	unsigned levels() const { return value.size(); }
+	const unsigned operator[](unsigned idx) const { return value[idx]; }
 	void append(unsigned arcValue) { value.push_back(arcValue); }
 	void trim(unsigned levels = 1) { value.erase(value.end()-levels, value.end()); }
 
@@ -759,8 +759,8 @@ class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_I
 	void assign(InputIterator first, InputIterator last)
 	{	value.assign(first, last); }
 
-    bool decodeCommon(const char* data, unsigned dataLen);
-    void encodeCommon(std::vector<char> & eObjId) const;
+	bool decodeCommon(const char* data, unsigned dataLen);
+	void encodeCommon(std::vector<char> & eObjId) const;
 
 	// comparison operators
 	bool operator == (const OBJECT_IDENTIFIER& rhs) const { return value == rhs.value; } 
@@ -776,10 +776,10 @@ class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_I
 
   private:
 	virtual int do_compare(const AbstractData& other) const;
-    virtual AbstractData * do_clone() const;
+	virtual AbstractData * do_clone() const;
 	virtual bool do_accept(Visitor&);
 	virtual bool do_accept(ConstVisitor&) const;
-    std::vector<unsigned> value;
+	std::vector<unsigned> value;
 };
 
 
@@ -788,11 +788,11 @@ class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_I
 class BIT_STRING : public ConstrainedObject, public detail::Allocator<BIT_STRING>
 {
   protected:
-    BIT_STRING(const void* info);
+	BIT_STRING(const void* info);
   public:
-    BIT_STRING() : ConstrainedObject(&theInfo) {}
-    BIT_STRING(const BIT_STRING & other);  
-    BIT_STRING & operator=(const BIT_STRING & other) {
+	BIT_STRING() : ConstrainedObject(&theInfo) {}
+	BIT_STRING(const BIT_STRING & other);  
+	BIT_STRING & operator=(const BIT_STRING & other) {
 		bitData = other.bitData;
 		totalBits = other.totalBits;
 		return *this;
@@ -801,29 +801,29 @@ class BIT_STRING : public ConstrainedObject, public detail::Allocator<BIT_STRING
 	bool isValid() const { return size() >= (unsigned)getLowerLimit() && (getConstraintType() != FixedConstraint || size() <= getUpperLimit()); }
 	bool isStrictlyValid() const { return size() >= (unsigned)getLowerLimit() && size() <= getUpperLimit(); } 
 
-    BIT_STRING * clone() const { return static_cast<BIT_STRING*>(do_clone());}
-    static AbstractData* create(const void* info);
+	BIT_STRING * clone() const { return static_cast<BIT_STRING*>(do_clone());}
+	static AbstractData* create(const void* info);
 	void swap(BIT_STRING& other) {
 		bitData.swap(other.bitData);
 		std::swap(totalBits,other.totalBits);
 	}
 
 
-    unsigned size() const { return totalBits; }
-    void resize(unsigned nBits) {
+	unsigned size() const { return totalBits; }
+	void resize(unsigned nBits) {
 		bitData.resize((nBits+7)/8);
 		totalBits = nBits;
 	}
 
 
-    bool operator[](unsigned bit) const {
+	bool operator[](unsigned bit) const {
 		if ((unsigned)bit < totalBits)
 			return (bitData[bit>>3] & (1 << (7 - (bit&7)))) != 0;
 		return false;
 	}
 
 
-    void setData(unsigned nBits, const char * buf){
+	void setData(unsigned nBits, const char * buf){
         int size = (nBits-1)/8 + 1;
 		bitData.assign(buf,buf+size);
 		totalBits = nBits;
@@ -833,15 +833,15 @@ class BIT_STRING : public ConstrainedObject, public detail::Allocator<BIT_STRING
 		return bitData;
 	}
 
-    void set(unsigned bit){
+	void set(unsigned bit){
 		if (bit < totalBits)
 			bitData[(unsigned)(bit>>3)] |= 1 << (7 - (bit&7));
 	}
-    void clear(unsigned bit){
+	void clear(unsigned bit){
 		if (bit < totalBits)
 			bitData[(unsigned)(bit>>3)] &= ~(1 << (7 - (bit&7)));
 	}
-    void invert(unsigned bit){
+	void invert(unsigned bit){
 		if (bit < totalBits)
 			bitData[(unsigned)(bit>>3)] ^= 1 << (7 - (bit&7));
 	}
@@ -857,16 +857,16 @@ class BIT_STRING : public ConstrainedObject, public detail::Allocator<BIT_STRING
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 	static const InfoType theInfo;
   private:
-    friend class BERDecoder;
-    friend class PERDecoder;
-    friend class AVNDecoder;
+	friend class BERDecoder;
+	friend class PERDecoder;
+	friend class AVNDecoder;
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
 	virtual bool do_accept(Visitor&);
 	virtual bool do_accept(ConstVisitor&) const;
 
-    unsigned totalBits;
-    std::vector<char> bitData;
+	unsigned totalBits;
+	std::vector<char> bitData;
 };
 
 
@@ -905,8 +905,8 @@ public:
 		return *this;
 	}
 
-    Constrained_BIT_STRING * clone() const { return static_cast<Constrained_BIT_STRING*>(BIT_STRING::clone());}
-    static const InfoType theInfo;
+	Constrained_BIT_STRING * clone() const { return static_cast<Constrained_BIT_STRING*>(BIT_STRING::clone());}
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -928,7 +928,7 @@ class OCTET_STRING : public ConstrainedObject, public std::vector<char>, public 
 {
 	typedef std::vector<char> ContainerType;
   protected:
-    OCTET_STRING(const void* info);
+	OCTET_STRING(const void* info);
   public:
 	typedef ContainerType::value_type value_type;
 	typedef ContainerType::size_type size_type;
@@ -936,7 +936,7 @@ class OCTET_STRING : public ConstrainedObject, public std::vector<char>, public 
 	typedef ContainerType::reference reference;
 	typedef ContainerType::const_reference const_reference;
 
-    OCTET_STRING() : ConstrainedObject(&theInfo) {}
+	OCTET_STRING() : ConstrainedObject(&theInfo) {}
 	OCTET_STRING(size_type n, char v, const void* info = &theInfo) ;
 
     template <class Itr>
@@ -946,9 +946,9 @@ class OCTET_STRING : public ConstrainedObject, public std::vector<char>, public 
 
 	OCTET_STRING(const std::vector<char>& other, const void* info = &theInfo);
 
-    OCTET_STRING(const OCTET_STRING & other) ;
+	OCTET_STRING(const OCTET_STRING & other) ;
 
-    OCTET_STRING & operator=(const OCTET_STRING & other)	{
+	OCTET_STRING & operator=(const OCTET_STRING & other)	{
 		assign(other.begin(), other.end());
 		return *this;
 	}
@@ -958,21 +958,21 @@ class OCTET_STRING : public ConstrainedObject, public std::vector<char>, public 
 		return *this;
 	}
 
-    OCTET_STRING & operator=(const std::string & str) {
+	OCTET_STRING & operator=(const std::string & str) {
 		assign(str.begin(), str.end());
 		return *this;
 	}
 
-    OCTET_STRING & operator=(const char* str) {
-        assign(str, str+strlen(str));
+	OCTET_STRING & operator=(const char* str) {
+		assign(str, str+strlen(str));
 		return *this;
-    }
+	}
 
 	bool isValid() const { return size() >= (unsigned)getLowerLimit() && (getConstraintType() != FixedConstraint || size() <= getUpperLimit());}
  	bool isStrictlyValid() const { return size() >= (unsigned)getLowerLimit() && size() <= getUpperLimit();}
 
-    OCTET_STRING * clone() const { return static_cast<OCTET_STRING*>(do_clone());}
-    static AbstractData* create(const void* info);
+	OCTET_STRING * clone() const { return static_cast<OCTET_STRING*>(do_clone());}
+	static AbstractData* create(const void* info);
 	void swap(OCTET_STRING& other) { ContainerType::swap(other); }
 
     operator std::string () const { return std::string(begin(), end()); }
@@ -1022,11 +1022,11 @@ class Constrained_OCTET_STRING : public OCTET_STRING
         return *this;
     }
 
-    Constrained_OCTET_STRING * clone() const { return static_cast<Constrained_OCTET_STRING*>(OCTET_STRING::clone());}
-    static AbstractData* create();
+	Constrained_OCTET_STRING * clone() const { return static_cast<Constrained_OCTET_STRING*>(OCTET_STRING::clone());}
+	static AbstractData* create();
 	void swap(Constrained_OCTET_STRING& other) { OCTET_STRING::swap(other); }
 
-    static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -1086,7 +1086,7 @@ public:
 
    	bool isValid() const;
 	bool isStrictlyValid() const;
-    size_type find_first_invalid() const { 
+	size_type find_first_invalid() const { 
 		return info()->characterSetSize ? find_first_not_of(info()->characterSet) : std::string::npos;
 	}
 
@@ -1096,11 +1096,11 @@ public:
 #endif
 
 	const char* getCharacterSet() const  { return info()->characterSet; }
-    unsigned getCharacterSetSize() const { return info()->characterSetSize; }
-    unsigned getCanonicalSetBits() const { return info()->canonicalSetBits; }
+	unsigned getCharacterSetSize() const { return info()->characterSetSize; }
+	unsigned getCanonicalSetBits() const { return info()->canonicalSetBits; }
 	unsigned getNumBits(bool align) const { return align ? info()->charSetAlignedBits : info()->charSetUnalignedBits; }
 
-    static AbstractData* create(const void*);
+	static AbstractData* create(const void*);
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
@@ -1125,14 +1125,14 @@ public:
 		unsigned charSetUnalignedBits;
 		unsigned charSetAlignedBits;
 	};	  
-    const InfoType* info() const { return static_cast<const InfoType*>(info_);}
+	const InfoType* info() const { return static_cast<const InfoType*>(info_);}
 };
 
 class NumericString : public AbstractString { 
 protected:
-    NumericString(const void* info) : AbstractString(info) { }
+	NumericString(const void* info) : AbstractString(info) { }
 public:
-    NumericString() : AbstractString(&theInfo) { }
+	NumericString() : AbstractString(&theInfo) { }
 	NumericString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
 	NumericString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
 
@@ -1141,8 +1141,8 @@ public:
 	NumericString& operator=(const std::string & str) { assign(str);  return *this;} 
 	NumericString& operator=(char c) { assign(1, c); return *this;}
     
-    NumericString * clone() const { return static_cast<NumericString *>(AbstractString::clone()); } 
-    static AbstractData* create();
+	NumericString * clone() const { return static_cast<NumericString *>(AbstractString::clone()); } 
+	static AbstractData* create();
 	void swap(NumericString& other) { base_string::swap(other); }
 
 	static const InfoType theInfo;
@@ -1152,9 +1152,9 @@ public:
 
 class PrintableString : public AbstractString { 
 protected:
-    PrintableString(const void* info) : AbstractString(info) { }
+	PrintableString(const void* info) : AbstractString(info) { }
 public:
-    PrintableString() : AbstractString(&theInfo) { }
+	PrintableString() : AbstractString(&theInfo) { }
 	PrintableString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
 	PrintableString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
 
@@ -1163,7 +1163,7 @@ public:
 	PrintableString& operator=(const std::string & str) { assign(str);  return *this;} 
 	PrintableString& operator=(char c) { assign(1, c); return *this;} 
 	PrintableString * clone() const { return static_cast<PrintableString *>(AbstractString::clone()); } 
-    static AbstractData* create();
+	static AbstractData* create();
 	void swap(PrintableString& other) { base_string::swap(other); }
 	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
@@ -1172,9 +1172,9 @@ public:
 
 class VisibleString : public AbstractString { 
 protected:
-    VisibleString(const void* info) : AbstractString(info) { }
+	VisibleString(const void* info) : AbstractString(info) { }
 public:
-    VisibleString() : AbstractString(&theInfo) { }
+	VisibleString() : AbstractString(&theInfo) { }
 	VisibleString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
 	VisibleString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
 
@@ -1183,7 +1183,7 @@ public:
 	VisibleString& operator=(const std::string & str) { assign(str);  return *this;} 
 	VisibleString& operator=(char c) { assign(1, c); return *this;} 
 	VisibleString * clone() const { return static_cast<VisibleString *>(AbstractString::clone()); } 
-    static AbstractData* create();
+	static AbstractData* create();
 	void swap(VisibleString& other) { base_string::swap(other); }
 
 	static const InfoType theInfo;
@@ -1193,9 +1193,9 @@ public:
 
 class IA5String : public AbstractString { 
 protected:
-    IA5String(const void* info) : AbstractString(info) { }
+	IA5String(const void* info) : AbstractString(info) { }
 public:
-    IA5String() : AbstractString(&theInfo) { }
+	IA5String() : AbstractString(&theInfo) { }
 	IA5String(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
 	IA5String(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
 
@@ -1204,7 +1204,7 @@ public:
 	IA5String& operator=(const std::string & str) { assign(str);  return *this;} 
 	IA5String& operator=(char c) { assign(1, c); return *this;} 
 	IA5String * clone() const { return static_cast<IA5String *>(AbstractString::clone()); } 
-    static AbstractData* create();
+	static AbstractData* create();
 	void swap(IA5String& other) { base_string::swap(other); }
 
 	static const InfoType theInfo;
@@ -1214,9 +1214,9 @@ public:
 
 class GeneralString : public AbstractString { 
 protected:
-    GeneralString(const void* info) : AbstractString(info) { }
+	GeneralString(const void* info) : AbstractString(info) { }
 public:
-    GeneralString() : AbstractString(&theInfo) { }
+	GeneralString() : AbstractString(&theInfo) { }
 	GeneralString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
 	GeneralString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
 
@@ -1225,7 +1225,7 @@ public:
 	GeneralString& operator=(const std::string & str) { assign(str);  return *this;} 
 	GeneralString& operator=(char c) { assign(1, c); return *this;} 
 	GeneralString * clone() const { return static_cast<GeneralString *>(AbstractString::clone()); } 
-    static AbstractData* create();
+	static AbstractData* create();
 	void swap(GeneralString& other) { base_string::swap(other); }
 
 	static const InfoType theInfo;
@@ -1259,10 +1259,10 @@ class BMPString : public ConstrainedObject, public std::wstring
 	typedef base_string::reference reference;
 	typedef base_string::const_reference const_reference;
 
-    BMPString();
+	BMPString();
 	BMPString(const base_string& str, const void* info = &theInfo);
 	BMPString(const value_type* str, const void* info = &theInfo);
-    BMPString(const BMPString & other);
+	BMPString(const BMPString & other);
 	BMPString & operator=(const value_type * str) { return assign(str);} 
 	BMPString & operator=(const base_string & str) { return  assign(str);} 
 	BMPString & operator=(value_type c) { return  assign(1,c);} 
@@ -1290,7 +1290,7 @@ class BMPString : public ConstrainedObject, public std::wstring
 	int compare(const BMPString& other) const { return base_string::compare(other); }
     
 	BMPString * clone() const { return static_cast<BMPString *>(do_clone()); } 
-    static AbstractData* create(const void* info);
+	static AbstractData* create(const void* info);
 	void swap(BMPString& other) { base_string::swap(other); }
 
 	bool isValid() const;
@@ -1301,7 +1301,7 @@ class BMPString : public ConstrainedObject, public std::wstring
     { return os << static_cast<const AbstractData&>(data); }
 #endif
 
-    wchar_t getFirstChar() const { return info()->firstChar; }
+	wchar_t getFirstChar() const { return info()->firstChar; }
 	wchar_t getLastChar() const { return info()->lastChar; }
 	unsigned getNumBits(bool align) const { 
         return align ? info()->charSetAlignedBits : info()->charSetUnalignedBits; 
@@ -1313,11 +1313,11 @@ class BMPString : public ConstrainedObject, public std::wstring
 	size_type first_illegal_at() const;
 
   private:
-    bool legalCharacter(wchar_t ch) const;
-    const InfoType* info() const { return static_cast<const InfoType*>(info_);}
+	bool legalCharacter(wchar_t ch) const;
+	const InfoType* info() const { return static_cast<const InfoType*>(info_);}
 
-    int do_compare(const AbstractData& other) const;
-    virtual AbstractData * do_clone() const;
+	int do_compare(const AbstractData& other) const;
+	virtual AbstractData * do_clone() const;
 	virtual bool do_accept(Visitor&);
 	virtual bool do_accept(ConstVisitor&) const;
 };
@@ -1329,8 +1329,8 @@ protected:
 	GeneralizedTime(const void* info);
 public:
 	typedef const char* const_reference;
-    GeneralizedTime();
-    GeneralizedTime(const char* value);
+	GeneralizedTime();
+	GeneralizedTime(const char* value);
 	GeneralizedTime(int year, int month, int day, 
 		int hour = 0, int minute=0, int second=0,
 		int millisec = 0, int mindiff = 0, bool utc = false);
@@ -1376,7 +1376,7 @@ public:
 	GeneralizedTime* clone() const { return static_cast<GeneralizedTime*>(do_clone()); }
 
 	bool isValid() const { return isStrictlyValid();}
-    static AbstractData* create(const void* info);
+	static AbstractData* create(const void* info);
 	bool isStrictlyValid() const;
 
 	static const InfoType theInfo;
@@ -1420,12 +1420,12 @@ class CHOICE : public AbstractData, public detail::Allocator<CHOICE>
     /**
      * Returns the object of the currently selected alternatives. 
      */
-    AbstractData * getSelection() { return choice.get(); }
-    const AbstractData * getSelection() const { return choice.get(); }
+	AbstractData * getSelection() { return choice.get(); }
+	const AbstractData * getSelection() const { return choice.get(); }
     /**
      * Set the value by alternative index number.
      */
-    bool select(int selection) { 
+	bool select(int selection) { 
 		if (choiceID != selection)
 		{
 			choiceID = selection; 
@@ -1447,22 +1447,22 @@ class CHOICE : public AbstractData, public detail::Allocator<CHOICE>
      * Returns the number of alternatives in the extension root.
      */
 	unsigned getNumChoices() const { return info()->numChoices; } 
-    bool extendable() const { return info()->extendableFlag; }
-    unsigned getSelectionTag() const {
+	bool extendable() const { return info()->extendableFlag; }
+	unsigned getSelectionTag() const {
         assert(choiceID >= 0);
         return info()->tags == 0 ? 0x800000 | choiceID 
             : info()->tags[choiceID];
-    }
+	 }
 
-    static AbstractData* create(const void* info);
+	static AbstractData* create(const void* info);
 
   protected:
-    CHOICE(const void* info	, int id = -1, AbstractData* value= NULL);
-    ~CHOICE();
+	CHOICE(const void* info	, int id = -1, AbstractData* value= NULL);
+	~CHOICE();
 
 
-    CHOICE(const CHOICE & other);
-    CHOICE & operator=(const CHOICE & other);
+	CHOICE(const CHOICE & other);
+	CHOICE & operator=(const CHOICE & other);
 	void swap(CHOICE& other);
 
 	std::unique_ptr<AbstractData> choice;
@@ -1483,9 +1483,9 @@ class CHOICE : public AbstractData, public detail::Allocator<CHOICE>
 	virtual int do_compare(const AbstractData& other) const;
 	virtual bool do_accept(Visitor&);
 	virtual bool do_accept(ConstVisitor&) const;
-    virtual AbstractData* do_clone() const;
-    bool createSelection();
-    const InfoType* info() const { return static_cast<const InfoType*>(info_);}
+	virtual AbstractData* do_clone() const;
+	bool createSelection();
+	const InfoType* info() const { return static_cast<const InfoType*>(info_);}
   public:
     /**
      * Set the value by \c tag number and \c tag class.
@@ -1515,23 +1515,23 @@ public:
 		IMPLICIT_TAG
 	};
 
-    SEQUENCE(const SEQUENCE & other);
+	SEQUENCE(const SEQUENCE & other);
 	~SEQUENCE();
-    SEQUENCE & operator=(const SEQUENCE & other);
-    SEQUENCE * clone() const { return static_cast<SEQUENCE*>(do_clone()); }
+	SEQUENCE & operator=(const SEQUENCE & other);
+	SEQUENCE * clone() const { return static_cast<SEQUENCE*>(do_clone()); }
 	void swap(SEQUENCE& other);
 
     /** 
      *  Returns the pointer to the component of the SEQUENCE at position \c pos.
      */
-    AbstractData* getField(unsigned pos) { 
-        assert(pos < fields.size());
-        return fields[pos]; 
-    }
-    const AbstractData* getField(unsigned pos) const { 
-        assert(pos < fields.size());
-        return fields[pos]; 
-    }
+	AbstractData* getField(unsigned pos) { 
+        	assert(pos < fields.size());
+	        return fields[pos]; 
+	}
+	const AbstractData* getField(unsigned pos) const { 
+		assert(pos < fields.size());
+		return fields[pos]; 
+	}
 
 	unsigned tagMode() const {
 		if (info()->tags == 0)
@@ -1549,20 +1549,20 @@ public:
         else 
             return static_cast<const AbstractData::InfoType*>(info()->fieldInfos[pos])->tag; // IMPLICIT Tag
     }
-    bool extendable() const { return info()->extendableFlag; }
+	bool extendable() const { return info()->extendableFlag; }
     /**
      * Makes an OPTIONAL field present.
      *
      * @param opt The index to the OPTIONAL field
 	 * @param pos The position of the OPTIONAL field
      */
-    void includeOptionalField(unsigned opt, unsigned pos);
+	void includeOptionalField(unsigned opt, unsigned pos);
 	/**
      * Tests the presence of an OPTIONAL field.
      *
      * @param opt The index to the OPTIONAL field
      */
-    bool hasOptionalField(unsigned opt) const;
+	bool hasOptionalField(unsigned opt) const;
     /**
      * Makes an OPTIONAL field absence. 
      *
@@ -1603,8 +1603,8 @@ public:
     };
 
 	FieldVector fields;
-    BitMap optionMap;
-    BitMap extensionMap;
+	BitMap optionMap;
+	BitMap extensionMap;
 
 	static const unsigned defaultTag;
 
@@ -1623,16 +1623,16 @@ public:
 		AVN_ONLY(const char** names;)
 	};
   private:
-    friend class Visitor;
-    friend class ConstVisitor;
+	friend class Visitor;
+	friend class ConstVisitor;
 	friend class PEREncoder;
-    friend class PERDecoder;
+	friend class PERDecoder;
 
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
 	virtual bool do_accept(ConstVisitor&) const;
 
-    const InfoType* info() const { return static_cast<const InfoType*>(info_);}
+	const InfoType* info() const { return static_cast<const InfoType*>(info_);}
   protected:
 	virtual bool do_accept(Visitor&);
 #ifdef ASN1_HAS_IOSTREAM
@@ -1663,11 +1663,11 @@ class SEQUENCE_OF_Base : public ConstrainedObject, public detail::Allocator<SEQU
 {
   protected:
 	typedef std::vector<AbstractData*> Container;
-    SEQUENCE_OF_Base(const void*);
+	SEQUENCE_OF_Base(const void*);
   public:
 	~SEQUENCE_OF_Base() { clear();}
-    SEQUENCE_OF_Base(const SEQUENCE_OF_Base & other);
-    SEQUENCE_OF_Base & operator=(const SEQUENCE_OF_Base & other);
+	SEQUENCE_OF_Base(const SEQUENCE_OF_Base & other);
+	SEQUENCE_OF_Base & operator=(const SEQUENCE_OF_Base & other);
 
 	typedef Container::iterator iterator;
 	typedef Container::const_iterator const_iterator;
@@ -1678,30 +1678,30 @@ class SEQUENCE_OF_Base : public ConstrainedObject, public detail::Allocator<SEQU
 	const_iterator end() const { return container.end(); }
 	void resize(Container::size_type size);
 	void push_back(AbstractData* obj) { container.push_back(obj);}
-    void erase(iterator first, iterator last);
+	void erase(iterator first, iterator last);
 	Container::size_type	size() const { return container.size(); } 
 	Container::size_type	max_size() const { return container.max_size(); } 
 	Container::size_type	capacity() const { return container.capacity(); } 
-    void reserve(Container::size_type n) { container.reserve(n); }
+	void reserve(Container::size_type n) { container.reserve(n); }
 	bool empty() const { return container.empty(); } 
 	void clear();
 
 	bool isValid() const;
 	bool isStrictlyValid() const;
 
-    AbstractData * createElement() const { 
-        const AbstractData::InfoType* elementInfo = 
-            static_cast<const AbstractData::InfoType*>(static_cast<const InfoType*>(info_)->elementInfo); 
-        return elementInfo->create(elementInfo);
-    }
+	AbstractData * createElement() const { 
+		const AbstractData::InfoType* elementInfo = 
+		static_cast<const AbstractData::InfoType*>(static_cast<const InfoType*>(info_)->elementInfo); 
+		return elementInfo->create(elementInfo);
+	}
 
-    static AbstractData* create(const void* info);
+	static AbstractData* create(const void* info);
   protected:
-    void insert(iterator position, Container::size_type n, const AbstractData& x);
-    void insert(iterator position, const_iterator first, const_iterator last);
+	void insert(iterator position, Container::size_type n, const AbstractData& x);
+	void insert(iterator position, const_iterator first, const_iterator last);
 
 	Container container;
-    virtual AbstractData* do_clone() const;
+	virtual AbstractData* do_clone() const;
 
 	struct create_from_ptr
 	{
@@ -1735,9 +1735,9 @@ class SEQUENCE_OF_Base : public ConstrainedObject, public detail::Allocator<SEQU
 template <class T, class Constraint = EmptyConstraint>
 class SEQUENCE_OF : public SEQUENCE_OF_Base 
 {
-    typedef SEQUENCE_OF_Base Inherited;
+	typedef SEQUENCE_OF_Base Inherited;
   protected:
-    typedef Inherited::InfoType InfoType;
+	typedef Inherited::InfoType InfoType;
   public:
 	typedef T&									reference;
 	typedef const T&							const_reference;
@@ -1748,7 +1748,7 @@ class SEQUENCE_OF : public SEQUENCE_OF_Base
 	typedef typename Container::difference_type	difference_type;
 
   private:
-    typedef boost::iterator<std::random_access_iterator_tag, value_type> my_iterator_traits;
+	typedef boost::iterator<std::random_access_iterator_tag, value_type> my_iterator_traits;
 	typedef boost::iterator<std::random_access_iterator_tag, const value_type> my_const_iterator_traits;
   public:
 	  class iterator : public my_iterator_traits
@@ -1944,8 +1944,8 @@ class SEQUENCE_OF : public SEQUENCE_OF_Base
 	reverse_iterator		rend() { return reverse_iterator(begin());}
 	const_reverse_iterator  rend() const { return const_reverse_iterator(begin());}
 
-    void resize(size_type sz) { Inherited::resize(sz); }
-	void		resize(size_type sz, const T& c ) { 
+	void resize(size_type sz) { Inherited::resize(sz); }
+	void resize(size_type sz, const T& c ) { 
 		if (sz < size()) container.resize(sz, c); 
 		else insert(end(), sz-size(), c);
 	} 
@@ -2063,13 +2063,13 @@ class SEQUENCE_OF : public SEQUENCE_OF_Base
 	
 	void reverse() { std::reverse(container.begin(), container.end());}
 
-    static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
 private:
 	void clean(iterator i)	{	delete &*i;	}
-    void clean(iterator first, iterator last)      { while (first != last) clean(first++); }
+	void clean(iterator first, iterator last)      { while (first != last) clean(first++); }
 
 	struct create_from1
 	{
@@ -2154,15 +2154,15 @@ public:
 protected:
 	typedef typename Inherited::InfoType InfoType;
 public:
-    SET_OF() {  }
-    SET_OF(size_type n, const_reference val = T()) 
+	SET_OF() {  }
+	SET_OF(size_type n, const_reference val = T()) 
         : Inherited(&theInfo)
-    {   insert(begin(),n, val);     }
+	{   insert(begin(),n, val);     }
 
-    template <class InputIterator>
-    SET_OF(InputIterator first, InputIterator last)
+	template <class InputIterator>
+	SET_OF(InputIterator first, InputIterator last)
             : Inherited(&theInfo) 
-    {   insert(begin(), first, last);  }
+	{   insert(begin(), first, last);  }
 
 
 	SET_OF(const SET_OF<T, Constraint>& other) : Inherited(other) {}
@@ -2173,7 +2173,7 @@ public:
 	}
 	SET_OF<T, Constraint>* clone() const { return static_cast<SET_OF<T, Constraint>*>(Inherited::clone()); }
 
-    static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
@@ -2233,7 +2233,7 @@ public:
 	bool isStrictlyValid() const;
 
 	OpenData* clone() const { return static_cast<OpenData*>(do_clone()); }
-    static AbstractData* create(const void* info);
+	static AbstractData* create(const void* info);
 	void swap(OpenData& other);	
 
 	bool operator == (const OpenData& rhs) const { return do_compare(rhs) == 0; }
@@ -2264,7 +2264,7 @@ private:
 protected:
 	TypeConstrainedOpenData(AbstractData* pData, const void* info) :  OpenData(pData, info) {}
 	TypeConstrainedOpenData(const AbstractData& aData, const void* info) : OpenData(aData, info) {}
-    static AbstractData* create(const void* info);
+	static AbstractData* create(const void* info);
 
 	struct InfoType
 	{
@@ -2298,17 +2298,17 @@ public:
 	Constrained_OpenData<T>& operator = (const OpenBuf& aBuf) { buf.reset(new OpenBuf(aBuf)); return *this;}
 
 	void grab(T* aData) { data.reset(aData); } 
-    T& get_data() { return static_cast<T&>(OpenData::get_data()); }
+	T& get_data() { return static_cast<T&>(OpenData::get_data()); }
 	const T& get_data() const { return static_cast<const T&>(OpenData::get_data());}
 
 	Constrained_OpenData<T>* clone() const { return static_cast<Constrained_OpenData<T>*>(OpenData::clone()); }
 	void swap(Constrained_OpenData<T>& other) { OpenData::swap(other); }
 
-    static const InfoType theInfo;
+	static const InfoType theInfo;
 	static bool equal_type(const ASN1::AbstractData& type)
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 private:
-    const InfoType* info() const { return static_cast<const InfoType*>(info_); }
+	const InfoType* info() const { return static_cast<const InfoType*>(info_); }
 };
 
 template <class T>
@@ -2348,7 +2348,7 @@ class Visitor
 {
 public:
 	virtual ~Visitor(){}
-    bool visit(Null& value) { return do_visit(value); }
+	bool visit(Null& value) { return do_visit(value); }
 	bool visit(BOOLEAN& value) { return do_visit(value); }
 	bool visit(INTEGER& value) { return do_visit(value); }
 	bool visit(IntegerWithNamedNumber& value) { return do_visit(value); }
@@ -2361,22 +2361,22 @@ public:
 	bool visit(CHOICE& value) { return do_visit(value); }
 	bool visit(SEQUENCE_OF_Base& value) { return do_visit(value); }
 	bool visit(OpenData& value) { return do_visit(value); }
-    bool revisit(OpenData& value) { return do_revisit(value); }
+	bool revisit(OpenData& value) { return do_revisit(value); }
 	bool visit(TypeConstrainedOpenData& value) { return do_visit(value); }
 	bool visit(GeneralizedTime& value) { return do_visit(value); }
-    bool visit(SEQUENCE& value) ;
+	bool visit(SEQUENCE& value) ;
 
-    CoderEnv* get_env() { return env;}
+	CoderEnv* get_env() { return env;}
 
-    enum VISIT_SEQ_RESULT
-    {
-        FAIL,
-        STOP,
-        NO_EXTENSION,
-        CONTINUE
-    };
+	enum VISIT_SEQ_RESULT
+	{
+		FAIL,
+		STOP,
+		NO_EXTENSION,
+		CONTINUE
+	};
 protected:
-    Visitor(CoderEnv* coder) : env(coder) {}
+	Visitor(CoderEnv* coder) : env(coder) {}
 
 private:
 	virtual bool do_visit(Null& value)=0;
@@ -2392,7 +2392,7 @@ private:
 	virtual bool do_visit(CHOICE& value)=0;
 	virtual bool do_visit(SEQUENCE_OF_Base& value)=0;
 	virtual bool do_visit(OpenData& value)=0;
-    virtual bool do_revisit(OpenData& value)=0;
+	virtual bool do_revisit(OpenData& value)=0;
 	virtual bool do_visit(TypeConstrainedOpenData& value)=0;
 	virtual bool do_visit(GeneralizedTime& value)=0;
 
@@ -2420,7 +2420,7 @@ private:
      *         different return values indicate how the sebsequent components are traversed. STOP means
      *         no sebsequent components should be visited; CONTINUE means all components should be visited.
      */
-    virtual VISIT_SEQ_RESULT visitExtensionRoot(SEQUENCE& value, int pos, int optional_id) { return FAIL;}
+	virtual VISIT_SEQ_RESULT visitExtensionRoot(SEQUENCE& value, int pos, int optional_id) { return FAIL;}
     /**
      * Called by \c visit() before visiting any extension component of the \c SEQUENCE.
      *
@@ -2494,7 +2494,7 @@ public:
 	bool visit(const OpenData& value) { return do_visit(value); }
 	bool visit(const GeneralizedTime& value) { return do_visit(value); }
 	bool visit(const SEQUENCE_OF_Base& value) {return do_visit(value); }
-    bool visit(const SEQUENCE& value) ;
+	bool visit(const SEQUENCE& value) ;
 private:
 	virtual bool do_visit(const AbstractData& value) { return true; }
 	virtual bool do_visit(const Null& value) { return do_visit(static_cast<const AbstractData&>(value)); }
@@ -2546,12 +2546,12 @@ public:
 	 */
 	BEREncoder(OpenBuf& buf)
 		: encodedBuffer(buf), tag(0xffffffff)
-    { 
-        encodedBuffer.clear(); 
-        encodedBuffer.reserve(256);
-    }
+	{ 
+		encodedBuffer.clear(); 
+		encodedBuffer.reserve(256);
+	}
 
-    void encodeHeader(const AbstractData & obj);
+	void encodeHeader(const AbstractData & obj);
 
 private:
    	virtual bool do_visit(const Null& value);
@@ -2572,10 +2572,10 @@ private:
 	virtual bool visitExtensionRoot(const SEQUENCE& value, int index);
 	virtual bool visitKnownExtension(const SEQUENCE& value, int index);
 
-    void encodeByte(unsigned value);
-    void encodeBlock(const char * bufptr, unsigned nBytes);
+	void encodeByte(unsigned value);
+	void encodeBlock(const char * bufptr, unsigned nBytes);
 	OpenBuf& encodedBuffer;
-    unsigned tag;
+	unsigned tag;
 };
 
 /**
@@ -2613,15 +2613,15 @@ public:
         , dontCheckTag(0)
         {}
 
-    typedef const char* memento_type;
-    memento_type get_memento() const { return beginPosition; }
-    void rollback(memento_type memento) { beginPosition = memento;}
-    bool decodeChoicePreamle(CHOICE& value, memento_type& nextPostion);
+	typedef const char* memento_type;
+	memento_type get_memento() const { return beginPosition; }
+	void rollback(memento_type memento) { beginPosition = memento;}
+	bool decodeChoicePreamle(CHOICE& value, memento_type& nextPostion);
 
-    bool decodeHeader(unsigned & tag,
+	bool decodeHeader(unsigned & tag,
                       bool & primitive,
                       unsigned & len);
-    bool decodeHeader(AbstractData & obj, unsigned & len);
+	bool decodeHeader(AbstractData & obj, unsigned & len);
 
 	virtual VISIT_SEQ_RESULT preVisitExtensionRoots(SEQUENCE& value);
 	virtual VISIT_SEQ_RESULT visitExtensionRoot(SEQUENCE& value, int index, int optional_id);
@@ -2641,18 +2641,18 @@ private:
 	virtual bool do_visit(CHOICE& value);
 	virtual bool do_visit(SEQUENCE_OF_Base& value);
 	virtual bool do_visit(OpenData& value);
-    virtual bool do_revisit(OpenData& value);
+	virtual bool do_revisit(OpenData& value);
 	virtual bool do_visit(TypeConstrainedOpenData& value);
 	virtual bool do_visit(GeneralizedTime& value);
 
-    bool atEnd();
-    unsigned char decodeByte();
-    unsigned decodeBlock(char * bufptr, unsigned nBytes);
+	bool atEnd();
+	unsigned char decodeByte();
+	unsigned decodeBlock(char * bufptr, unsigned nBytes);
 
 	const char* beginPosition;
-    const char* endPosition;
-    std::vector<const char*> endSEQUENCEPositions; 
-    int dontCheckTag;
+	const char* endPosition;
+	std::vector<const char*> endSEQUENCEPositions; 
+	int dontCheckTag;
 };
 
 /**
@@ -2717,21 +2717,21 @@ private:
 	virtual bool preVisitExtensions(const SEQUENCE& value) ;
 	virtual bool visitKnownExtension(const SEQUENCE& value, int index);
 
-    void encodeBitMap(const std::vector<char>& bitData, unsigned nBits);
+	void encodeBitMap(const std::vector<char>& bitData, unsigned nBits);
 	void encodeMultiBit(unsigned value, unsigned nBits);
-    bool encodeConstrainedLength(const ConstrainedObject & obj, unsigned length) ;
-    bool encodeConstraint(const ConstrainedObject & obj, unsigned value) ;
-    void encodeSingleBit(bool value);
+	bool encodeConstrainedLength(const ConstrainedObject & obj, unsigned length) ;
+	bool encodeConstraint(const ConstrainedObject & obj, unsigned value) ;
+	void encodeSingleBit(bool value);
 	void encodeSmallUnsigned(unsigned value);
-    bool encodeLength(unsigned len, unsigned lower, unsigned upper);
-    bool encodeUnsigned(unsigned value, unsigned lower, unsigned upper);
+	bool encodeLength(unsigned len, unsigned lower, unsigned upper);
+	bool encodeUnsigned(unsigned value, unsigned lower, unsigned upper);
 	bool encodeAnyType(const AbstractData*);
 
 	void byteAlign();
-    void encodeByte(unsigned value);
-    void encodeBlock(const char * bufptr, unsigned nBytes);
+	void encodeByte(unsigned value);
+	void encodeBlock(const char * bufptr, unsigned nBytes);
 	OpenBuf& encodedBuffer;
-    unsigned short bitOffset;
+	unsigned short bitOffset;
 	bool alignedFlag;
 };
 
@@ -2773,32 +2773,33 @@ public:
 		, bitOffset (8)
 		, alignedFlag(isAligned){}
 
-    struct memento_type
-    {
-        memento_type(const char* bytePos=0, unsigned bitPos=0) 
-            : bytePosition(bytePos), bitPosition(bitPos){}
-        const char* bytePosition;
-        unsigned bitPosition;
-    };
+	struct memento_type
+	{
+		memento_type(const char* bytePos=0, unsigned bitPos=0) 
+			: bytePosition(bytePos), bitPosition(bitPos){}
+		const char* bytePosition;
+		unsigned bitPosition;
+	};
 
-    memento_type get_memento() const { return memento_type(beginPosition,bitOffset); }
-    void rollback(memento_type memento) { 
-        if (memento.bytePosition != 0)
-        {
-            beginPosition = (memento.bytePosition > endPosition ?
+	memento_type get_memento() const { return memento_type(beginPosition,bitOffset); }
+	void rollback(memento_type memento)
+	{ 
+		if (memento.bytePosition != 0)
+		{
+			beginPosition = (memento.bytePosition > endPosition ?
                              endPosition : memento.bytePosition);
-            bitOffset   = memento.bitPosition;
-        }
-    }
+			bitOffset   = memento.bitPosition;
+		}
+	}
 
 	bool aligned() const { return alignedFlag; }
 
-    bool decodeChoicePreamle(CHOICE& value, memento_type& nextPostion);
-    const char* getPosition() const { return beginPosition; }
-    const char* getNextPosition() const { return beginPosition + (bitOffset != 8 ? 1 : 0); }
-    void setPosition(const char* newPos);
-    int decodeConstrainedLength(ConstrainedObject & obj, unsigned & length);
-    int decodeLength(unsigned lower, unsigned upper, unsigned & len);
+	bool decodeChoicePreamle(CHOICE& value, memento_type& nextPostion);
+	const char* getPosition() const { return beginPosition; }
+	const char* getNextPosition() const { return beginPosition + (bitOffset != 8 ? 1 : 0); }
+	void setPosition(const char* newPos);
+	int decodeConstrainedLength(ConstrainedObject & obj, unsigned & length);
+	int decodeLength(unsigned lower, unsigned upper, unsigned & len);
 
 	virtual VISIT_SEQ_RESULT preVisitExtensionRoots(SEQUENCE& value);
 	virtual VISIT_SEQ_RESULT visitExtensionRoot(SEQUENCE& value, int index, int optional_id);
@@ -2820,23 +2821,26 @@ private:
 	virtual bool do_visit(CHOICE& value);
 	virtual bool do_visit(SEQUENCE_OF_Base& value);
 	virtual bool do_visit(OpenData& value);
-    virtual bool do_revisit(OpenData& value);
+	virtual bool do_revisit(OpenData& value);
 	virtual bool do_visit(TypeConstrainedOpenData& value);
 	virtual bool do_visit(GeneralizedTime& value);
 
 	void byteAlign();
-    bool atEnd() ;
-    unsigned getBitsLeft() const;
+	bool atEnd();
+	unsigned getBitsLeft() const;
+
 	bool decodeSingleBit();
 	bool decodeMultiBit(unsigned nBits, unsigned& value);
 	bool decodeSmallUnsigned(unsigned & value);
-    int decodeUnsigned(unsigned lower, unsigned upper, unsigned & value);
-    unsigned decodeBlock(char * bufptr, unsigned nBytes);
-    bool decodeBitMap(std::vector<char>& bitData, unsigned nBit);
+	int decodeUnsigned(unsigned lower, unsigned upper, unsigned & value);
 
-    const char* beginPosition;
-    const char* endPosition;
-    unsigned short bitOffset;
+	unsigned decodeBlock(char * bufptr, unsigned nBytes);
+
+	bool decodeBitMap(std::vector<char>& bitData, unsigned nBit);
+
+	const char* beginPosition;
+	const char* endPosition;
+	unsigned short bitOffset;
 	bool alignedFlag;
 };
 
@@ -2885,7 +2889,7 @@ private:
 	virtual bool afterVisitSequence(const SEQUENCE& value);
 
 	std::ostream& strm;
-    int indent;
+	int indent;
 	std::vector<bool> outputSeparators; // used to indicate whether to output separator while parsing SEQUENCE
 };
 
@@ -2923,7 +2927,7 @@ private:
 	virtual bool do_visit(CHOICE& value);
 	virtual bool do_visit(SEQUENCE_OF_Base& value);
 	virtual bool do_visit(OpenData& value);
-    virtual bool do_revisit(OpenData& value);
+	virtual bool do_revisit(OpenData& value);
 	virtual bool do_visit(TypeConstrainedOpenData& value);
 	virtual bool do_visit(GeneralizedTime& value);
 
@@ -2981,18 +2985,16 @@ public:
 	void erase(Module* module) { assert(module); modules.erase(module->name()); }
 	void erase(const char* moduleName) { modules.erase(moduleName); }
 
-	enum EncodingRules { avn,
-						 ber,
-						 per_Basic_Aligned	};
+	enum EncodingRules { avn, ber, per_Basic_Aligned };
 
 	EncodingRules get_encodingRule() const { return encodingRule;}
 	void set_encodingRule(EncodingRules rule) { encodingRule = rule; }
-    void set_avn() {set_encodingRule(avn);}
-    bool is_avn() const { return encodingRule == avn;}
-    void set_ber() {set_encodingRule(ber);}
-    bool is_ber() const { return encodingRule == ber;}
-    void set_per_Basic_Aligned() {set_encodingRule(per_Basic_Aligned);}
-    bool is_per_Basic_Aligned() const { return encodingRule == per_Basic_Aligned;}
+	void set_avn() {set_encodingRule(avn);}
+	bool is_avn() const { return encodingRule == avn;}
+	void set_ber() {set_encodingRule(ber);}
+	bool is_ber() const { return encodingRule == ber;}
+	void set_per_Basic_Aligned() {set_encodingRule(per_Basic_Aligned);}
+	bool is_per_Basic_Aligned() const { return encodingRule == per_Basic_Aligned;}
 
 	template <class OutputIterator>
 	bool encode(const AbstractData& val, OutputIterator begin)	
@@ -3009,59 +3011,60 @@ public:
 	}
 
 	bool decode(const char* first, const char* last, AbstractData& val, bool defered);
-    bool decode(const unsigned char* first, const unsigned char* last , AbstractData& val, bool defered)
+	bool decode(const unsigned char* first, const unsigned char* last , AbstractData& val, bool defered)
 	{
 		return decode(reinterpret_cast<const char*>(first), reinterpret_cast<const char*>(last), val, defered);
 	}
 
-    template <class InputIterator>
+	template <class InputIterator>
 	bool decode(InputIterator first, InputIterator last, AbstractData& val, bool defered)
-    {
+	{
 #ifdef ASN1_HAS_IOSTREAM
 		if (get_encodingRule() == avn)
 		{
-		   std::istringstream strm(std::string(first, last));
-           AVNDecoder decoder(strm);
-		   return val.accept(decoder);
+			std::istringstream strm(std::string(first, last));
+			AVNDecoder decoder(strm);
+			return val.accept(decoder);
 		}
 #endif // ASN1_HAS_IOSTREAM
-        OpenBuf buf(first, last);
+		OpenBuf buf(first, last);
 		return decode((const char*)&buf[0], (const char*)&*buf.end(), val, defered);
-    }
+	}
 
 protected:
 	EncodingRules encodingRule;
-    struct StringListeralCmp : public std::binary_function<const char*, const char*, bool>
-    {
-        bool operator() (const char* lhs, const char* rhs) const 
-        { return strcmp(lhs, rhs) < 0 ; }
-    };
-    typedef Loki::AssocVector<const char*, Module*, StringListeralCmp> Modules;
-    Modules modules;
+	struct StringListeralCmp : public std::binary_function<const char*, const char*, bool>
+	{
+		bool operator() (const char* lhs, const char* rhs) const 
+			{ return strcmp(lhs, rhs) < 0 ; }
+	};
+	typedef Loki::AssocVector<const char*, Module*, StringListeralCmp> Modules;
+	Modules modules;
+
 	template <class OutputIterator>
 	bool encodePER(const AbstractData& val, OutputIterator begin)
 	{
-        OpenBuf buf;
+		OpenBuf buf;
 		PEREncoder encoder(buf);
 		if (val.accept(encoder))
-        {
+		{
 		    std::copy(buf.begin(), buf.end(), begin);
 		    return true;
-        }
-        return false;
+		}
+		return false;
 	}
 
 	template <class OutputIterator>
 	bool encodeBER(const AbstractData& val, OutputIterator begin)
 	{
-        OpenBuf buf;
+		OpenBuf buf;
 		BEREncoder encoder(buf);
 		if (val.accept(encoder))
-        {
+		{
 		    std::copy(buf.begin() , buf.end(), begin);
 		    return true;
-        }
-        return false;
+		}
+		return false;
 	}
 
 #ifdef ASN1_HAS_IOSTREAM
@@ -3069,7 +3072,7 @@ protected:
 	bool encodeAVN(const AbstractData& val, OutputIterator begin)
 	{
 		std::ostringstream strm;
-        AVNEncoder encoder(strm);
+		AVNEncoder encoder(strm);
 		if (val.accept(encoder))
 		{
 			const std::string& str = strm.str();
