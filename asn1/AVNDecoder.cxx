@@ -376,7 +376,7 @@ bool AVNDecoder::do_visit(SEQUENCE_OF_Base& value)
 			return true; // no entry, return and indicate success
 
 		do {
-			std::auto_ptr<AbstractData> entry(value.createElement());
+			std::unique_ptr<AbstractData> entry(value.createElement());
 			if (entry.get() && entry->accept(*this) && strm >> c)
 				value.push_back(entry.release());
 			else

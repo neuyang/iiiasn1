@@ -1465,7 +1465,7 @@ class CHOICE : public AbstractData, public detail::Allocator<CHOICE>
     CHOICE & operator=(const CHOICE & other);
 	void swap(CHOICE& other);
 
-	std::auto_ptr<AbstractData> choice;
+	std::unique_ptr<AbstractData> choice;
 	int choiceID;
 
 	struct InfoType
@@ -2248,8 +2248,8 @@ public:
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 
   protected:
-	std::auto_ptr<AbstractData> data;
-	std::auto_ptr<OpenBuf> buf;
+	std::unique_ptr<AbstractData> data;
+	std::unique_ptr<OpenBuf> buf;
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;

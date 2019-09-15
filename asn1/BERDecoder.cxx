@@ -274,7 +274,7 @@ bool BERDecoder::do_visit(SEQUENCE_OF_Base& value)
       value.erase(it, last);
 
   while (beginPosition < endPos) {
-	std::auto_ptr<AbstractData> obj(value.createElement());
+	std::unique_ptr<AbstractData> obj(value.createElement());
 	if (!obj->accept(*this))
 		return false;
 	value.push_back(obj.release());

@@ -567,9 +567,9 @@ Constraint::Constraint(ConstraintElementPtr& elmt)
 }
 
 
-Constraint::Constraint(std::auto_ptr<ConstraintElementVector> std, 
+Constraint::Constraint(std::unique_ptr<ConstraintElementVector> std, 
 					   bool extend, 
-					   std::auto_ptr<ConstraintElementVector> ext)
+					   std::unique_ptr<ConstraintElementVector> ext)
 {
   if (std.get() != NULL) {
 	  standard.swap(*std);	
@@ -850,9 +850,9 @@ const SubTypeConstraintElement* Constraint::GetSubTypeConstraint() const
 	return result;
 }
 
-std::auto_ptr<Constraint> Constraint::Clone() const
+std::unique_ptr<Constraint> Constraint::Clone() const
 {
-	return std::auto_ptr<Constraint>(new Constraint(*this));
+	return std::unique_ptr<Constraint>(new Constraint(*this));
 }
 
 
@@ -933,7 +933,7 @@ ElementListConstraintElement::ElementListConstraintElement()
 {
 }
 
-ElementListConstraintElement::ElementListConstraintElement(std::auto_ptr<ConstraintElementVector> list)
+ElementListConstraintElement::ElementListConstraintElement(std::unique_ptr<ConstraintElementVector> list)
 {
   elements.swap(*list);
 }
@@ -1480,7 +1480,7 @@ void WithComponentConstraintElement::GenerateCplusplus(const std::string &, std:
 
 /////////////////////////////////////////////////////////
 
-InnerTypeConstraintElement::InnerTypeConstraintElement(std::auto_ptr<ConstraintElementVector> list,
+InnerTypeConstraintElement::InnerTypeConstraintElement(std::unique_ptr<ConstraintElementVector> list,
                                                        bool part)
   : ElementListConstraintElement(list)
 {
@@ -1537,7 +1537,7 @@ void UserDefinedConstraintElement::GenerateCplusplus(const std::string &, std::o
 ////////////////////////////////////////////////////////////
 
 TableConstraint::TableConstraint(std::shared_ptr<DefinedObjectSet> os, 
-								std::auto_ptr<StringList> as)
+								std::unique_ptr<StringList> as)
 : objSet(os), atNotations(as)
 {
 }
@@ -1655,7 +1655,7 @@ void TypeBase::MoveConstraints(TypeBase& from)
 void TypeBase::CopyConstraints(const TypeBase& from)
 {
 	for (size_t i = 0; i < from.constraints.size(); ++i) {
-		std::auto_ptr<Constraint> cons = from.constraints[i]->Clone();
+		std::unique_ptr<Constraint> cons = from.constraints[i]->Clone();
 		constraints.push_back(ConstraintPtr(cons));
 	}
 }
@@ -5993,7 +5993,7 @@ ObjectClassBasePtr ModuleDefinition::FindObjectClass(const std::string & name)
 		
 		std::shared_ptr<ObjectClassDefn> type_Identifier(new ObjectClassDefn);
 		type_Identifier->SetName("TYPE-IDENTIFIER");
-		std::auto_ptr<FieldSpecsList> fieldSpecs(new FieldSpecsList);
+		std::unique_ptr<FieldSpecsList> fieldSpecs(new FieldSpecsList);
 		
 		std::shared_ptr<FixedTypeValueFieldSpec> idField( 
 			new FixedTypeValueFieldSpec("&id"
@@ -6925,7 +6925,7 @@ ObjectClassDefn::~ObjectClassDefn()
 {
 }
 
-void ObjectClassDefn::SetFieldSpecs(std::auto_ptr<FieldSpecsList> list)
+void ObjectClassDefn::SetFieldSpecs(std::unique_ptr<FieldSpecsList> list)
 { 
 	fieldSpecs = list;
 	for (size_t i = 0; i < fieldSpecs->size(); ++i)
@@ -7520,7 +7520,7 @@ void TokenGroup::Reset()
 
 
 
-FieldSetting::FieldSetting(const std::string& fieldname,  std::auto_ptr<Setting> aSetting) 
+FieldSetting::FieldSetting(const std::string& fieldname,  std::unique_ptr<Setting> aSetting) 
 : name(fieldname), setting(aSetting)
 {
     identifier = name.c_str()+1;
@@ -7588,7 +7588,7 @@ void InformationObject::PrintBase(std::ostream & strm) const
     }
 }
 
-void InformationObject::SetParameters(std::auto_ptr<ParameterList> list)
+void InformationObject::SetParameters(std::unique_ptr<ParameterList> list)
 {
     parameters = list;
 }
@@ -8370,7 +8370,7 @@ void DefaultSyntaxBuilder::AddToken(DefinedSyntaxToken* token)
 
 }
 
-std::auto_ptr<FieldSettingList> DefaultSyntaxBuilder::GetDefaultSyntax()
+std::unique_ptr<FieldSettingList> DefaultSyntaxBuilder::GetDefaultSyntax()
 {
     EndSyntaxToken token;
     if (tokenGroup->MakeDefaultSyntax(&token, setting.get())
@@ -8380,7 +8380,7 @@ std::auto_ptr<FieldSettingList> DefaultSyntaxBuilder::GetDefaultSyntax()
         return setting;
     }
     std::cerr << StdError(Fatal) << "Incomplete Object Definition \n";
-    return std::auto_ptr<FieldSettingList>();
+    return std::unique_ptr<FieldSettingList>();
 }
 
 void DefaultSyntaxBuilder::ResetTokenGroup()
@@ -8409,7 +8409,7 @@ ValueSetPtr SingleObjectConstraintElement::GetValueSetFromValueField(const std::
     ValueSetting* setting = (ValueSetting*) object->GetSetting(field);
     if (setting)
     {
-		std::auto_ptr<ConstraintElementVector> elems ( new ConstraintElementVector );
+		std::unique_ptr<ConstraintElementVector> elems ( new ConstraintElementVector );
         elems->push_back(ConstraintElementPtr(new SingleValueConstraintElement(setting->GetValue())));
         ConstraintPtr con(new Constraint(elems, false));
         return ValueSetPtr(new ValueSetDefn(
@@ -8443,7 +8443,7 @@ ConstraintPtr SingleObjectConstraintElement::GetObjectSetFromObjectField(const s
     ObjectSetting* setting = (ObjectSetting*) object->GetSetting(field);
     if (setting)
     {
-		std::auto_ptr<ConstraintElementVector> elems ( new ConstraintElementVector );
+		std::unique_ptr<ConstraintElementVector> elems ( new ConstraintElementVector );
         elems->push_back(ConstraintElementPtr(
 			new SingleObjectConstraintElement(setting->GetObject())));
         result.reset(new Constraint(elems, false));
@@ -8519,7 +8519,7 @@ void ValueSetDefn::Intersect(ValueSetPtr& other)
     if (elements.get() == NULL || elements->size() == 0)
         type.reset(new DefinedType(other->GetType(),""));
 
-	std::auto_ptr<ConstraintElementVector> root(new ConstraintElementVector);
+	std::unique_ptr<ConstraintElementVector> root(new ConstraintElementVector);
 	root->swap(*elements);
     root->insert(root->end(), other->GetElements()->begin(), other->GetElements()->end());
     elements.reset(new ConstraintElementVector);

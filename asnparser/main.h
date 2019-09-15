@@ -233,10 +233,10 @@ class Constraint : public Printable
   public:
 	Constraint(bool extend) : extendable(extend){};
     Constraint(ConstraintElementPtr& elmt);
-	Constraint(std::auto_ptr<ConstraintElementVector> std, 
+	Constraint(std::unique_ptr<ConstraintElementVector> std, 
 		       bool extend, 
-			   std::auto_ptr<ConstraintElementVector> ext =
-				std::auto_ptr<ConstraintElementVector>());
+			   std::unique_ptr<ConstraintElementVector> ext =
+				std::unique_ptr<ConstraintElementVector>());
 
 	Constraint(const Constraint& other);
 
@@ -263,7 +263,7 @@ class Constraint : public Printable
 
 	void GetCharacterSet(std::string& characterSet) const;
 
-	virtual std::auto_ptr<Constraint> Clone() const;
+	virtual std::unique_ptr<Constraint> Clone() const;
 	bool HasPERInvisibleConstraint(const Parameter&) const;
     void GenerateObjectSetInstanceCode(const std::string& prefix, std::ostream& cxx) const;
     void GenerateObjSetAccessCode(std::ostream& );
@@ -290,7 +290,7 @@ class ElementListConstraintElement : public ConstraintElementBase
 {
   public:
     ElementListConstraintElement();
-    ElementListConstraintElement(std::auto_ptr<ConstraintElementVector> list);
+    ElementListConstraintElement(std::unique_ptr<ConstraintElementVector> list);
     void PrintOn(std::ostream &) const;
  
     virtual void GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const;
@@ -442,7 +442,7 @@ class WithComponentConstraintElement : public NestedConstraintConstraintElement
 class InnerTypeConstraintElement : public ElementListConstraintElement
 {
   public:
-    InnerTypeConstraintElement(std::auto_ptr<ConstraintElementVector> list, bool partial);
+    InnerTypeConstraintElement(std::unique_ptr<ConstraintElementVector> list, bool partial);
 
     void PrintOn(std::ostream &) const;
     virtual void GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const;
@@ -473,14 +473,14 @@ class TableConstraint
 {
   public:
 	TableConstraint(std::shared_ptr<DefinedObjectSet> objSet, 
-		  std::auto_ptr<StringList> atNotations = std::auto_ptr<StringList>());
+		  std::unique_ptr<StringList> atNotations = std::unique_ptr<StringList>());
 	~TableConstraint();
 	bool ReferenceType(const TypeBase& type);
     std::string GetObjectSetIdentifier() const;
     const StringList* GetAtNotations() const { return atNotations.get();}
   private:
     std::shared_ptr<DefinedObjectSet> objSet;
-	std::auto_ptr<StringList> atNotations;
+	std::unique_ptr<StringList> atNotations;
 };
 
 /////////////////////////////////////////////
@@ -1447,7 +1447,7 @@ public:
     void ResolveReference() const;
 protected:
 	TypePtr type;
-	std::auto_ptr<ConstraintElementVector> elements;
+	std::unique_ptr<ConstraintElementVector> elements;
     bool extendable;
 };
 
@@ -1837,11 +1837,11 @@ public:
 	DefaultSyntaxBuilder(TokenGroupPtr tkGrp);
 	~DefaultSyntaxBuilder();
 	void AddToken(DefinedSyntaxToken* token);
-	std::auto_ptr<FieldSettingList> GetDefaultSyntax();
+	std::unique_ptr<FieldSettingList> GetDefaultSyntax();
 	void ResetTokenGroup();
 private:
 	TokenGroupPtr tokenGroup;
-	std::auto_ptr<FieldSettingList> setting;
+	std::unique_ptr<FieldSettingList> setting;
 };
 
 class ObjectClassBase : public Printable
@@ -1881,7 +1881,7 @@ public:
 
 	~ObjectClassDefn();
 
-	void SetFieldSpecs(std::auto_ptr<FieldSpecsList> list);
+	void SetFieldSpecs(std::unique_ptr<FieldSpecsList> list);
 	void SetWithSyntaxSpec(TokenGroupPtr list);
 
 	FieldSpec* GetField(const std::string& fieldName);
@@ -1902,7 +1902,7 @@ public:
 	const std::string& GetKeyName() const { return keyName; }
 	void GenerateCplusplus(std::ostream& hdr, std::ostream& cxx, std::ostream& inl);
 protected:
-	std::auto_ptr<FieldSpecsList> fieldSpecs;
+	std::unique_ptr<FieldSpecsList> fieldSpecs;
 	TokenGroupPtr withSyntaxSpec;
 	TypePtr keyType;
 	std::string keyName;
@@ -2056,7 +2056,7 @@ protected:
 class FieldSetting : public Printable
 {
 public:
-	FieldSetting(const std::string& fieldname, std::auto_ptr<Setting> aSetting);
+	FieldSetting(const std::string& fieldname, std::unique_ptr<Setting> aSetting);
 	~FieldSetting();
 
 	const std::string& GetName() const { return name;}
@@ -2072,7 +2072,7 @@ public:
 protected:
 	std::string name;
     std::string identifier;
-	 std::auto_ptr<Setting> setting; 
+	 std::unique_ptr<Setting> setting; 
 };
 
 
@@ -2088,14 +2088,14 @@ public:
 	virtual bool SetObjectClass(const ObjectClassBase* definedClass) = 0;
 	virtual const ObjectClassBase* GetObjectClass() const = 0;
 	virtual const Setting* GetSetting(const std::string& fieldname) const = 0; 
-	void SetParameters(std::auto_ptr<ParameterList> list);
+	void SetParameters(std::unique_ptr<ParameterList> list);
 	virtual void GenerateCplusplus(std::ostream&  , std::ostream & , std::ostream & ){}
 	virtual bool IsExtendable() const =0;
 	virtual void GenerateInstanceCode(std::ostream& cxx) const =0;
 protected:
 	virtual bool VerifyObjectDefinition() = 0 ;
 	std::string name;
-	std::auto_ptr<ParameterList> parameters;
+	std::unique_ptr<ParameterList> parameters;
 };
 
 typedef std::vector<InformationObjectPtr> InformationObjectList;
@@ -2131,7 +2131,7 @@ private:
 class DefaultObjectDefn : public InformationObject
 {
 public:
-	DefaultObjectDefn(std::auto_ptr<FieldSettingList> list) : settings(list){}
+	DefaultObjectDefn(std::unique_ptr<FieldSettingList> list) : settings(list){}
 	~DefaultObjectDefn(){ }
 	bool VerifyObjectDefinition();
 
@@ -2144,7 +2144,7 @@ public:
 	virtual bool IsExtendable() const ;
 	virtual void GenerateInstanceCode(std::ostream& cxx) const;
 protected:
-	std::auto_ptr<FieldSettingList> settings;
+	std::unique_ptr<FieldSettingList> settings;
 	const ObjectClassBase* referenceClass;
 };
 
@@ -2186,11 +2186,11 @@ protected:
 class SettingToken : public DefinedSyntaxToken
 {
 public:
-	SettingToken(std::auto_ptr<Setting> set) : setting(set) {}
+	SettingToken(std::unique_ptr<Setting> set) : setting(set) {}
 	~SettingToken() { }
 	virtual FieldSettingPtr MatchSetting(const std::string&) ;
 protected:
-	std::auto_ptr<Setting> setting;
+	std::unique_ptr<Setting> setting;
 };
 
 class EndSyntaxToken : public DefinedSyntaxToken

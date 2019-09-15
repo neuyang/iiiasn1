@@ -1472,23 +1472,23 @@ ExceptionIdentification
 ElementSetSpecs
   : ElementSetSpec
       {
-	$$ = new Constraint(std::auto_ptr<ConstraintElementVector>($1), false);
+	$$ = new Constraint(std::unique_ptr<ConstraintElementVector>($1), false);
       }
   | ElementSetSpec  ',' '.' '.' '.'
       {
-	$$ = new Constraint(std::auto_ptr<ConstraintElementVector>($1), true);
+	$$ = new Constraint(std::unique_ptr<ConstraintElementVector>($1), true);
       }
   | '.' '.' '.' ',' ElementSetSpec
       {
-	$$ = new Constraint(std::auto_ptr<ConstraintElementVector>(), 
+	$$ = new Constraint(std::unique_ptr<ConstraintElementVector>(), 
 						true, 
-						std::auto_ptr<ConstraintElementVector>($5));
+						std::unique_ptr<ConstraintElementVector>($5));
       }
   | ElementSetSpec  ',' '.' '.' '.' ',' ElementSetSpec
       {
-	$$ = new Constraint(std::auto_ptr<ConstraintElementVector>($1), 
+	$$ = new Constraint(std::unique_ptr<ConstraintElementVector>($1), 
 						true, 
-						std::auto_ptr<ConstraintElementVector>($7));
+						std::unique_ptr<ConstraintElementVector>($7));
       }
   ;
 
@@ -1514,7 +1514,7 @@ Unions
 	{
 	  $$ = new ConstraintElementVector;
 	  $$->push_back(ConstraintElementPtr(new ElementListConstraintElement(
-												std::auto_ptr<ConstraintElementVector>($1))));
+												std::unique_ptr<ConstraintElementVector>($1))));
 	}
       }
   | Unions UnionMark Intersections
@@ -1526,7 +1526,7 @@ Unions
 	}
 	else 
 	  $$->push_back(ConstraintElementPtr(new ElementListConstraintElement(
-				std::auto_ptr<ConstraintElementVector>($3))));
+				std::unique_ptr<ConstraintElementVector>($3))));
       }
   ;
 
@@ -1573,7 +1573,7 @@ Elements
   | ObjectSetElements
   | '(' ElementSetSpec ')'
       {
-	$$ = new ElementListConstraintElement(std::auto_ptr<ConstraintElementVector>($2));
+	$$ = new ElementListConstraintElement(std::unique_ptr<ConstraintElementVector>($2));
       }
   ;
 
@@ -1677,11 +1677,11 @@ InnerTypeConstraints
 MultipleTypeConstraints
   : '{' TypeConstraints '}'			/* FullSpecification */
       {
-	$$ = new InnerTypeConstraintElement(std::auto_ptr<ConstraintElementVector>($2), false);
+	$$ = new InnerTypeConstraintElement(std::unique_ptr<ConstraintElementVector>($2), false);
       }
   | '{'  '.' '.' '.' ',' TypeConstraints '}'	/* PartialSpecification */
       {
-	$$ = new InnerTypeConstraintElement(std::auto_ptr<ConstraintElementVector>($6), true);
+	$$ = new InnerTypeConstraintElement(std::unique_ptr<ConstraintElementVector>($6), true);
       }
   ;
 
@@ -1801,7 +1801,7 @@ SimpleTableConstraint
 ComponentRelationConstraint
   : '{' DefinedObjectSet '}' '{' AtNotations '}'
       { 
-	$$ = new TableConstraint(DefinedObjectSetPtr($2), std::auto_ptr<StringList>($5));  
+	$$ = new TableConstraint(DefinedObjectSetPtr($2), std::unique_ptr<StringList>($5));  
 	  }
   ;
 
@@ -1938,7 +1938,7 @@ ObjectClassDefn
     {
 	    ObjectClassDefn* ocd = new ObjectClassDefn;
 		$$ = ocd;
-		ocd->SetFieldSpecs(std::auto_ptr<FieldSpecsList>($3));
+		ocd->SetFieldSpecs(std::unique_ptr<FieldSpecsList>($3));
 		ocd->SetWithSyntaxSpec(TokenGroupPtr($5));
 		InWithSyntaxContext = false;
     }
@@ -2314,7 +2314,7 @@ ObjectDefn
 	}
   | DefaultSyntax
     {
-		$$ = new DefaultObjectDefn(std::auto_ptr<FieldSettingList>($1));
+		$$ = new DefaultObjectDefn(std::unique_ptr<FieldSettingList>($1));
 	}  
 ;
 
@@ -2336,7 +2336,7 @@ FieldSettings
 	  {
 	$$ = $1;
 	classStack->top()->GetField(*$3)->EndParseSetting();
-    $1->push_back(FieldSettingPtr(new FieldSetting(*$3, std::auto_ptr<Setting>($5))));
+    $1->push_back(FieldSettingPtr(new FieldSetting(*$3, std::unique_ptr<Setting>($5))));
     delete $3;
 	  }
   | PrimitiveFieldName
@@ -2347,7 +2347,7 @@ FieldSettings
 	  {
 	$$ = new FieldSettingList;
 	classStack->top()->GetField(*$1)->EndParseSetting();
-	$$->push_back(FieldSettingPtr(new FieldSetting(*$1, std::auto_ptr<Setting>($3))));
+	$$->push_back(FieldSettingPtr(new FieldSetting(*$1, std::unique_ptr<Setting>($3))));
 	delete $1;
 	  }
   ;
@@ -2382,7 +2382,7 @@ DefinedSyntaxToken
   }
   | Setting
   {
-	$$ = new SettingToken(std::auto_ptr<Setting>($1)); 
+	$$ = new SettingToken(std::unique_ptr<Setting>($1)); 
   }
   ;
 
@@ -2426,7 +2426,7 @@ ObjectSetSpec
   : ElementSetSpecs
   | '.''.''.'
     {
-	  $$ = new Constraint(std::auto_ptr<ConstraintElementVector>(), true); 
+	  $$ = new Constraint(std::unique_ptr<ConstraintElementVector>(), true); 
 	}
   ;
 
@@ -2545,7 +2545,7 @@ ParameterizedObjectAssignment
 	DummyParameters = NULL;
 	$6->SetName(*$1); delete $1;
     $6->SetObjectClass($3); 
-	$6->SetParameters(std::auto_ptr<ParameterList>($2));
+	$6->SetParameters(std::unique_ptr<ParameterList>($2));
     Module->AddInformationObject(InformationObjectPtr($6));
 	  }
   ;

@@ -67,7 +67,7 @@ void H450Test()
 	ROA::Invoke<H4501::InvokeIdSet, H4501::OperationSet>& invoke = ros.select_invoke();
 	invoke.set_invokeId(1);
 	invoke.set_opcode(h4502Module.get_callTransferInitiate().operationCode);
-	std::auto_ptr<H4502::CTInitiateArg> arg(new H4502::CTInitiateArg);
+	std::unique_ptr<H4502::CTInitiateArg> arg(new H4502::CTInitiateArg);
 	arg->set_callIdentity("1111");
 	arg->set_reroutingNumber().set_destinationAddress().resize(1);
 	H225::AliasAddress& addr = arg->ref_reroutingNumber().ref_destinationAddress()[0];
