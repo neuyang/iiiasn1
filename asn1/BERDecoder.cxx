@@ -59,20 +59,17 @@ bool CHOICE::setID(unsigned tagVal, unsigned tagClass)
 	{
 		if (!createSelection())
 			return false;
-	}
-	else if ( info()->tags[0] == 0)
-    {
+	} else if (info()->tags[0] == 0)
+	{
 		choiceID = 0;
 		createSelection();
 		CHOICE* obj = std::static_cast<CHOICE*>(choice.get());
 		if (obj->setID(tagVal, tagClass))
 			result = true;
 		
-        if (!result)
+		if (!result)
 			choiceID = unknownSelection_;
-    }
-
-
+	}
 	return result;
 }
 
@@ -285,22 +282,22 @@ bool BERDecoder::do_decode(SEQUENCE_OF_Base& value)
 
 bool BERDecoder::do_decode(OpenData& value)
 {
-  const char* savedPosition = beginPosition;
+	const char* savedPosition = beginPosition;
 
-  unsigned tag;
-  bool primitive;
-  unsigned entryLen;
-  if (!decodeHeader(tag, primitive, entryLen))
-    return false;
+	unsigned tag;
+	bool primitive;
+	unsigned entryLen;
+	if (!decodeHeader(tag, primitive, entryLen))
+		return false;
 
-  if (value.getTag() == 0)
-	beginPosition = savedPosition;
+	if (value.getTag() == 0)
+		beginPosition = savedPosition;
 
-  if (!value.has_buf())
-	  value.grab(new OpenBuf);
-  value.get_buf().resize(entryLen);
-  decodeBlock(&*value.get_buf().begin(), entryLen);
-  return true;
+	if (!value.has_buf())
+		value.grab(new OpenBuf);
+	value.get_buf().resize(entryLen);
+	decodeBlock(&*value.get_buf().begin(), entryLen);
+	return true;
 }
 
 bool BERDecoder::do_redecode(OpenData& value)
@@ -367,39 +364,39 @@ Visitor::VISIT_SEQ_RESULT BERDecoder::decodeExtensionRoot(SEQUENCE& value, int i
 		(endSEQUENCEPositions.back() < savedPosition))
 	return FAIL;
     
-    unsigned tag;
-    bool primitive;
-    unsigned entryLen;
-    if (!decodeHeader(tag, primitive, entryLen))
-        return FAIL;
-    beginPosition = savedPosition;
-    unsigned fieldTag = value.getFieldTag(index);
+	unsigned tag;
+	bool primitive;
+	unsigned entryLen;
+	if (!decodeHeader(tag, primitive, entryLen))
+		return FAIL;
+	beginPosition = savedPosition;
+	unsigned fieldTag = value.getFieldTag(index);
 
-    if ((fieldTag == tag) || (fieldTag == 0))
-    {
+	if ((fieldTag == tag) || (fieldTag == 0))
+	{
 
-        if (optional_id != -1)
-            value.includeOptionalField(optional_id, index);
+		if (optional_id != -1)
+			value.includeOptionalField(optional_id, index);
         
-        AbstractData* field = value.getField(index);
-        if (field)
-        {
+		AbstractData* field = value.getField(index);
+		if (field)
+		{
 			if (value.tagMode() != SEQUENCE::IMPLICIT_TAG)
 				dontCheckTag = 1;
-            if (field->decode(*this))
-					return CONTINUE;
+			if (field->decode(*this))
+				return CONTINUE;
             
-            if (optional_id != -1)
-            {
-                value.removeOptionalField(optional_id);
-                if (fieldTag == 0)
-                    return CONTINUE;
-            }
-            return FAIL;
-        }
-        return optional_id != -1 ? CONTINUE : FAIL;
-    }
-    return CONTINUE;
+			if (optional_id != -1)
+			{
+				value.removeOptionalField(optional_id);
+				if (fieldTag == 0)
+					return CONTINUE;
+			}
+			return FAIL;
+		}
+		return optional_id != -1 ? CONTINUE : FAIL;
+	}
+	return CONTINUE;
 }
 
 
@@ -410,9 +407,9 @@ Visitor::VISIT_SEQ_RESULT BERDecoder::decodeKnownExtension(SEQUENCE& value, int 
 
 bool BERDecoder::decodeUnknownExtensions(SEQUENCE& value)
 {
-  beginPosition = endSEQUENCEPositions.back();
-  endSEQUENCEPositions.pop_back();
-  return true;
+	beginPosition = endSEQUENCEPositions.back();
+	endSEQUENCEPositions.pop_back();
+	return true;
 }
 
 bool BERDecoder::decodeTag(unsigned& tag, bool & primitive)
