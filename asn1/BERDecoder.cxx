@@ -64,7 +64,7 @@ bool CHOICE::setID(unsigned tagVal, unsigned tagClass)
     {
 		choiceID = 0;
 		createSelection();
-		CHOICE* obj = boost::polymorphic_downcast<CHOICE*>(choice.get());
+		CHOICE* obj = std::static_cast<CHOICE*>(choice.get());
 		if (obj->setID(tagVal, tagClass))
 			result = true;
 		

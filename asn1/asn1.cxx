@@ -203,7 +203,7 @@ AbstractData * BOOLEAN::do_clone() const
 
 int BOOLEAN::do_compare(const AbstractData& data) const
 {
-	const BOOLEAN& that = *boost::polymorphic_downcast<const BOOLEAN*>(&data);
+	const BOOLEAN& that = *std::static_cast<const BOOLEAN*>(&data);
 	return value - that.value;
 }
 
@@ -260,7 +260,7 @@ AbstractData * INTEGER::do_clone() const
 
 int INTEGER::do_compare(const AbstractData& data) const
 {
-	const INTEGER& that = *boost::polymorphic_downcast<const INTEGER*>(&data);
+	const INTEGER& that = *std::static_cast<const INTEGER*>(&data);
 	if (getLowerLimit() >= 0)
 		return value - that.value;
 	else
@@ -496,7 +496,7 @@ AbstractData * OBJECT_IDENTIFIER::do_clone() const
 
 int OBJECT_IDENTIFIER::do_compare(const AbstractData& other) const
 {
-	const OBJECT_IDENTIFIER& that = *boost::polymorphic_downcast<const OBJECT_IDENTIFIER*>(&other);
+	const OBJECT_IDENTIFIER& that = *std::static_cast<const OBJECT_IDENTIFIER*>(&other);
 	int min_level = std::min(levels(), that.levels());
 	for (int i = 0; i < min_level; ++i)
 		if (value[i] != that.value[i])
@@ -547,7 +547,7 @@ AbstractData* BIT_STRING::do_clone() const
 
 int BIT_STRING::do_compare(const AbstractData& other) const
 {
-	const BIT_STRING& that = *boost::polymorphic_downcast<const BIT_STRING*>(&other);
+	const BIT_STRING& that = *std::static_cast<const BIT_STRING*>(&other);
 	int nBytes = std::min(bitData.size(), that.bitData.size());
 	for (int i = 0 ; i < nBytes; ++i)
 	{
@@ -610,7 +610,7 @@ AbstractData * OCTET_STRING::do_clone() const
 
 int OCTET_STRING::do_compare(const AbstractData& other) const
 {
-	const OCTET_STRING& that = *boost::polymorphic_downcast<const OCTET_STRING*>(&other);
+	const OCTET_STRING& that = *std::static_cast<const OCTET_STRING*>(&other);
 	return lexicographic_compare_bytes(&(*begin()), &(*end()), &(*that.begin()), &(*that.end()));
 }
 
@@ -654,7 +654,7 @@ AbstractData* AbstractString::do_clone() const
 
 int AbstractString::do_compare(const AbstractData& other) const
 {
-	const AbstractString& that = *boost::polymorphic_downcast<const AbstractString*>(&other);
+	const AbstractString& that = *std::static_cast<const AbstractString*>(&other);
 	return base_string::compare(that);
 }
 
@@ -838,7 +838,7 @@ AbstractData * BMPString::do_clone() const
 
 int BMPString::do_compare(const AbstractData& other) const 
 {
-	const BMPString& that = *boost::polymorphic_downcast<const BMPString*>(&other);
+	const BMPString& that = *std::static_cast<const BMPString*>(&other);
 	return base_string::compare(that);
 }
 
@@ -957,7 +957,7 @@ void GeneralizedTime::swap(GeneralizedTime& other)
 
 int GeneralizedTime::do_compare(const AbstractData& other) const 
 {
-	const GeneralizedTime& that = *boost::polymorphic_downcast<const GeneralizedTime*>(&other);
+	const GeneralizedTime& that = *std::static_cast<const GeneralizedTime*>(&other);
 	const int* src = &year, *dst = &that.year;
 	for (; src != &mindiff; ++src, ++dst)
 		if (*src != *dst)
@@ -1054,7 +1054,7 @@ void CHOICE::swap(CHOICE& other)
 
 int CHOICE::do_compare(const AbstractData& other) const
 {
-	const CHOICE& that = *boost::polymorphic_downcast<const CHOICE*>(&other);
+	const CHOICE& that = *std::static_cast<const CHOICE*>(&other);
 	if (choiceID >= 0 && choiceID == that.choiceID)
 		return choice->compare(*that.choice);
 	return choiceID - that.choiceID;
@@ -1261,7 +1261,7 @@ void SEQUENCE::swap(SEQUENCE& other)
 
 int SEQUENCE::do_compare(const AbstractData& other) const
 {
-	const SEQUENCE& that = *boost::polymorphic_downcast<const SEQUENCE*>(&other);
+	const SEQUENCE& that = *std::static_cast<const SEQUENCE*>(&other);
 	assert(info_ == that.info_);
 
     int lastOptionalId = -1, result;
@@ -1346,7 +1346,7 @@ void SEQUENCE_OF_Base::clear()
 
 int SEQUENCE_OF_Base::do_compare(const AbstractData& other) const
 {
-  const SEQUENCE_OF_Base& that = *boost::polymorphic_downcast<const SEQUENCE_OF_Base*>(&other);
+  const SEQUENCE_OF_Base& that = *std::static_cast<const SEQUENCE_OF_Base*>(&other);
   Container::const_iterator first1 = container.begin(), last1 = container.end();
   Container::const_iterator first2 = that.container.begin(), last2 = that.container.end();
   for (; first1 != last1 && first2 != last2; ++first1, ++first2)
@@ -1448,7 +1448,7 @@ bool OpenData::do_accept(ConstVisitor& visitor) const
 
 int OpenData::do_compare(const AbstractData& other) const
 {
-	const OpenData& that = *boost::polymorphic_downcast<const OpenData*>(&other);
+	const OpenData& that = *std::static_cast<const OpenData*>(&other);
 	if (has_data() && that.has_data())
 		return get_data().compare(that.get_data());
 	if (has_buf() && that.has_buf())
