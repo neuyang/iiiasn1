@@ -322,9 +322,9 @@ ModuleDefinition* FindModule(const char* name)
 
 
 template <class T>
-std::ostream& operator << (std::ostream& os, const std::vector<boost::shared_ptr<T> >& cont)
+std::ostream& operator << (std::ostream& os, const std::vector<std::shared_ptr<T> >& cont)
 {
-	typename std::vector<boost::shared_ptr<T> >::const_iterator it, last = cont.end();
+	typename std::vector<std::shared_ptr<T> >::const_iterator it, last = cont.end();
 	for (it = cont.begin(); it != last; ++it)
 		os << **it;
 	return os;
@@ -1006,7 +1006,7 @@ void ElementListConstraintElement::AppendElements(
 
 ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectField(const std::string& field) const
 {
-	boost::shared_ptr<ElementListConstraintElement> 
+	std::shared_ptr<ElementListConstraintElement> 
 		elem(new  ElementListConstraintElement);
 	ConstraintElementVector::const_iterator i = elements.begin(), e = elements.end();
 	for (; i != e; ++i)
@@ -1031,7 +1031,7 @@ ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectField(const st
 
 ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectSetField(const std::string& field) const
 {
-	boost::shared_ptr<ElementListConstraintElement> 
+	std::shared_ptr<ElementListConstraintElement> 
 		elem(new  ElementListConstraintElement);
 	ConstraintElementVector::const_iterator i = elements.begin(), e = elements.end();
 	for (; i != e; ++i)
@@ -1540,7 +1540,7 @@ void UserDefinedConstraintElement::GenerateCplusplus(const std::string &, std::o
 
 ////////////////////////////////////////////////////////////
 
-TableConstraint::TableConstraint(boost::shared_ptr<DefinedObjectSet> os, 
+TableConstraint::TableConstraint(std::shared_ptr<DefinedObjectSet> os, 
 								std::auto_ptr<StringList> as)
 : objSet(os), atNotations(as)
 {
@@ -4839,7 +4839,7 @@ std::string ObjectClassFieldType::GetTypeName() const
 	
 }
 
-void ObjectClassFieldType::AddTableConstraint(boost::shared_ptr<TableConstraint> constraint)
+void ObjectClassFieldType::AddTableConstraint(std::shared_ptr<TableConstraint> constraint)
 {
 	tableConstraint = constraint;
 }
@@ -5586,7 +5586,7 @@ bool ModuleDefinition::ReorderTypes()
   size_t loopDetect = 0;
   size_t bubble = 0;
 
-  typedef std::list<boost::shared_ptr<TypeBase> > TypesList;
+  typedef std::list<std::shared_ptr<TypeBase> > TypesList;
   TypesList rtypes(types.begin(), types.end());
 
   TypesList::iterator itr , bubble_itr=rtypes.begin();
@@ -5995,11 +5995,11 @@ ObjectClassBasePtr ModuleDefinition::FindObjectClass(const std::string & name)
 	{
 		// add the definition of TYPE-IDENTIFIER
 		
-		boost::shared_ptr<ObjectClassDefn> type_Identifier(new ObjectClassDefn);
+		std::shared_ptr<ObjectClassDefn> type_Identifier(new ObjectClassDefn);
 		type_Identifier->SetName("TYPE-IDENTIFIER");
 		std::auto_ptr<FieldSpecsList> fieldSpecs(new FieldSpecsList);
 		
-		boost::shared_ptr<FixedTypeValueFieldSpec> idField( 
+		std::shared_ptr<FixedTypeValueFieldSpec> idField( 
 			new FixedTypeValueFieldSpec("&id"
 			 , TypePtr(new ObjectIdentifierType), false, true));
 		
@@ -8673,7 +8673,7 @@ void TypeReference::AppendToModule(ModuleDefinition* from, ModuleDefinition* to)
     assert(from);
     assert(to);
     TypePtr refType = from->FindType(name);
-	boost::shared_ptr<ImportedType> type;
+	std::shared_ptr<ImportedType> type;
     if (refType.get())
         type.reset(new ImportedType(refType));
     else 
@@ -8685,7 +8685,7 @@ void TypeReference::AppendToModule(ModuleDefinition* from, ModuleDefinition* to)
 void TypeReference::AppendToModule(const std::string& fromName, ModuleDefinition* to)
 {
     assert(to);
-	boost::shared_ptr<ImportedType> type(new ImportedType(name, parameterized));
+	std::shared_ptr<ImportedType> type(new ImportedType(name, parameterized));
     type->SetModuleName(fromName);
     to->AddType(type);
 }
@@ -8849,7 +8849,7 @@ ActualParameterPtr ObjectParameter::MakeActualParameter() const
 {
     if (isupper(name[0])) 
         return ActualParameterPtr(new ActualObjectSetParameter(
-			boost::shared_ptr<ObjectSetConstraintElement>(new DefinedObjectSet(name))));
+			std::shared_ptr<ObjectSetConstraintElement>(new DefinedObjectSet(name))));
     else
         return ActualParameterPtr(new ActualObjectParameter(InformationObjectPtr(new DefinedObject(name))));
 }
@@ -8915,9 +8915,9 @@ void ParameterList::GenerateCplusplus(std::string& templatePrefix, std::string& 
     }
 }
 
-boost::shared_ptr<ParameterList> ParameterList::GetReferencedParameters(const TypeBase& type) const
+std::shared_ptr<ParameterList> ParameterList::GetReferencedParameters(const TypeBase& type) const
 {
-	boost::shared_ptr<ParameterList> result(new ParameterList);
+	std::shared_ptr<ParameterList> result(new ParameterList);
 	for (size_t i = 0; i < rep.size(); ++i)
 	{
 		if (rep[i]->ReferencedBy(type))
@@ -9054,7 +9054,7 @@ bool ActualObjectParameter::ReferencesType(const TypeBase & type) const
 
 /////////////////////////////////////////////////////////////////////
 
-ActualObjectSetParameter::ActualObjectSetParameter(boost::shared_ptr<ObjectSetConstraintElement> objectSet)
+ActualObjectSetParameter::ActualObjectSetParameter(std::shared_ptr<ObjectSetConstraintElement> objectSet)
 : param(objectSet)
 {
 }

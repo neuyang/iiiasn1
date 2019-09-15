@@ -1070,7 +1070,7 @@ ObjectClassFieldType
 	  }
   | SimpleObjectClassFieldType '(' TableConstraint ExceptionSpec ')'
 	  {
-  $1->AddTableConstraint(boost::shared_ptr<TableConstraint>($3));
+  $1->AddTableConstraint(std::shared_ptr<TableConstraint>($3));
   $$ = $1;
 	  }
   | SimpleObjectClassFieldType '(' ConstraintSpec ExceptionSpec ')'
@@ -2666,7 +2666,7 @@ ActualParameter
 	  }
   | '{' ObjectSetParameter '}' /* ObjectSet */
       {
-    $$ = new ActualObjectSetParameter(boost::shared_ptr<ObjectSetConstraintElement>($2)); 
+    $$ = new ActualObjectSetParameter(std::shared_ptr<ObjectSetConstraintElement>($2)); 
 	  }
   ;
 

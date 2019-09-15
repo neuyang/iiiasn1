@@ -43,6 +43,7 @@
 #include <stack>
 #include <string>
 #include <iostream>
+#include <memory>
 #include <boost/smart_ptr.hpp>
 #include <cinttypes>
 
@@ -112,14 +113,14 @@ inline std::ostream& operator << (std::ostream& os, const Printable& obj)
 }
 
 //PLIST(NamedNumberList, NamedNumber);
-typedef boost::shared_ptr<NamedNumber> NamedNumberPtr;
+typedef std::shared_ptr<NamedNumber> NamedNumberPtr;
 typedef std::list<NamedNumberPtr> NamedNumberList;
 
 
 // Types
 
 class TypeBase;
-typedef boost::shared_ptr<TypeBase> TypePtr;
+typedef std::shared_ptr<TypeBase> TypePtr;
 typedef std::vector<TypePtr> TypesVector;
 
 class Tag : public Printable
@@ -191,8 +192,8 @@ class SizeConstraintElement;
 class FromConstraintElement;
 class SubTypeConstraintElement;
 
-typedef boost::shared_ptr<ValueSet> ValueSetPtr;
-typedef boost::shared_ptr<Constraint> ConstraintPtr;
+typedef std::shared_ptr<ValueSet> ValueSetPtr;
+typedef std::shared_ptr<Constraint> ConstraintPtr;
 
 class ConstraintElementBase : public Printable
 {
@@ -200,7 +201,7 @@ class ConstraintElementBase : public Printable
     ConstraintElementBase();
 	~ConstraintElementBase();
 
-    void SetExclusions(boost::shared_ptr<ConstraintElementBase> excl) { exclusions = excl; }
+    void SetExclusions(std::shared_ptr<ConstraintElementBase> excl) { exclusions = excl; }
 
     virtual void GenerateCplusplus(const std::string & fn, std::ostream & hdr, std::ostream & cxx, std::ostream & inl) const;
 	virtual void GetConstraint(std::string& ) const {}
@@ -222,10 +223,10 @@ class ConstraintElementBase : public Printable
 	virtual void PrintOn(std::ostream&) {};
 	
   protected:
-    boost::shared_ptr<ConstraintElementBase> exclusions;
+    std::shared_ptr<ConstraintElementBase> exclusions;
 };
 
-typedef boost::shared_ptr<ConstraintElementBase> ConstraintElementPtr;
+typedef std::shared_ptr<ConstraintElementBase> ConstraintElementPtr;
 typedef std::vector<ConstraintElementPtr> ConstraintElementVector;
 
 class Constraint : public Printable
@@ -274,7 +275,7 @@ class Constraint : public Printable
     ConstraintElementVector extensions;
 };
 
-typedef boost::shared_ptr<Constraint> ConstraintPtr;
+typedef std::shared_ptr<Constraint> ConstraintPtr;
 typedef std::vector<ConstraintPtr> ConstraintList;
 
 class ConstrainAllConstraintElement : public ConstraintElementBase
@@ -319,7 +320,7 @@ class ElementListConstraintElement : public ConstraintElementBase
 
 
 class ValueBase;
-typedef boost::shared_ptr<ValueBase> ValuePtr;
+typedef std::shared_ptr<ValueBase> ValuePtr;
 
 class SingleValueConstraintElement : public ConstraintElementBase
 {
@@ -452,9 +453,9 @@ class InnerTypeConstraintElement : public ElementListConstraintElement
 };
 
 class ActualParameter;
-typedef boost::shared_ptr<ActualParameter> ActualParameterPtr;
+typedef std::shared_ptr<ActualParameter> ActualParameterPtr;
 typedef std::vector<ActualParameterPtr> ActualParameterList;
-typedef boost::shared_ptr<ActualParameterList> ActualParameterListPtr;
+typedef std::shared_ptr<ActualParameterList> ActualParameterListPtr;
 
 class UserDefinedConstraintElement : public ConstraintElementBase
 {
@@ -468,18 +469,18 @@ class UserDefinedConstraintElement : public ConstraintElementBase
 };
 
 class DefinedObjectSet;
-typedef boost::shared_ptr<DefinedObjectSet> DefinedObjectSetPtr;
+typedef std::shared_ptr<DefinedObjectSet> DefinedObjectSetPtr;
 class TableConstraint 
 {
   public:
-	TableConstraint(boost::shared_ptr<DefinedObjectSet> objSet, 
+	TableConstraint(std::shared_ptr<DefinedObjectSet> objSet, 
 		  std::auto_ptr<StringList> atNotations = std::auto_ptr<StringList>());
 	~TableConstraint();
 	bool ReferenceType(const TypeBase& type);
     std::string GetObjectSetIdentifier() const;
     const StringList* GetAtNotations() const { return atNotations.get();}
   private:
-    boost::shared_ptr<DefinedObjectSet> objSet;
+    std::shared_ptr<DefinedObjectSet> objSet;
 	std::auto_ptr<StringList> atNotations;
 };
 
@@ -518,7 +519,7 @@ class ValueParameter : public Parameter
 };
 
 class DefinedObjectClass;
-typedef boost::shared_ptr<DefinedObjectClass> DefinedObjectClassPtr;
+typedef std::shared_ptr<DefinedObjectClass> DefinedObjectClassPtr;
 class ObjectParameter : public Parameter
 {
   public:
@@ -534,7 +535,7 @@ class ObjectParameter : public Parameter
     DefinedObjectClassPtr governor;
 };
 
-typedef boost::shared_ptr<Parameter> ParameterPtr;
+typedef std::shared_ptr<Parameter> ParameterPtr;
 typedef std::vector<ParameterPtr> ParameterListRep;
 
 class ParameterList : public Printable
@@ -546,13 +547,13 @@ class ParameterList : public Printable
 	Parameter* GetParameter(const char* identifier);
 	void GenerateCplusplus(std::string& templatePrefix, std::string& classNameString);
 	void PrintOn(std::ostream& strm) const;
-	boost::shared_ptr<ParameterList> GetReferencedParameters(const TypeBase& type) const;
+	std::shared_ptr<ParameterList> GetReferencedParameters(const TypeBase& type) const;
     ActualParameterListPtr MakeActualParameters() const;
 	void swap(ParameterList& other) { rep.swap(other.rep); }
 	ParameterListRep rep;
 };
 
-typedef boost::shared_ptr<ParameterList> ParameterListPtr;
+typedef std::shared_ptr<ParameterList> ParameterListPtr;
 
 ////////////////////////////////////////////
 class ModuleDefinition;
@@ -1149,7 +1150,7 @@ class ObjectIdentifierType : public TypeBase
 
 
 class ObjectClassBase;
-typedef boost::shared_ptr<ObjectClassBase> ObjectClassBasePtr;
+typedef std::shared_ptr<ObjectClassBase> ObjectClassBasePtr;
 
 class ObjectClassFieldType : public TypeBase
 {
@@ -1163,14 +1164,14 @@ class ObjectClassFieldType : public TypeBase
 	TypeBase* GetFieldType() ;
 	const TypeBase* GetFieldType() const ;
     virtual std::string GetTypeName() const;
-	void AddTableConstraint(boost::shared_ptr<TableConstraint> constraint);
+	void AddTableConstraint(std::shared_ptr<TableConstraint> constraint);
     void GenerateDecoder(std::ostream&);
 	virtual void GenerateInfo(const TypeBase* type, std::ostream& hdr, std::ostream& cxx);
     std::string GetConstrainedTypeName() const;
   protected:
     ObjectClassBasePtr asnObjectClass;
 	std::string asnObjectClassField;
-	boost::shared_ptr<TableConstraint> tableConstraint;
+	std::shared_ptr<TableConstraint> tableConstraint;
 };
 
 
@@ -1203,7 +1204,7 @@ private:
 
 
 class InformationObject;
-typedef boost::shared_ptr<InformationObject> InformationObjectPtr;
+typedef std::shared_ptr<InformationObject> InformationObjectPtr;
 
 
 class TypeFromObject : public TypeBase
@@ -1474,7 +1475,7 @@ protected:
 	ValueSetPtr rep;
 };
 
-typedef boost::shared_ptr<ObjectSetConstraintElement> ObjectSetConstraintElementPtr;
+typedef std::shared_ptr<ObjectSetConstraintElement> ObjectSetConstraintElementPtr;
 
 class ValueSetFromObjects : public ValueSet
 {
@@ -1500,12 +1501,12 @@ protected:
 // object class
 class FieldSetting;
 
-typedef boost::shared_ptr<FieldSetting> FieldSettingPtr;
+typedef std::shared_ptr<FieldSetting> FieldSettingPtr;
 typedef std::vector<FieldSettingPtr> FieldSettingList;
 
 class FieldSpec;
 //PLIST(FieldSpecsList, FieldSpec);
-typedef boost::shared_ptr<FieldSpec> FieldSpecPtr;
+typedef std::shared_ptr<FieldSpec> FieldSpecPtr;
 typedef std::vector<FieldSpecPtr> FieldSpecsList;
 
 class FieldSpec : public Printable
@@ -1683,7 +1684,7 @@ protected:
 };
 
 class DefinedObjectClass;
-typedef boost::shared_ptr<DefinedObjectClass> DefinedObjectClassPtr;
+typedef std::shared_ptr<DefinedObjectClass> DefinedObjectClassPtr;
 class ObjectFieldSpec : public FieldSpec
 {
 public:
@@ -1801,7 +1802,7 @@ private:
 	FieldSpec* field;
 };
 
-typedef boost::shared_ptr<TokenOrGroupSpec> TokenOrGroupSpecPtr;
+typedef std::shared_ptr<TokenOrGroupSpec> TokenOrGroupSpecPtr;
 typedef std::vector<TokenOrGroupSpecPtr> TokenOrGroupSpecList;
 
 class TokenGroup : public TokenOrGroupSpec
@@ -1829,7 +1830,7 @@ private:
 	size_t cursor;
 };
 
-typedef boost::shared_ptr<TokenGroup> TokenGroupPtr;
+typedef std::shared_ptr<TokenGroup> TokenGroupPtr;
 
 class DefaultSyntaxBuilder 
 {
@@ -2020,7 +2021,7 @@ protected:
 };
 
 class InformationObject;
-typedef boost::shared_ptr<InformationObject> InformationObjectPtr;
+typedef std::shared_ptr<InformationObject> InformationObjectPtr;
 class ObjectSetting : public Setting
 {
 public:
@@ -2271,7 +2272,7 @@ class ImportedObjectSet :  public InformationObjectSet
     std::string moduleName;
 };
 
-typedef boost::shared_ptr<InformationObjectSet> InformationObjectSetPtr;
+typedef std::shared_ptr<InformationObjectSet> InformationObjectSetPtr;
 typedef std::vector<InformationObjectSetPtr> InformationObjectSetList;
 class ObjectSetConstraintElement : public ConstraintElementBase
 {
@@ -2519,7 +2520,7 @@ class ActualObjectParameter : public ActualParameter
 class ActualObjectSetParameter : public ActualParameter
 {
   public:
-	ActualObjectSetParameter(boost::shared_ptr<ObjectSetConstraintElement> objectSet);
+	ActualObjectSetParameter(std::shared_ptr<ObjectSetConstraintElement> objectSet);
 	~ActualObjectSetParameter();
 	bool GenerateTemplateArgument(std::string& name) const;
 	virtual bool UseType(const TypeBase & ) const ;
@@ -2528,12 +2529,12 @@ class ActualObjectSetParameter : public ActualParameter
 	void PrintOn(std::ostream & strm) const;
 	virtual bool IsTemplateArgument() const { return true;}
   protected:
-	boost::shared_ptr<ObjectSetConstraintElement> param;
+	std::shared_ptr<ObjectSetConstraintElement> param;
 };
 
 
 
-typedef boost::shared_ptr<Symbol> SymbolPtr;
+typedef std::shared_ptr<Symbol> SymbolPtr;
 typedef std::vector<SymbolPtr> SymbolList;
 
 class ImportModule : public Printable
@@ -2562,9 +2563,9 @@ class ImportModule : public Printable
 	std::string   filename;
 };
 
-typedef boost::shared_ptr<ImportModule> ImportModulePtr;
+typedef std::shared_ptr<ImportModule> ImportModulePtr;
 typedef std::vector<ImportModulePtr> ImportsList;
-typedef boost::shared_ptr<ModuleDefinition> ModuleDefinitionPtr;
+typedef std::shared_ptr<ModuleDefinition> ModuleDefinitionPtr;
 typedef std::vector<ModuleDefinitionPtr> ModuleList;
 
 
@@ -2666,15 +2667,15 @@ class ModuleDefinition : public Printable
 };
 
 template <class T>
-boost::shared_ptr<T> FindWithName(const std::vector<boost::shared_ptr<T> >& cont, const std::string& name) 
+std::shared_ptr<T> FindWithName(const std::vector<std::shared_ptr<T> >& cont, const std::string& name) 
 {
-	typedef std::vector<boost::shared_ptr<T> > Cont;
+	typedef std::vector<std::shared_ptr<T> > Cont;
 
 	typename Cont::const_iterator itr = cont.begin(), last = cont.end();
 	for (; itr != last; ++itr)
 		if ((*itr)->GetName() == name)
 			return *itr;
-	return boost::shared_ptr<T>();
+	return std::shared_ptr<T>();
 
 }
 
