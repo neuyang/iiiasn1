@@ -139,7 +139,6 @@ bool PERDecoder::decode(ENUMERATED& value)
 	return false;
 }
 
-
 bool PERDecoder::decode(OBJECT_IDENTIFIER& value)
 {
 	// X.691 Section 23
@@ -319,7 +318,6 @@ bool PERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
 	nextPosition.bytePosition = 0;
 	return value.select(choiceID);
 }
-
 
 bool PERDecoder::decode(CHOICE& value)
 {
@@ -579,7 +577,6 @@ bool PERDecoder::decodeSmallUnsigned(unsigned & value)
 	return decodeMultiBit(len*8, value);
 }
 
-
 int PERDecoder::decodeLength(unsigned lower, unsigned upper, unsigned & len)
 {
 	// X.691 section 10.9
@@ -643,7 +640,6 @@ int PERDecoder::decodeUnsigned(unsigned lower, unsigned upper, unsigned & value)
 	}
 	return -1;
 }
-
 
 unsigned PERDecoder::decodeBlock(char * bufptr, unsigned nBytes)
 {

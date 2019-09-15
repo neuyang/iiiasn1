@@ -143,7 +143,6 @@ bool BERDecoder::decode(ENUMERATED& value)
 	return true;
 }
 
-
 bool BERDecoder::decode(OBJECT_IDENTIFIER& value)
 {
 	unsigned len;
@@ -321,7 +320,6 @@ bool BERDecoder::decode(TypeConstrainedOpenData& value)
 		beginPosition = savedPosition;
 	return value.get_data().decode(*this);
 }
-
 
 bool BERDecoder::decode(GeneralizedTime& value)
 {

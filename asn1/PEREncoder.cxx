@@ -306,7 +306,6 @@ bool PEREncoder::encodeKnownExtension(const SEQUENCE& value, int index)
 	return encodeAnyType(value.fields[index]);
 }
 
-
 bool PEREncoder::encodeConstrainedLength(const ConstrainedObject & obj, unsigned length) 
 {
 	return (encodeConstraint(obj, length) ? // 26.4
