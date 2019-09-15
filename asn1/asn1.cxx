@@ -35,7 +35,7 @@
 #endif
 
 
-#include <boost/cast.hpp>
+#include <memory>
 #include <stdio.h>
 #include "asn1.h"
 

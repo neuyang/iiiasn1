@@ -34,7 +34,7 @@
 #include <config.h>
 #endif
 
-#include <boost/cast.hpp>
+#include <memory>
 #include "asn1.h"
 
 namespace ASN1 {

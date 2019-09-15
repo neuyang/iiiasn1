@@ -34,11 +34,9 @@
 
 #include <unistd.h>
 #include "main.h"
-#include <boost/mem_fn.hpp>
-#include <boost/ref.hpp>
-#include <boost/bind.hpp>
+#include <memory>
 #include <boost/iterator_adaptors.hpp>
-#include <boost/functional.hpp>
+#include <functional>
 #include <typeinfo>
 #include <algorithm>
 #include <numeric>
@@ -55,8 +53,6 @@
 #else
 #define DIR_SEPARATOR '/'
 #endif
-
-//using namespace boost;
 
 unsigned lineNumber;
 std::string  fileName;

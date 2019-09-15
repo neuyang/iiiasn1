@@ -44,7 +44,6 @@
 #include <string>
 #include <iostream>
 #include <memory>
-#include <boost/smart_ptr.hpp>
 #include <cinttypes>
 
 extern unsigned lineNumber;
