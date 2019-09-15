@@ -6182,7 +6182,7 @@ std::string ModuleDefinition::CreateSubModules(SymbolList& exportedSymbols)
 
 void ModuleDefinition::AdjustImportedModules()
 {
-	for_all(imports, boost::mem_fn(&ImportModule::Adjust));
+	for_all(imports, std::mem_fn(&ImportModule::Adjust));
 }
 
 void ModuleDefinition::CreateObjectSetTypes()
@@ -7065,7 +7065,7 @@ void ObjectClassDefn::PrintOn(std::ostream& strm) const
 void ObjectClassDefn::ResolveReference() const
 {
 
-	std::for_each(fieldSpecs->begin(), fieldSpecs->end(), boost::mem_fn(&FieldSpec::ResolveReference));
+	std::for_each(fieldSpecs->begin(), fieldSpecs->end(), std::mem_fn(&FieldSpec::ResolveReference));
 }
 
 void ObjectClassDefn::ResolveKey()
@@ -7517,7 +7517,7 @@ bool TokenGroup::HasLiteral(const std::string& str) const
 void TokenGroup::Reset()
 {
 	cursor = 0;
-	for_all(tokenOrGroupSpecList, boost::mem_fn(&TokenOrGroupSpec::Reset));
+	for_all(tokenOrGroupSpecList, std::mem_fn(&TokenOrGroupSpec::Reset));
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -7785,7 +7785,7 @@ bool DefaultObjectDefn::IsExtendable() const
 {
 
    if (std::find_if(settings->begin(), settings->end(), 
-	                boost::mem_fn(&FieldSetting::IsExtendable))
+	                std::mem_fn(&FieldSetting::IsExtendable))
 			!= settings->end())
 		return true;
    return false;
