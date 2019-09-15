@@ -1022,7 +1022,7 @@ ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectField(const st
 	}
 	if (elem->elements.size()) {
 		ConstraintElementPtr elm = 
-			boost::shared_static_cast<ConstraintElementBase>(elem);		
+			std::static_pointer_cast<ConstraintElementBase>(elem);		
 		return ConstraintPtr(new Constraint(elm));
 	}
 	else
@@ -1045,9 +1045,9 @@ ConstraintPtr ElementListConstraintElement::GetObjectSetFromObjectSetField(const
 				cons->GetExtensionElements().end());
 		}
 	}
-	if (elem->elements.size()){
+	if (elem->elements.size()) {
 		ConstraintElementPtr elm = 
-			boost::shared_static_cast<ConstraintElementBase>(elem);		
+			std::static_pointer_cast<ConstraintElementBase>(elem);		
 		return ConstraintPtr(new Constraint(elm));
 	}
 	else
