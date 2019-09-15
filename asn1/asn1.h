@@ -189,7 +189,7 @@ class AbstractData
 	unsigned getTag() const { return info()->tag; }
 
 	/**
-	 * Accept a \c Visitor which implement a fragment of algorithm or request for
+	 * Decode a \c Visitor which implement a fragment of algorithm or request for
 	 * each corresponding class of ASN.1 object structure.
 	 *
 	 * @param v The \c Visitor.
@@ -197,7 +197,7 @@ class AbstractData
 	 */
 	bool decode(Visitor& v) { return do_decode(v) ;}
 	/**
-	 * Accept a \c Visitor which implement a fragment of algorithm or request for
+	 * Encode a \c Visitor which implement a fragment of algorithm or request for
 	 * each corresponding class of ASN.1 object structure.
 	 *
 	 * @param v The \c ConstVisitor.
@@ -2338,8 +2338,8 @@ class CoderEnv;
  * a byte stream into a ASN.1 value; that is to say, they modify the ASN.1 objects they visit to
  * some specific values.
  *
- * All classes inherit from shall override the do_visit() member functions, which are called
- * by their corresponding visit() member functions. The do_visit() member functions are all
+ * All classes inherit from shall override the do_decode() member functions, which are called
+ * by their corresponding decode() member functions. The do_decode() member functions are all
  * declared private for they should not be called by their derivatives.
  *
  * @see BERDecoder, PERDecoder, AVNDecoder
@@ -2398,7 +2398,7 @@ private:
 	virtual bool do_decode(GeneralizedTime& value)=0;
 
     /**
-     * Called by \c visit() before visiting any component in the \c SEQUENCE.
+     * Called by \c decode() before visiting any component in the \c SEQUENCE.
      *
      * @param value The \c SEQUENCE been visited.
      * @return If the return value is FAIL, it indicates the operation is fail and stop visiting
@@ -2409,7 +2409,7 @@ private:
      */
 	virtual VISIT_SEQ_RESULT preDecodeExtensionRoots(SEQUENCE& value) { return CONTINUE; }
     /**
-     * Called by \c visit() while visiting a component in the extension root of
+     * Called by \c decode() while visiting a component in the extension root of
      * the \c SEQUENCE.
      *
      * @param value The \c SEQUENCE been visited.
@@ -2423,7 +2423,7 @@ private:
      */
 	virtual VISIT_SEQ_RESULT decodeExtensionRoot(SEQUENCE& value, int pos, int optional_id) { return FAIL;}
     /**
-     * Called by \c visit() before visiting any extension component of the \c SEQUENCE.
+     * Called by \c decode() before visiting any extension component of the \c SEQUENCE.
      *
      * @param value The \c SEQUENCE been visited.
      * @return If the return value is FAIL, it indicates the operation is fail and stop visiting
@@ -2433,7 +2433,7 @@ private:
      */
 	virtual VISIT_SEQ_RESULT preDecodeExtensions(SEQUENCE& value) { return CONTINUE;}
     /**
-     * Called by \c visit() when visiting a component which locates after the extension mark of
+     * Called by \c decode() when visiting a component which locates after the extension mark of
      * a \c SEQUENCE.
      *
      * @param value The \c SEQUENCE been visited.
@@ -2447,7 +2447,7 @@ private:
      */
 	virtual VISIT_SEQ_RESULT decodeKnownExtension(SEQUENCE& value, int pos, int optional_id){ return FAIL;}
     /**
-     * Called by \c visit() after visiting all known extension components of the \c SEQUENCE.
+     * Called by \c decode() after visiting all known extension components of the \c SEQUENCE.
      *
      * @param value The \c SEQUENCE been visited.
      * @return true if the operation is successful.
@@ -2471,8 +2471,8 @@ private:
  * \c ConstVisitor, are used to encode an ASN.1 value into a byte stream; that is to say, the  
  * \c BEREncoder and PEREncoder do not modify the ASN.1 objects they visit.
  *
- * All classes inherit from shall override the do_visit() member functions, which are called
- * by their corresponding visit() member functions. The do_visit() member functions are all
+ * All classes inherit from shall override the do_encode() member functions, which are called
+ * by their corresponding encode() member functions. The do_encode() member functions are all
  * declared private for they should not be called by their derivatives.
  *
  *@see BEREncoder, PEREncoder, AVNEncoder

@@ -74,201 +74,187 @@ bool InvalidTracer::do_encode(const BOOLEAN& value)
 }
 
 bool InvalidTracer::do_encode(const INTEGER& value) { 
-    if (value.getLowerLimit() >= 0)
-    {
-        unsigned v = static_cast<unsigned>(value.getValue());
-        if (value.getValue() < value.getLowerLimit())
-            strm << " The INTEGER value " << v << " is smaller than lower bound " << value.getLowerLimit();
-        else if (v > value.getUpperLimit() && !value.extendable())
-            strm << " The INTEGER value " << v << " is greater than upper bound " << value.getUpperLimit();
-        else 
-            return true;
-    }
-    else
-    {
-        if (value.getValue() < value.getLowerLimit() )
-            strm << " The INTEGER value " << value.getValue() << " is smaller than lower bound " << value.getLowerLimit();
-        else if (static_cast<unsigned>(value.getValue()) > value.getUpperLimit() && !value.extendable())
-            strm << " The INTEGER value " << value.getValue() << " is greater than upper bound " << value.getUpperLimit();
-        else
-            return true;
-    }
-    return false;
+	if (value.getLowerLimit() >= 0)
+	{
+		unsigned v = static_cast<unsigned>(value.getValue());
+		if (value.getValue() < value.getLowerLimit())
+			strm << " The INTEGER value " << v << " is smaller than lower bound " << value.getLowerLimit();
+		else if (v > value.getUpperLimit() && !value.extendable())
+			strm << " The INTEGER value " << v << " is greater than upper bound " << value.getUpperLimit();
+		else 
+			return true;
+	} else
+	{
+		if (value.getValue() < value.getLowerLimit() )
+			strm << " The INTEGER value " << value.getValue() << " is smaller than lower bound " << value.getLowerLimit();
+		else if (static_cast<unsigned>(value.getValue()) > value.getUpperLimit() && !value.extendable())
+			strm << " The INTEGER value " << value.getValue() << " is greater than upper bound " << value.getUpperLimit();
+		else
+			return true;
+	}
+	return false;
 }
 
 bool InvalidTracer::do_encode(const ENUMERATED& value)
 { 
-    if (value.asInt() > value.getMaximum())
-    {
-        strm << " This ENUMERATED has invalid value " << value.asInt();
-        return false;
-    }
-    return true; 
+	if (value.asInt() > value.getMaximum())
+	{
+		strm << " This ENUMERATED has invalid value " << value.asInt();
+		return false;
+	}
+	return true; 
 }
 
 bool InvalidTracer::do_encode(const OBJECT_IDENTIFIER& value) 
 { 
-    if (value.levels() == 0)
-    {
-        strm << " This OBJECT IDENTIFIER is not assigned";
-        return false;
-    }
-    return true; 
+	if (value.levels() == 0)
+	{
+		strm << " This OBJECT IDENTIFIER is not assigned";
+		return false;
+	}
+	return true; 
 }
 
 bool InvalidTracer::do_encode(const BIT_STRING& value) 
 { 
-    if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
-    {
-        strm << " This BIT STRING has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
-    }
-    else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
-    {
-        strm << " This BIT STRING has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
-    }
-    else
-        return true;
+	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
+	{
+		strm << " This BIT STRING has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
+	} else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
+	{
+		strm << " This BIT STRING has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
+	} else
+		return true;
 
-    return false; 
+	return false; 
 }
 
 bool InvalidTracer::do_encode(const OCTET_STRING& value) 
 { 
-    if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
-    {
-        strm << " This OCTET STRING has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
-    }
-    else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
-    {
-        strm << " This OCTET STRING has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
-    }
-    else
-        return true;
+	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
+	{
+		strm << " This OCTET STRING has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
+	} else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
+	{
+		strm << " This OCTET STRING has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
+	} else
+		return true;
 
-    return false; 
+	return false; 
 }
 
 bool InvalidTracer::do_encode(const AbstractString& value)
 { 
-    int pos;
-    if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
-    {
-        strm << " This AbstractString has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
-    }
-    else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
-    {
-        strm << " This AbstractString has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
-    }
-    else if ( (pos = value.find_first_invalid()) != std::string::npos)
-    {
-        strm << " The character '" << value[pos]  << "' is not valid for the string";
-    }
-    else
-        return true;
+	int pos;
+	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
+	{
+		strm << " This AbstractString has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
+	} else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
+	{
+		strm << " This AbstractString has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
+	} else if ((pos = value.find_first_invalid()) != std::string::npos)
+	{
+		strm << " The character '" << value[pos]  << "' is not valid for the string";
+	} else
+		return true;
 
-    return false; 
+	return false; 
 }
 
 bool InvalidTracer::do_encode(const BMPString& value)
 {
-    unsigned pos;
-    if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
-    {
-        strm << " This BMPString has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
-    }
-    else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
-    {
-        strm << " This BMPString has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
-    }
-    else if ( (pos = value.first_illegal_at()) < value.size())
-    {
-        strm << " The character '" << value[pos]  << "' is not valid for the string";
-    }
-    else
-        return true;
+	unsigned pos;
+	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
+	{
+		strm << " This BMPString has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
+	} else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
+	{
+		strm << " This BMPString has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
+	} else if ((pos = value.first_illegal_at()) < value.size())
+	{
+		strm << " The character '" << value[pos]  << "' is not valid for the string";
+	} else
+		return true;
 
-    return false; 
+	return false; 
 }
 
 bool InvalidTracer::do_encode(const CHOICE& value)
 {
-    if (value.currentSelection() == CHOICE::unselected_)
-        strm << " This CHOICE is not selected";
-    else if (value.currentSelection() == CHOICE::unknownSelection_)
-        strm << " This selection is not understood by this decoder";
-    else 
-    {
-        strm << "." << value.getSelectionName();
-        return value.getSelection()->encode(*this);
-    }
-    return false;
+	if (value.currentSelection() == CHOICE::unselected_)
+		strm << " This CHOICE is not selected";
+	else if (value.currentSelection() == CHOICE::unknownSelection_)
+		strm << " This selection is not understood by this decoder";
+	else {
+		strm << "." << value.getSelectionName();
+		return value.getSelection()->encode(*this);
+	}
+	return false;
 }
 
 bool InvalidTracer::do_encode(const OpenData& value)
 { 
-    if (value.has_data())
-        return value.get_data().encode(*this);
+	if (value.has_data())
+		return value.get_data().encode(*this);
 
-    if (!value.has_buf())
-    {
-        strm << " This Open Type does not contain any valid data";
-        return false;
-    }
-
-    return true; 
+	if (!value.has_buf())
+	{
+		strm << " This Open Type does not contain any valid data";
+		return false;
+	}
+	return true; 
 }
 
 bool InvalidTracer::do_encode(const GeneralizedTime& value)  
 { 
-    if (value.isStrictlyValid())
-    {
-        strm << " This GeneralizedTime is not valid";
-        return false;
-    }
-    return true;
+	if (value.isStrictlyValid())
+	{
+		strm << " This GeneralizedTime is not valid";
+		return false;
+	}
+	return true;
 }
 
 bool InvalidTracer::do_encode(const SEQUENCE_OF_Base& value)
 { 
-    if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
-    {
-        strm << " This SEQUENCE OF has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
-        return false;
-    }
-    else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
-    {
-        strm << " This SEQUENCE OF has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
-        return false;
-    }
+	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
+	{
+		strm << " This SEQUENCE OF has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
+		return false;
+	} else
+	if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
+	{
+		strm << " This SEQUENCE OF has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
+		return false;
+	}
 
-    SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
-
-    for (; first != last; ++first)
-    {
+	SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
+	for (; first != last; ++first)
+	{
 		InvalidTracer tracer;
-        if (! (*first)->encode(tracer))
-        {
-            strm << "[" << first- value.begin() << "]" << tracer;
-            return false;
-        }
-    }
-    return true;
+		if (!(*first)->encode(tracer))
+		{
+			strm << "[" << first- value.begin() << "]" << tracer;
+			return false;
+		}
+	}
+	return true;
 }
 
 bool InvalidTracer::encodeExtensionRoot(const SEQUENCE& value, int index)
 { 
-   InvalidTracer tracer;
-   if (!value.getField(index)->encode(tracer))
-   {
-       strm <<  "." << value.getFieldName(index) << tracer;
-       return false;
-   }
-   return true; 
+	InvalidTracer tracer;
+	if (!value.getField(index)->encode(tracer))
+	{
+		strm <<  "." << value.getFieldName(index) << tracer;
+		return false;
+	}
+	return true; 
 }
 
 bool InvalidTracer::encodeKnownExtension(const SEQUENCE& value, int index) 
 { 
-    return encodeExtensionRoot(value, index); 
+	return encodeExtensionRoot(value, index); 
 }
 
 bool trace_invalid(std::ostream& os, const char* str, const AbstractData& data)
