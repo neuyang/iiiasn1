@@ -17,8 +17,6 @@
 
 #include "asn1test.h"
  
-
-
 bool CoderTest(const char* str, CoderEnv& env, const AbstractData& v1, AbstractData& v2, 
 			   const char* encodedStrm, int lineno)
 {
@@ -43,8 +41,7 @@ bool CoderTest(const char* str, CoderEnv& env, const AbstractData& v1, AbstractD
 	else if (!result)
 	{
 		printf("decode error\n");
-	}
-	else
+	} else
 	{
 		result = false;
 		printf( "decode result doesn't match the original value\n");
@@ -66,7 +63,7 @@ int main(int argc, char* argv[])
 	SMC1Init();
 #endif
 	H245Test();
-    H225Test();
+	H225Test();
 	H248Test();    
 	H450Test();
 	return 0; 

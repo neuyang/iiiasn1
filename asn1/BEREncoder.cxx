@@ -346,6 +346,32 @@ bool BEREncoder::encodeKnownExtension(const SEQUENCE& value, int index)
 	return value.getField(index)->encode(*this);
 }
 
+void BEREncoder::encodeTag(unsigned tagNumber, char ident)
+{
+	if (tagNumber < 31)
+		encodeByte(ident|tagNumber);
+	else {
+		encodeByte(ident|31);
+		//encodeSubidentifier
+		unsigned count = (CountBits(tagNumber)+6)/7;
+		while (count-- > 1)
+			encodeByte((tagNumber >> (count*7))&0x7f);
+		encodeByte(tagNumber & 0x7f);
+	}
+}
+
+void BEREncoder::encodeContentsLength(unsigned len)
+{
+	if (len < 128)
+		encodeByte(len);
+	else {
+		unsigned count = (CountBits(len+1)+7)/8;
+		encodeByte(count|0x80);
+		while (count-- > 0)
+			encodeByte(len >> (count*8));
+	}
+}
+
 void BEREncoder::encodeHeader(const AbstractData & obj)
 {
 	unsigned obj_tag = (tag == 0xFFFFFFFF) ? obj.getTag() : tag;
@@ -357,26 +383,9 @@ void BEREncoder::encodeHeader(const AbstractData & obj)
 		ident |= 0x20;
 
 	unsigned tagNumber = obj_tag & 0xffff;
+	encodeTag(tagNumber, ident);
 
-	if (tagNumber < 31)
-		encodeByte(ident|tagNumber);
-	else {
-		encodeByte(ident|31);
-		unsigned count = (CountBits(tagNumber)+6)/7;
-		while (count-- > 1)
-			encodeByte((tagNumber >> (count*7))&0x7f);
-		encodeByte(tagNumber & 0x7f);
-	}
-
-	unsigned len = getDataLength(obj);
-	if (len < 128)
-		encodeByte(len);
-	else {
-		unsigned count = (CountBits(len+1)+7)/8;
-		encodeByte(count|0x80);
-		while (count-- > 0)
-			encodeByte(len >> (count*8));
-	}
+	encodeContentsLength(getDataLength(obj));
 }
 
 

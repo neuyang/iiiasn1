@@ -2552,6 +2552,8 @@ public:
 		encodedBuffer.reserve(256);
 	}
 
+	void encodeTag(unsigned tagNumber, char ident);
+	void encodeContentsLength(unsigned len);
 	void encodeHeader(const AbstractData & obj);
 
 private:
@@ -2619,6 +2621,8 @@ public:
 	void rollback(memento_type memento) { beginPosition = memento;}
 	bool decodeChoicePreamle(CHOICE& value, memento_type& nextPostion);
 
+	bool decodeTag(unsigned& tag, bool & primitive);
+	bool decodeContentsLength(unsigned & len);
 	bool decodeHeader(unsigned & tag,
                       bool & primitive,
                       unsigned & len);
@@ -3012,6 +3016,7 @@ public:
 	}
 
 	bool decode(const char* first, const char* last, AbstractData& val, bool defered);
+
 	bool decode(const unsigned char* first, const unsigned char* last , AbstractData& val, bool defered)
 	{
 		return decode(reinterpret_cast<const char*>(first), reinterpret_cast<const char*>(last), val, defered);

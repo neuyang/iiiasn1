@@ -415,9 +415,7 @@ bool BERDecoder::decodeUnknownExtensions(SEQUENCE& value)
   return true;
 }
 
-bool BERDecoder::decodeHeader(unsigned& tag,
-                      bool & primitive,
-                      unsigned & len)
+bool BERDecoder::decodeTag(unsigned& tag, bool & primitive)
 {
 	unsigned tagVal, tagClass;
 	unsigned char ident = decodeByte();
@@ -437,7 +435,11 @@ bool BERDecoder::decodeHeader(unsigned& tag,
 	}
 
 	tag = tagVal | (tagClass << 16);
+	return true;
+}
 
+bool BERDecoder::decodeContentsLength(unsigned & len)
+{
 	if (atEnd())
 		return false;
 
@@ -457,6 +459,16 @@ bool BERDecoder::decodeHeader(unsigned& tag,
 	}
 
 	return true;
+}
+
+bool BERDecoder::decodeHeader(unsigned& tag,
+                      bool & primitive,
+                      unsigned & len)
+{
+	if (!decodeTag(tag, primitive))
+		return false;
+
+	return decodeContentsLength(len);
 }
 
 bool BERDecoder::decodeHeader(AbstractData & obj, unsigned & len)

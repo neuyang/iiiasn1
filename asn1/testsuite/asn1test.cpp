@@ -50,8 +50,7 @@ bool CoderTest(const char* str, CoderEnv& env, const AbstractData& v1, AbstractD
 	else if (!result)
 	{
 		printf("decode error\n");
-	}
-	else
+	} else
 	{
 		result = false;
 		printf( "decode result doesn't match the original value\n");
