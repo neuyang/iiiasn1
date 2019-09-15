@@ -98,10 +98,10 @@ bool INTEGER::isStrictValid() const
 	if (getLowerLimit() >= 0)
 	{
 		int v = static_cast<int>(value);
-		return  v >= getLowerLimit() && value <= getUpperLimit();
+		return v >= getLowerLimit() && value <= getUpperLimit();
 	} else {
 		int v = static_cast<int>(value);
-		return  v >= getLowerLimit() && value <= static_cast<signed>(getUpperLimit());
+		return v >= getLowerLimit() && value <= static_cast<signed>(getUpperLimit());
 	}
 }
 
@@ -109,7 +109,7 @@ bool INTEGER::isStrictValid() const
 bool AbstractString::isValid() const
 {
 	return size() >= static_cast<unsigned>(getLowerLimit()) && 
-		(size() <= getUpperLimit() || extendable() )&&
+		(size() <= getUpperLimit() || extendable()) &&
 		(find_first_invalid() == std::string::npos);
 }
 
@@ -117,7 +117,7 @@ bool AbstractString::isStrictlyValid() const
 {
 	return size() >= static_cast<unsigned>(getLowerLimit()) && 
 		size() <= getUpperLimit() &&
-		(find_first_invalid() == std::string::npos) ;
+		(find_first_invalid() == std::string::npos);
 }
 
 bool BMPString::legalCharacter(wchar_t ch) const
@@ -136,37 +136,39 @@ BMPString::size_type BMPString::first_illegal_at() const
 	const_iterator first = begin(), last = end();
 	for (; first != end(); ++first)
 		if (!legalCharacter(*first))
-            break;
+			break;
 
 	return first-begin();
 }
 
 bool BMPString::isValid() const
 {
-	return size() >= static_cast<unsigned>(getLowerLimit()) && ( size() <= getUpperLimit() || extendable()) 
-		&& first_illegal_at() == size();
+	return size() >= static_cast<unsigned>(getLowerLimit()) &&
+		(size() <= getUpperLimit() || extendable()) &&
+		first_illegal_at() == size();
 }
 
 bool BMPString::isStrictlyValid() const
 {
-	return size() >= static_cast<unsigned>(getLowerLimit()) && size() <= getUpperLimit() 
-		&& first_illegal_at() == size();
+	return size() >= static_cast<unsigned>(getLowerLimit()) &&
+		size() <= getUpperLimit() &&
+		first_illegal_at() == size();
 }
 
 bool GeneralizedTime::isStrictlyValid() const
 {
 	return (year > 0 ) &&
-		   (month > 0) && (month < 13) &&
-		   (day >0) && (day < 32) &&
-		   (hour >=0) && (hour <= 24) &&
-		   (minute >=0) && (minute < 60) &&
-		   (second >=0) && (second < 60) && 
-		   (mindiff <= 60*12) && (mindiff >= -60*12);
+		(month > 0) && (month < 13) &&
+		(day >0) && (day < 32) &&
+		(hour >=0) && (hour <= 24) &&
+		(minute >=0) && (minute < 60) &&
+		(second >=0) && (second < 60) && 
+		(mindiff <= 60*12) && (mindiff >= -60*12);
 }
 
 bool CHOICE::isValid() const
 {
-	return choiceID >=0 && (static_cast<unsigned>(choiceID) < info()->numChoices || extendable() ) && choice->isValid();
+	return choiceID >=0 && (static_cast<unsigned>(choiceID) < info()->numChoices || extendable()) && choice->isValid();
 }
 
 bool CHOICE::isStrictlyValid() const
