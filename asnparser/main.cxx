@@ -2272,7 +2272,7 @@ bool ParameterizedType::ReferencesType(const TypeBase & type) const
 {
 
   if (std::find_if(arguments.begin(), arguments.end(),
-	  std::bind(&ActualParameter::ReferencesType, _1, boost::cref(type))) != arguments.end())
+	  std::bind(&ActualParameter::ReferencesType, _1, std::cref(type))) != arguments.end())
 	  return true;
   return DefinedType::ReferencesType(type);
 }
@@ -2281,7 +2281,7 @@ bool ParameterizedType::UseType(const TypeBase & type) const
 {
 
   if (std::find_if(arguments.begin(), arguments.end(),
-	  std::bind(&ActualParameter::UseType, _1, boost::cref(type))) != arguments.end())
+	  std::bind(&ActualParameter::UseType, _1, std::cref(type))) != arguments.end())
 	  return true;
 
   return DefinedType::UseType(type);
@@ -2305,7 +2305,7 @@ TypeBase::RemoveReuslt ParameterizedType::CanRemoveType(const TypeBase& type)
 {
 
   if (std::find_if(arguments.begin(), arguments.end(),
-	  std::bind(&ActualParameter::ReferencesType, _1, boost::cref(type))) != arguments.end())
+	  std::bind(&ActualParameter::ReferencesType, _1, std::cref(type))) != arguments.end())
 	  return FORBIDDEN;
 
   return DefinedType::CanRemoveType(type);
@@ -4797,7 +4797,7 @@ bool ObjectClassFieldType::ReferencesType(const TypeBase & type) const
   {
 
 	  if (std::find_if(constraints.begin(), constraints.end(),
-		std::bind(&Constraint::ReferencesType, _1, boost::cref(type) ) ) != constraints.end())
+		std::bind(&Constraint::ReferencesType, _1, std::cref(type) ) ) != constraints.end())
 			return true;
 
 	if (tableConstraint.get())
