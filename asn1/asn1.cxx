@@ -1099,39 +1099,39 @@ SEQUENCE::FieldVector::FieldVector(const SEQUENCE::FieldVector& other)
 	reserve(other.size());
 	for (; it != last; ++it)
 	{
-		push_back( *it ? (*it)->clone() : NULL);
+		push_back(*it ? (*it)->clone() : NULL);
 	}
 }
 
 void SEQUENCE::BitMap::resize(unsigned nBits)
 {
-    bitData.resize((nBits+7)/8);
-    totalBits = nBits;
+	bitData.resize((nBits+7)/8);
+	totalBits = nBits;
 }
 
-bool SEQUENCE::BitMap::operator [] (unsigned bit) const 	
+bool SEQUENCE::BitMap::operator[](unsigned bit) const 	
 {	
-    if (bit < totalBits)
-        return (bitData[bit>>3] & (1 << (7 - (bit&7)))) != 0;
-    return false;
+	if (bit < totalBits)
+		return (bitData[bit>>3] & (1 << (7 - (bit&7)))) != 0;
+	return false;
 }
 
 void SEQUENCE::BitMap::set(unsigned bit)
 {
-    if (bit < totalBits)
-        bitData[(unsigned)(bit>>3)] |= 1 << (7 - (bit&7));
+	if (bit < totalBits)
+		bitData[(unsigned)(bit>>3)] |= 1 << (7 - (bit&7));
 }
 
 void SEQUENCE::BitMap::clear(unsigned bit)
 {
-    if (bit < totalBits)
-        bitData[(unsigned)(bit>>3)] &= ~(1 << (7 - (bit&7)));
+	if (bit < totalBits)
+		bitData[(unsigned)(bit>>3)] &= ~(1 << (7 - (bit&7)));
 }      
 
 inline void SEQUENCE::BitMap::swap(BitMap& other)
 {
-    bitData.swap(other.bitData);
-    std::swap(totalBits, other.totalBits);
+	bitData.swap(other.bitData);
+	std::swap(totalBits, other.totalBits);
 }
 
 
@@ -1147,11 +1147,11 @@ SEQUENCE::SEQUENCE(const void* information)
 {
 	unsigned nBaseFields = info()->numFields;
 	int nExtensions = info()->knownExtensions;
-    unsigned i;
-    fields.resize(nBaseFields+nExtensions);
-    optionMap.resize(info()->numOptional);
-    for (i = 0; i < nBaseFields; ++i)
-		if (info()->ids[i]  == -1 )
+	unsigned i;
+	fields.resize(nBaseFields+nExtensions);
+	optionMap.resize(info()->numOptional);
+	for (i = 0; i < nBaseFields; ++i)
+		if (info()->ids[i]  == -1)
 			fields[i] = AbstractData::create(info()->fieldInfos[i]);
 
 	if (info()->nonOptionalExtensions)
@@ -1186,77 +1186,74 @@ SEQUENCE::~SEQUENCE()
 
 SEQUENCE & SEQUENCE::operator=(const SEQUENCE & other)
 {
-  assert(info_ == other.info_ );
+	assert(info_ == other.info_ );
 
-  FieldVector temp_fields(other.fields);
-  BitMap temp_optionalMap(other.optionMap);
-  BitMap temp_extensionMap(other.extensionMap);
+	FieldVector temp_fields(other.fields);
+	BitMap temp_optionalMap(other.optionMap);
+	BitMap temp_extensionMap(other.extensionMap);
 
-  fields.swap(temp_fields);
-  optionMap.swap(temp_optionalMap);
-  extensionMap.swap(temp_extensionMap);
+	fields.swap(temp_fields);
+	optionMap.swap(temp_optionalMap);
+	extensionMap.swap(temp_extensionMap);
 
-  return *this;
+	return *this;
 }
-
 
 bool SEQUENCE::hasOptionalField(unsigned opt) const
 {
-  if (opt < (unsigned)optionMap.size())
-    return optionMap[opt];
-  else
-    return extensionMap[opt - optionMap.size()];
+	if (opt < (unsigned)optionMap.size())
+		return optionMap[opt];
+	else	return extensionMap[opt - optionMap.size()];
 }
-
 
 void SEQUENCE::includeOptionalField(unsigned opt, unsigned pos)
 {
-  if (opt < (unsigned)optionMap.size())
-    optionMap.set(opt);
-  else {
-    assert(extendable());
-    opt -= optionMap.size();
-    if (opt >= (unsigned)extensionMap.size())
-      extensionMap.resize(opt+1);
-    extensionMap.set(opt);
-  }
-  if (fields[pos] == NULL)
-	fields[pos] = AbstractData::create(info()->fieldInfos[pos]);
+	if (opt < (unsigned)optionMap.size())
+		optionMap.set(opt);
+	else {
+		assert(extendable());
+		opt -= optionMap.size();
+		if (opt >= (unsigned)extensionMap.size())
+			extensionMap.resize(opt+1);
+		extensionMap.set(opt);
+	}
+	if (fields[pos] == NULL)
+		fields[pos] = AbstractData::create(info()->fieldInfos[pos]);
 }
 
 
 void SEQUENCE::removeOptionalField(unsigned opt)
 {
-  if (opt < (unsigned)optionMap.size())
-    optionMap.clear(opt);
-  else {
-    assert(extendable());
-    opt -= optionMap.size();
-    extensionMap.clear(opt);
-  }
+	if (opt < (unsigned)optionMap.size())
+		optionMap.clear(opt);
+	else {
+		assert(extendable());
+		opt -= optionMap.size();
+		extensionMap.clear(opt);
+	}
 }
 
 bool SEQUENCE::do_decode(Visitor& visitor)
 {
-    return visitor.decode(*this);
+	return visitor.decode(*this);
 }
 
 bool SEQUENCE::do_encode(ConstVisitor& visitor) const
 {
-    return visitor.encode(*this);
+	return visitor.encode(*this);
 }
 
 
 AbstractData * SEQUENCE::do_clone() const
 {
-  return new SEQUENCE(*this);
+	return new SEQUENCE(*this);
 }
 
 void SEQUENCE::swap(SEQUENCE& other)
 {
-  fields.swap(other.fields);
-  optionMap.swap(other.optionMap);
-  extensionMap.swap(other.extensionMap);
+	fields.swap(other.fields);
+	optionMap.swap(other.optionMap);
+	extensionMap.swap(other.extensionMap);
 }
 
 int SEQUENCE::do_compare(const AbstractData& other) const
@@ -1264,15 +1261,14 @@ int SEQUENCE::do_compare(const AbstractData& other) const
 	const SEQUENCE& that = *std::static_cast<const SEQUENCE*>(&other);
 	assert(info_ == that.info_);
 
-    int lastOptionalId = -1, result;
-    unsigned i;
-    for (i = 0; i < info()->numFields ; ++i)
+	int lastOptionalId = -1, result;
+	unsigned i;
+	for (i = 0; i < info()->numFields ; ++i)
 	{
 		int id = info()->ids[i];
 		if (id == mandatory_  || (hasOptionalField(id) && that.hasOptionalField(id)) )
 			result = fields[i]->compare(*that.fields[i]);
-		else 
-			result = hasOptionalField(id) - that.hasOptionalField(id);
+		else 	result = hasOptionalField(id) - that.hasOptionalField(id);
 
 		if (result != 0) return result;
 		lastOptionalId = ( id != mandatory_ ? id : lastOptionalId);
@@ -1282,11 +1278,9 @@ int SEQUENCE::do_compare(const AbstractData& other) const
 	{
 		if (hasOptionalField(++lastOptionalId) && that.hasOptionalField(lastOptionalId))
 			result = fields[i]->compare(*that.fields[i]);
-		else
-			result = hasOptionalField(lastOptionalId) - that.hasOptionalField(lastOptionalId);
+		else	result = hasOptionalField(lastOptionalId) - that.hasOptionalField(lastOptionalId);
 	}
 	return result;
-
 }
 
 ///////////////////////////////////////////////////////
@@ -1491,13 +1485,13 @@ bool Visitor::decode(SEQUENCE& value)
 
 	int lastOptionalId = -1;
 	unsigned i;
-	for (i = 0 ; i < value.info()->numFields; ++i)
+	for (i = 0; i < value.info()->numFields; ++i)
 	{
 		int optionalId = value.info()->ids[i];
 		result = decodeExtensionRoot(value, i, optionalId);
-		if ( result <= STOP)
+		if (result <= STOP)
 			return result != FAIL;
-		lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
+		lastOptionalId = (optionalId != -1 ? optionalId : lastOptionalId);
 	}
 
 	if (!visitExtension)
@@ -1505,13 +1499,13 @@ bool Visitor::decode(SEQUENCE& value)
    
 	result = preDecodeExtensions(value);
 
-	if ( result !=  CONTINUE )
+	if (result != CONTINUE )
 		return result != FAIL;
 
 	for (; i < value.fields.size(); ++i)
 	{
 		result = decodeKnownExtension(value, i, ++lastOptionalId);
-		if ( result !=  CONTINUE )
+		if (result != CONTINUE )
 			return result != FAIL;
 	}
 
@@ -1534,7 +1528,7 @@ bool ConstVisitor::encode(const SEQUENCE& value)
 			if (!encodeExtensionRoot(value, i))
 				return false;
 		}
-		lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
+		lastOptionalId = (optionalId != -1 ? optionalId : lastOptionalId);
 	}
 
 	if (value.extensionMap.size())
