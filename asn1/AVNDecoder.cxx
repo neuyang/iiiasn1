@@ -40,13 +40,13 @@ bool AbstractData::setFromValueNotation(const std::string& valueString)
 {
     std::stringstream strm(valueString, std::ios_base::in);
     AVNDecoder decoder(strm);
-    return accept(decoder);
+    return decode(decoder);
 }
 
 std::ios_base::iostate AbstractData::get_from(std::istream & strm)
 {
     AVNDecoder decoder(strm);
-    if (accept(decoder))
+    if (decode(decoder))
         return std::ios_base::goodbit;
     return std::ios_base::failbit;
 }
@@ -91,7 +91,7 @@ bool ENUMERATED::setFromName(const std::string& str)
 		return false;
 }
 
-bool AVNDecoder::do_visit(Null& value)
+bool AVNDecoder::do_decode(Null& value)
 {
 	std::string tmp;
     char c;
@@ -110,7 +110,7 @@ bool AVNDecoder::do_visit(Null& value)
 	return true;
 }
 
-bool AVNDecoder::do_visit(BOOLEAN& value)
+bool AVNDecoder::do_decode(BOOLEAN& value)
 {
 	std::string tmp;
     char c;
@@ -133,7 +133,7 @@ bool AVNDecoder::do_visit(BOOLEAN& value)
 	return true;
 }
 
-bool AVNDecoder::do_visit(INTEGER& value)
+bool AVNDecoder::do_decode(INTEGER& value)
 {
 	unsigned tmp;
 	if (!value.constrained() || value.getLowerLimit() < 0)
@@ -144,14 +144,14 @@ bool AVNDecoder::do_visit(INTEGER& value)
 	return input_success(strm);
 }
 
-bool AVNDecoder::do_visit(IntegerWithNamedNumber& value)
+bool AVNDecoder::do_decode(IntegerWithNamedNumber& value)
 {
 	char c;
 	if (strm >> c)
 	{
 		strm.putback(c);
 		if (isdigit(c) || c == '-')
-			return visit(static_cast<INTEGER&>(value));
+			return decode(static_cast<INTEGER&>(value));
 		
 		std::string tmp;
 		if (strm >> tmp)
@@ -160,7 +160,7 @@ bool AVNDecoder::do_visit(IntegerWithNamedNumber& value)
 	return false;
 }
 
-bool AVNDecoder::do_visit(ENUMERATED& value)
+bool AVNDecoder::do_decode(ENUMERATED& value)
 {
 	std::string tmp;
 	if (strm >> tmp)
@@ -169,7 +169,7 @@ bool AVNDecoder::do_visit(ENUMERATED& value)
 }
 
 
-bool AVNDecoder::do_visit(OBJECT_IDENTIFIER& value)
+bool AVNDecoder::do_decode(OBJECT_IDENTIFIER& value)
 {
 	char c;
 	if (strm >> c )
@@ -293,12 +293,12 @@ bool get_value_from(std::istream& strm, std::vector<char>& value, unsigned int& 
 	return false;
 }
 
-bool AVNDecoder::do_visit(BIT_STRING& value)
+bool AVNDecoder::do_decode(BIT_STRING& value)
 {
 	return get_value_from(strm, value.bitData, value.totalBits);
 }
 
-bool AVNDecoder::do_visit(OCTET_STRING& value)
+bool AVNDecoder::do_decode(OCTET_STRING& value)
 {
 	unsigned totalBits;
 	return get_value_from(strm, value, totalBits);
@@ -315,12 +315,12 @@ bool get_string(std::istream& strm, std::string& str)
 	return false;
 }
 
-bool AVNDecoder::do_visit(AbstractString& value)
+bool AVNDecoder::do_decode(AbstractString& value)
 {
 	return get_string(strm, value);
 }
 
-bool AVNDecoder::do_visit(BMPString& value)
+bool AVNDecoder::do_decode(BMPString& value)
 {
 	std::string str;
 	if (get_string(strm, str))
@@ -346,7 +346,7 @@ bool get_id(const char** names, unsigned size, const std::string& name, int& id)
 	return false;
 }
 
-bool AVNDecoder::do_visit(CHOICE& value)
+bool AVNDecoder::do_decode(CHOICE& value)
 {
 	std::string identifier;
 	char c;
@@ -355,12 +355,12 @@ bool AVNDecoder::do_visit(CHOICE& value)
 	{
 		if (c ==':' && get_id(value.info()->names, value.info()->totalChoices, identifier, choiceID) 
 					&& value.select(choiceID))
-			return value.getSelection()->accept(*this);
+			return value.getSelection()->decode(*this);
 	}
 	return false;
 }
 
-bool AVNDecoder::do_visit(SEQUENCE_OF_Base& value)
+bool AVNDecoder::do_decode(SEQUENCE_OF_Base& value)
 {
 	char c;
 	if (strm >> c)
@@ -377,7 +377,7 @@ bool AVNDecoder::do_visit(SEQUENCE_OF_Base& value)
 
 		do {
 			std::unique_ptr<AbstractData> entry(value.createElement());
-			if (entry.get() && entry->accept(*this) && strm >> c)
+			if (entry.get() && entry->decode(*this) && strm >> c)
 				value.push_back(entry.release());
 			else
 				return false;
@@ -390,7 +390,7 @@ bool AVNDecoder::do_visit(SEQUENCE_OF_Base& value)
 	return false;
 }
 
-bool AVNDecoder::do_visit(OpenData& value)
+bool AVNDecoder::do_decode(OpenData& value)
 {
 	// not implemented
 	return false;
@@ -402,14 +402,14 @@ bool AVNDecoder::do_revisit(OpenData& value)
 	return false;
 }
 
-bool AVNDecoder::do_visit(TypeConstrainedOpenData& value)
+bool AVNDecoder::do_decode(TypeConstrainedOpenData& value)
 {
 	assert(value.has_data());
-	return value.get_data().accept(*this);
+	return value.get_data().decode(*this);
 }
 
 
-bool AVNDecoder::do_visit(GeneralizedTime& value)
+bool AVNDecoder::do_decode(GeneralizedTime& value)
 {
 	std::string str;
 	if (get_string(strm, str))
@@ -421,7 +421,7 @@ bool AVNDecoder::do_visit(GeneralizedTime& value)
 }
 
 
-Visitor::VISIT_SEQ_RESULT AVNDecoder::preVisitExtensionRoots(SEQUENCE& value)
+Visitor::VISIT_SEQ_RESULT AVNDecoder::preDecodeExtensionRoots(SEQUENCE& value)
 {
 	char c;
 	if (strm >> c && c == '{')
@@ -445,14 +445,14 @@ Visitor::VISIT_SEQ_RESULT AVNDecoder::preVisitExtensionRoots(SEQUENCE& value)
 	return FAIL;
 }
 
-Visitor::VISIT_SEQ_RESULT AVNDecoder::visitExtensionRoot(SEQUENCE& value, int index, int optional_id)
+Visitor::VISIT_SEQ_RESULT AVNDecoder::decodeExtensionRoot(SEQUENCE& value, int index, int optional_id)
 {
 	if (identifiers.back() == value.getFieldName(index))
 	{
 		if (optional_id != -1)
 			value.includeOptionalField(optional_id, index);
         AbstractData* field = value.getField(index);
-		if (field && field->accept(*this))
+		if (field && field->decode(*this))
 		{
 			char c;
 			if (strm >> c)
@@ -469,12 +469,12 @@ Visitor::VISIT_SEQ_RESULT AVNDecoder::visitExtensionRoot(SEQUENCE& value, int in
         return (optional_id != -1) ? CONTINUE : FAIL ; // return true only it is not a mandatory component
 }
 
-Visitor::VISIT_SEQ_RESULT AVNDecoder::visitKnownExtension(SEQUENCE& value, int index, int optional_id)
+Visitor::VISIT_SEQ_RESULT AVNDecoder::decodeKnownExtension(SEQUENCE& value, int index, int optional_id)
 {
-	return visitExtensionRoot(value, index, optional_id);
+	return decodeExtensionRoot(value, index, optional_id);
 }
 
-bool AVNDecoder::visitUnknownExtensions(SEQUENCE& value)
+bool AVNDecoder::decodeUnknownExtensions(SEQUENCE& value)
 {
 	if (identifiers.back() != "}")
 		return false;

@@ -62,7 +62,7 @@ void H225ValueNotationTests()
 
 	std::stringstream buf;
 	ASN1::AVNEncoder encoder(buf);
-	ep.accept(encoder);
+	ep.encode(encoder);
 
 	EndpointType ep2;
 	TEST("EndpointType (AVN)" , env ,ep, ep2, eps); 

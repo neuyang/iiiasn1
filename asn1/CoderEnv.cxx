@@ -36,19 +36,19 @@ bool CoderEnv::decode(const char* first, const char* last, AbstractData& val, bo
 	if (get_encodingRule() == per_Basic_Aligned)
 	{
 		PERDecoder decoder(first, last, defered ? NULL : this);
-		return val.accept(decoder);
+		return val.decode(decoder);
 	}
 	if (get_encodingRule() == ber)
 	{
 		BERDecoder decoder(first, last, defered ? NULL : this);
-		return val.accept(decoder);
+		return val.decode(decoder);
 	}
 #ifdef ASN1_HAS_IOSTREAM
 	if (get_encodingRule() == avn)
 	{
 		std::istringstream strm(std::string(first, last));
 		AVNDecoder decoder(strm);
-		return val.accept(decoder);
+		return val.decode(decoder);
 	}
 #endif
 	return false;

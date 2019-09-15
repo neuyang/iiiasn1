@@ -130,9 +130,9 @@ AbstractData* Null::create(const void* info)
 }
 
 
-bool Null::do_accept(Visitor& visitor)
+bool Null::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool Null::do_encode(ConstVisitor& visitor) const
@@ -184,9 +184,9 @@ AbstractData* BOOLEAN::create(const void* info)
 }
 
 
-bool BOOLEAN::do_accept(Visitor& visitor)
+bool BOOLEAN::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool BOOLEAN::do_encode(ConstVisitor& visitor) const
@@ -242,9 +242,9 @@ AbstractData* INTEGER::create(const void* info)
 }
 
 
-bool INTEGER::do_accept(Visitor& visitor)
+bool INTEGER::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool INTEGER::do_encode(ConstVisitor& visitor) const
@@ -284,9 +284,9 @@ AbstractData* IntegerWithNamedNumber::create(const void* info)
     return new IntegerWithNamedNumber(info);
 }
 
-bool IntegerWithNamedNumber::do_accept(Visitor& visitor)
+bool IntegerWithNamedNumber::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool IntegerWithNamedNumber::do_encode(ConstVisitor& visitor) const
@@ -316,9 +316,9 @@ ENUMERATED& ENUMERATED::operator = (const ENUMERATED& that)
 	return *this;
 }
 
-bool ENUMERATED::do_accept(Visitor& visitor)
+bool ENUMERATED::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool ENUMERATED::do_encode(ConstVisitor& visitor) const
@@ -363,9 +363,9 @@ AbstractData* OBJECT_IDENTIFIER::create(const void* info)
 }
 
 
-bool OBJECT_IDENTIFIER::do_accept(Visitor& visitor)
+bool OBJECT_IDENTIFIER::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool OBJECT_IDENTIFIER::do_encode(ConstVisitor& visitor) const
@@ -530,9 +530,9 @@ AbstractData* BIT_STRING::create(const void* info)
     return new BIT_STRING(info);
 }
 
-bool BIT_STRING::do_accept(Visitor& visitor)
+bool BIT_STRING::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool BIT_STRING::do_encode(ConstVisitor& visitor) const
@@ -592,9 +592,9 @@ AbstractData* OCTET_STRING::create(const void* info)
     return new OCTET_STRING(info);
 }
 
-bool OCTET_STRING::do_accept(Visitor& visitor)
+bool OCTET_STRING::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool OCTET_STRING::do_encode(ConstVisitor& visitor) const
@@ -636,9 +636,9 @@ AbstractString::AbstractString(const void* info, const char* str)
 {
 }
 
-bool AbstractString::do_accept(Visitor& visitor)
+bool AbstractString::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool AbstractString::do_encode(ConstVisitor& visitor) const
@@ -821,9 +821,9 @@ AbstractData* BMPString::create(const void* info)
 
 
 
-bool BMPString::do_accept(Visitor& visitor)
+bool BMPString::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool BMPString::do_encode(ConstVisitor& visitor) const
@@ -932,9 +932,9 @@ std::string GeneralizedTime::get() const
 	return std::string(buf); 
 }
 
-bool GeneralizedTime::do_accept(Visitor& visitor)
+bool GeneralizedTime::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool GeneralizedTime::do_encode(ConstVisitor& visitor) const
@@ -1032,9 +1032,9 @@ AbstractData* CHOICE::setSelection(int id, AbstractData* obj)
     return obj;
 }
 
-bool CHOICE::do_accept(Visitor& visitor)
+bool CHOICE::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool CHOICE::do_encode(ConstVisitor& visitor) const
@@ -1236,9 +1236,9 @@ void SEQUENCE::removeOptionalField(unsigned opt)
   }
 }
 
-bool SEQUENCE::do_accept(Visitor& visitor)
+bool SEQUENCE::do_decode(Visitor& visitor)
 {
-    return visitor.visit(*this);
+    return visitor.decode(*this);
 }
 
 bool SEQUENCE::do_encode(ConstVisitor& visitor) const
@@ -1325,9 +1325,9 @@ AbstractData* SEQUENCE_OF_Base::do_clone() const
     return new SEQUENCE_OF_Base(*this);
 }
 
-bool SEQUENCE_OF_Base::do_accept(Visitor& visitor)
+bool SEQUENCE_OF_Base::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool SEQUENCE_OF_Base::do_encode(ConstVisitor& visitor) const
@@ -1435,9 +1435,9 @@ void OpenData::swap(OpenData& other)
 	other.buf.reset(tmpBuf);
 }
 
-bool OpenData::do_accept(Visitor& visitor)
+bool OpenData::do_decode(Visitor& visitor)
 {
-	return visitor.visit(*this);
+	return visitor.decode(*this);
 }
 
 bool OpenData::do_encode(ConstVisitor& visitor) const
@@ -1466,9 +1466,9 @@ AbstractData* OpenData::do_clone() const
 
 /////////////////////////////////////////////////////////
 
-bool TypeConstrainedOpenData::do_accept(Visitor& v)
+bool TypeConstrainedOpenData::do_decode(Visitor& v)
 {
-    return v.visit(*this);
+    return v.decode(*this);
 }
 
 AbstractData* TypeConstrainedOpenData::create(const void* info)
@@ -1481,41 +1481,41 @@ AbstractData* TypeConstrainedOpenData::create(const void* info)
 
 /////////////////////////////////////////////////////////
 
-bool Visitor::visit(SEQUENCE& value) 
+bool Visitor::decode(SEQUENCE& value) 
 { 
-  VISIT_SEQ_RESULT result = preVisitExtensionRoots(value);
-  if (result <= STOP)
-    return result != FAIL;
-
-  bool visitExtension = (result == CONTINUE);
-
-  int lastOptionalId = -1;
-  unsigned i;
-  for (i = 0 ; i < value.info()->numFields; ++i)
-  {
-	  int optionalId = value.info()->ids[i];
-      result = visitExtensionRoot(value, i, optionalId);
-      if ( result <= STOP)
+	VISIT_SEQ_RESULT result = preDecodeExtensionRoots(value);
+	if (result <= STOP)
 		return result != FAIL;
-	  lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
-  }
 
-  if (!visitExtension)
-      return true;
+	bool visitExtension = (result == CONTINUE);
+
+	int lastOptionalId = -1;
+	unsigned i;
+	for (i = 0 ; i < value.info()->numFields; ++i)
+	{
+		int optionalId = value.info()->ids[i];
+		result = decodeExtensionRoot(value, i, optionalId);
+		if ( result <= STOP)
+			return result != FAIL;
+		lastOptionalId = ( optionalId != -1 ? optionalId : lastOptionalId);
+	}
+
+	if (!visitExtension)
+		return true;
    
-  result = preVisitExtensions(value);
+	result = preDecodeExtensions(value);
 
-  if ( result !=  CONTINUE )
-	return result != FAIL;
+	if ( result !=  CONTINUE )
+		return result != FAIL;
 
-  for (; i < value.fields.size(); ++i)
-  {
-      result = visitKnownExtension(value, i, ++lastOptionalId);
-      if ( result !=  CONTINUE )
-          return result != FAIL;
-  }
+	for (; i < value.fields.size(); ++i)
+	{
+		result = decodeKnownExtension(value, i, ++lastOptionalId);
+		if ( result !=  CONTINUE )
+			return result != FAIL;
+	}
 
-  return visitUnknownExtensions(value);
+	return decodeUnknownExtensions(value);
 }
 
 bool ConstVisitor::encode(const SEQUENCE& value)

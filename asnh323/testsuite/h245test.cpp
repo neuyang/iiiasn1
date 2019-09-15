@@ -92,7 +92,7 @@ void H245Test()
 	//!! The GCC 2.95.3-5 in Cygwin has a mysterious bug. It doesn't work if  
 	// using decoder(tm, tm+sizeof(tm)-1) instead.
 
-    if (msg.accept(decoder))
+    if (msg.decode(decoder))
         printf("MultimediaSystemControlMessage decoder Sucess!\n");
     else
     {

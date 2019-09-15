@@ -70,12 +70,12 @@ inline bool PERDecoder::atEnd()
 }
 
 
-bool PERDecoder::do_visit(Null& value)
+bool PERDecoder::do_decode(Null& value)
 {
   return true;
 }
 
-bool PERDecoder::do_visit(BOOLEAN& value)
+bool PERDecoder::do_decode(BOOLEAN& value)
 {
   if (atEnd())
     return false;
@@ -85,7 +85,7 @@ bool PERDecoder::do_visit(BOOLEAN& value)
   return true;
 }
 
-bool PERDecoder::do_visit(INTEGER& integer)
+bool PERDecoder::do_decode(INTEGER& integer)
 {
   // X.931 Sections 12
 
@@ -116,7 +116,7 @@ bool PERDecoder::do_visit(INTEGER& integer)
   return true;
 }
 
-bool PERDecoder::do_visit(ENUMERATED& value)
+bool PERDecoder::do_decode(ENUMERATED& value)
 {
   // X.691 Section 13
 
@@ -143,7 +143,7 @@ bool PERDecoder::do_visit(ENUMERATED& value)
 }
 
 
-bool PERDecoder::do_visit(OBJECT_IDENTIFIER& value)
+bool PERDecoder::do_decode(OBJECT_IDENTIFIER& value)
 {
   // X.691 Section 23
 
@@ -157,7 +157,7 @@ bool PERDecoder::do_visit(OBJECT_IDENTIFIER& value)
   return value.decodeCommon(beginPosition-dataLen, dataLen);
 }
 
-bool PERDecoder::do_visit(BIT_STRING& value)
+bool PERDecoder::do_decode(BIT_STRING& value)
 {
   // X.691 Section 15
 
@@ -183,7 +183,7 @@ bool PERDecoder::do_visit(BIT_STRING& value)
   return decodeBitMap( value.bitData, value.size());
 }
 
-bool PERDecoder::do_visit(OCTET_STRING& value)
+bool PERDecoder::do_decode(OCTET_STRING& value)
 {
   // X.691 Section 16
 
@@ -224,7 +224,7 @@ bool PERDecoder::do_visit(OCTET_STRING& value)
   return true;
 }
 
-bool PERDecoder::do_visit(AbstractString& value)
+bool PERDecoder::do_decode(AbstractString& value)
 {
   // X.691 Section 26
 
@@ -264,7 +264,7 @@ bool PERDecoder::do_visit(AbstractString& value)
   return true;
 }
 
-bool PERDecoder::do_visit(BMPString& value)
+bool PERDecoder::do_decode(BMPString& value)
 {
   // X.691 Section 26
 
@@ -327,12 +327,12 @@ bool PERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
 }
 
 
-bool PERDecoder::do_visit(CHOICE& value)
+bool PERDecoder::do_decode(CHOICE& value)
 {
     memento_type memento;
     if (decodeChoicePreamle(value,memento))
     {
-        if (!value.isUnknownSelection() && !value.getSelection()->accept(*this))
+        if (!value.isUnknownSelection() && !value.getSelection()->decode(*this))
             return false;
         rollback(memento);
         return true;
@@ -340,7 +340,7 @@ bool PERDecoder::do_visit(CHOICE& value)
     return false;
 }
 
-bool PERDecoder::do_visit(SEQUENCE_OF_Base& value)
+bool PERDecoder::do_decode(SEQUENCE_OF_Base& value)
 {
 
   unsigned size;
@@ -356,7 +356,7 @@ bool PERDecoder::do_visit(SEQUENCE_OF_Base& value)
   for (; it != last; ++it) {
 	if (*it == NULL)
 		*it = value.createElement();
-    if (!(*it)->accept(*this))
+    if (!(*it)->decode(*this))
 	{
 	  value.erase(it, last);
       return false;
@@ -365,10 +365,10 @@ bool PERDecoder::do_visit(SEQUENCE_OF_Base& value)
   return true;
 }
 
-bool PERDecoder::do_visit(OpenData& data)
+bool PERDecoder::do_decode(OpenData& data)
 {
 	OCTET_STRING value;
-	if (value.accept(*this))
+	if (value.decode(*this))
 	{
 		if (!data.has_buf())
 			data.grab(new OpenBuf);
@@ -383,22 +383,22 @@ bool PERDecoder::do_revisit(OpenData& value)
     if (!value.has_buf() || !value.has_data())
         return false;
     PERDecoder decoder(&(*value.get_buf().begin()), &(*value.get_buf().end()), get_env());
-    return value.get_data().accept(decoder);
+    return value.get_data().decode(decoder);
 }
 
-bool PERDecoder::do_visit(TypeConstrainedOpenData& value)
+bool PERDecoder::do_decode(TypeConstrainedOpenData& value)
 {
 	assert(value.has_data());
 	unsigned len;
     if (decodeLength(0, INT_MAX, len) != 0)
        return false;
 	const char* nextPosition = beginPosition + len;
-	bool ok = value.get_data().accept(*this);
+	bool ok = value.get_data().decode(*this);
 	setPosition(nextPosition);
 	return ok;
 }
 
-bool PERDecoder::do_visit(GeneralizedTime& value)
+bool PERDecoder::do_decode(GeneralizedTime& value)
 {
 	unsigned len;
 	if (decodeLength(0, INT_MAX, len))
@@ -413,7 +413,7 @@ bool PERDecoder::do_visit(GeneralizedTime& value)
 	return false;
 }
 
-Visitor::VISIT_SEQ_RESULT PERDecoder::preVisitExtensionRoots(SEQUENCE& value)
+Visitor::VISIT_SEQ_RESULT PERDecoder::preDecodeExtensionRoots(SEQUENCE& value)
 {
   // X.691 Section 18
 
@@ -427,20 +427,20 @@ Visitor::VISIT_SEQ_RESULT PERDecoder::preVisitExtensionRoots(SEQUENCE& value)
       (hasExtension  ? CONTINUE : NO_EXTENSION) : FAIL;  // 18.2
 }
 
-Visitor::VISIT_SEQ_RESULT PERDecoder::visitExtensionRoot(SEQUENCE& value, int index, int optional_id)
+Visitor::VISIT_SEQ_RESULT PERDecoder::decodeExtensionRoot(SEQUENCE& value, int index, int optional_id)
 {
 	if (optional_id == SEQUENCE::mandatory_ || value.hasOptionalField(optional_id))
 	{
 		if (value.getField(index) == NULL)
 			value.fields[index] = AbstractData::create(value.info()->fieldInfos[index]);
 		
-		if (value.getField(index) == NULL || !value.getField(index)->accept(*this))
+		if (value.getField(index) == NULL || !value.getField(index)->decode(*this))
 			return FAIL;
 	}
 	return CONTINUE;
 }
 
-Visitor::VISIT_SEQ_RESULT PERDecoder::preVisitExtensions(SEQUENCE& value)
+Visitor::VISIT_SEQ_RESULT PERDecoder::preDecodeExtensions(SEQUENCE& value)
 {
   unsigned totalExtensions;
   if (!decodeSmallUnsigned(totalExtensions))
@@ -456,7 +456,7 @@ Visitor::VISIT_SEQ_RESULT PERDecoder::preVisitExtensions(SEQUENCE& value)
   return result;
 }
 
-Visitor::VISIT_SEQ_RESULT PERDecoder::visitKnownExtension(SEQUENCE& value, int index, int optional_id)
+Visitor::VISIT_SEQ_RESULT PERDecoder::decodeKnownExtension(SEQUENCE& value, int index, int optional_id)
 {
 	if (!value.hasOptionalField(optional_id))
 		return CONTINUE;
@@ -468,12 +468,12 @@ Visitor::VISIT_SEQ_RESULT PERDecoder::visitKnownExtension(SEQUENCE& value, int i
 	if (value.getField(index) == NULL)
 		value.fields[index] = AbstractData::create(value.info()->fieldInfos[index]);
 	
-	bool ok = value.getField(index) == NULL || value.getField(index)->accept(*this);
+	bool ok = value.getField(index) == NULL || value.getField(index)->decode(*this);
 	setPosition(nextExtensionPosition);
 	return ok ? CONTINUE : FAIL;
 }
 
-bool PERDecoder::visitUnknownExtensions(SEQUENCE& value)
+bool PERDecoder::decodeUnknownExtensions(SEQUENCE& value)
 {
   unsigned unknownCount = value.extensionMap.size() - value.info()->knownExtensions;
 
