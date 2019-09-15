@@ -188,22 +188,8 @@ class AbstractData
 	 */
 	unsigned getTag() const { return info()->tag; }
 
-	/**
-	 * Decode a \c Visitor which implement a fragment of algorithm or request for
-	 * each corresponding class of ASN.1 object structure.
-	 *
-	 * @param v The \c Visitor.
-	 * @return true if the operation has been successfully executed.
-	 */
-	bool decode(Visitor& v) { return do_decode(v) ;}
-	/**
-	 * Encode a \c Visitor which implement a fragment of algorithm or request for
-	 * each corresponding class of ASN.1 object structure.
-	 *
-	 * @param v The \c ConstVisitor.
-	 * @return true if the operation has been successfully executed.
-	 */
-	bool encode(ConstVisitor& v) const { return do_encode(v); }
+	virtual bool decode(Visitor& v) = 0;
+	virtual bool encode(ConstVisitor& v) const = 0;
 
 	/**
 	 * Create a AbstractData object based on the \c info structure.
@@ -222,8 +208,6 @@ class AbstractData
   private:
 	virtual int do_compare(const AbstractData& other) const =0;
 	virtual AbstractData* do_clone() const = 0;
-	virtual bool do_decode(Visitor&) = 0;
-	virtual bool do_encode(ConstVisitor&) const =0;
 
   protected:
 	AbstractData(const void* info);
@@ -327,8 +311,9 @@ class Null : public AbstractData , public detail::Allocator<Null>
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 
@@ -386,9 +371,10 @@ class BOOLEAN : public AbstractData, public detail::Allocator<BOOLEAN>
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
 	bool value;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 /** Class for ASN Integer type.
@@ -483,8 +469,9 @@ public:
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 
 };
 
@@ -525,8 +512,9 @@ class IntegerWithNamedNumber : public INTEGER
 	  };
 	const InfoType* info() const { return static_cast<const InfoType*>(info_); }
   private:
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 #ifdef ASN1_HAS_IOSTREAM
   public:
 	bool getName(std::string&) const;
@@ -702,9 +690,10 @@ class ENUMERATED : public AbstractData, public detail::Allocator<ENUMERATED>
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
 	const InfoType* info() const { return static_cast<const InfoType*>(info_); } 
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 		
 #ifdef ASN1_HAS_IOSTREAM
   public:
@@ -773,9 +762,10 @@ class OBJECT_IDENTIFIER : public AbstractData, public detail::Allocator<OBJECT_I
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData * do_clone() const;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
 	std::vector<unsigned> value;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 
@@ -858,11 +848,12 @@ class BIT_STRING : public ConstrainedObject, public detail::Allocator<BIT_STRING
 	friend class AVNDecoder;
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
 
 	unsigned totalBits;
 	std::vector<char> bitData;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 
@@ -980,8 +971,9 @@ class OCTET_STRING : public ConstrainedObject, public std::vector<char>, public 
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 template <class Constraint>
@@ -1100,8 +1092,9 @@ public:
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 
   protected:
 	ConstrainedString(const void* info);
@@ -1314,8 +1307,9 @@ class BMPString : public ConstrainedObject, public std::wstring
 
 	int do_compare(const AbstractData& other) const;
 	virtual AbstractData * do_clone() const;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 
@@ -1382,12 +1376,12 @@ public:
 private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
 
 	int year, month, day, hour, minute, second, millisec, mindiff;
 	bool utc;
-
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 
@@ -1477,11 +1471,12 @@ class CHOICE : public AbstractData, public detail::Allocator<CHOICE>
 	};
   private:
 	virtual int do_compare(const AbstractData& other) const;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
 	virtual AbstractData* do_clone() const;
 	bool createSelection();
 	const InfoType* info() const { return static_cast<const InfoType*>(info_);}
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
   public:
     /**
      * Set the value by \c tag number and \c tag class.
@@ -1626,11 +1621,12 @@ public:
 
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_encode(ConstVisitor&) const;
 
 	const InfoType* info() const { return static_cast<const InfoType*>(info_);}
   protected:
-	virtual bool do_decode(Visitor&);
+public:
+	virtual bool encode(ConstVisitor&) const;
+	virtual bool decode(Visitor&);
 #ifdef ASN1_HAS_IOSTREAM
   public:
 	const char* getFieldName(int i) const { return info()->names[i]; }
@@ -1716,8 +1712,6 @@ class SEQUENCE_OF_Base : public ConstrainedObject, public detail::Allocator<SEQU
 
   private:
 	virtual int do_compare(const AbstractData& other) const;
-	virtual bool do_decode(Visitor&);
-	virtual bool do_encode(ConstVisitor&) const;
 
    	struct create_from0
 	{
@@ -1725,6 +1719,9 @@ class SEQUENCE_OF_Base : public ConstrainedObject, public detail::Allocator<SEQU
 		create_from0(const AbstractData& obj) : object(obj){}
 		AbstractData* operator ()() const { return object.clone(); }
 	};
+public:
+	virtual bool decode(Visitor&);
+	virtual bool encode(ConstVisitor&) const;
 };
 
 
@@ -2249,14 +2246,16 @@ public:
   private:
 	virtual int do_compare(const AbstractData& other) const;
 	virtual AbstractData* do_clone() const ;
-	virtual bool do_encode(ConstVisitor&) const;
-	virtual bool do_decode(Visitor&);
+public:
+	virtual bool encode(ConstVisitor&) const;
+	virtual bool decode(Visitor&);
 };
 
 class TypeConstrainedOpenData : public OpenData
 {
 private:
-	virtual bool do_decode(Visitor& v);
+public:
+	virtual bool decode(Visitor& v);
 protected:
 	TypeConstrainedOpenData(AbstractData* pData, const void* info) :  OpenData(pData, info) {}
 	TypeConstrainedOpenData(const AbstractData& aData, const void* info) : OpenData(aData, info) {}
@@ -2322,23 +2321,23 @@ class Visitor
 {
 public:
 	virtual ~Visitor(){}
-	bool decode(Null& value) { return do_decode(value); }
-	bool decode(BOOLEAN& value) { return do_decode(value); }
-	bool decode(INTEGER& value) { return do_decode(value); }
-	bool decode(IntegerWithNamedNumber& value) { return do_decode(value); }
-	bool decode(ENUMERATED& value) { return do_decode(value); }
-	bool decode(OBJECT_IDENTIFIER& value) { return do_decode(value); }
-	bool decode(OCTET_STRING& value)  { return do_decode(value); }
-	bool decode(BIT_STRING& value) { return do_decode(value); }
-	bool decode(ConstrainedString& value) { return do_decode(value); }
-	bool decode(BMPString& value) { return do_decode(value); }
-	bool decode(CHOICE& value) { return do_decode(value); }
-	bool decode(SEQUENCE_OF_Base& value) { return do_decode(value); }
-	bool decode(OpenData& value) { return do_decode(value); }
-	bool redecode(OpenData& value) { return do_redecode(value); }
-	bool decode(TypeConstrainedOpenData& value) { return do_decode(value); }
-	bool decode(GeneralizedTime& value) { return do_decode(value); }
-	bool decode(SEQUENCE& value) ;
+	virtual bool decode(Null& value) = 0;
+	virtual bool decode(BOOLEAN& value) = 0;
+	virtual bool decode(INTEGER& value) = 0;
+	virtual bool decode(IntegerWithNamedNumber& value) { return decode(static_cast<INTEGER&>(value));}
+	virtual bool decode(ENUMERATED& value) = 0;
+	virtual bool decode(OBJECT_IDENTIFIER& value) = 0;
+	virtual bool decode(OCTET_STRING& value) = 0;
+	virtual bool decode(BIT_STRING& value) = 0;
+	virtual bool decode(ConstrainedString& value) = 0;
+	virtual bool decode(BMPString& value) = 0;
+	virtual bool decode(CHOICE& value) = 0;
+	virtual bool decode(SEQUENCE_OF_Base& value) = 0;
+	virtual bool decode(OpenData& value) = 0;
+	virtual bool redecode(OpenData& value) = 0;
+	virtual bool decode(TypeConstrainedOpenData& value) = 0;
+	virtual bool decode(GeneralizedTime& value) = 0;
+	virtual bool decode(SEQUENCE& value) ;
 
 	CoderEnv* get_env() { return env;}
 
@@ -2353,22 +2352,6 @@ protected:
 	Visitor(CoderEnv* coder) : env(coder) {}
 
 private:
-	virtual bool do_decode(Null& value)=0;
-	virtual bool do_decode(BOOLEAN& value)=0;
-	virtual bool do_decode(INTEGER& value)=0;
-	virtual bool do_decode(IntegerWithNamedNumber& value) { return decode(static_cast<INTEGER&>(value));}
-	virtual bool do_decode(ENUMERATED& value)=0;
-	virtual bool do_decode(OBJECT_IDENTIFIER& value)=0;
-	virtual bool do_decode(OCTET_STRING& value) =0;
-	virtual bool do_decode(BIT_STRING& value)=0;
-	virtual bool do_decode(ConstrainedString& value)=0;
-	virtual bool do_decode(BMPString& value)=0;
-	virtual bool do_decode(CHOICE& value)=0;
-	virtual bool do_decode(SEQUENCE_OF_Base& value)=0;
-	virtual bool do_decode(OpenData& value)=0;
-	virtual bool do_redecode(OpenData& value)=0;
-	virtual bool do_decode(TypeConstrainedOpenData& value)=0;
-	virtual bool do_decode(GeneralizedTime& value)=0;
 
     /**
      * Called by \c decode() before visiting any component in the \c SEQUENCE.
@@ -2433,37 +2416,23 @@ class ConstVisitor
 {
 public:
 	virtual ~ConstVisitor(){}
-	bool encode(const Null& value) { return do_encode(value); }
-	bool encode(const BOOLEAN& value) { return do_encode(value);}
-	bool encode(const INTEGER& value) { return do_encode(value); }
-	bool encode(const IntegerWithNamedNumber& value) { return do_encode(value);}
-	bool encode(const ENUMERATED& value) { return do_encode(value); }
-	bool encode(const OBJECT_IDENTIFIER& value) { return do_encode(value); }
-	bool encode(const BIT_STRING& value) { return do_encode(value); }
-	bool encode(const OCTET_STRING& value) { return do_encode(value); }
-	bool encode(const ConstrainedString& value) { return do_encode(value); }
-	bool encode(const BMPString& value) { return do_encode(value); }
-	bool encode(const CHOICE& value) { return do_encode(value); }
-	bool encode(const OpenData& value) { return do_encode(value); }
-	bool encode(const GeneralizedTime& value) { return do_encode(value); }
-	bool encode(const SEQUENCE_OF_Base& value) {return do_encode(value); }
-	bool encode(const SEQUENCE& value) ;
+	virtual bool encode(const Null& value) = 0;
+	virtual bool encode(const BOOLEAN& value) = 0;
+	virtual bool encode(const INTEGER& value) = 0;
+	virtual bool encode(const IntegerWithNamedNumber& value) { return encode(static_cast<const INTEGER&>(value));}
+	virtual bool encode(const ENUMERATED& value) = 0;
+	virtual bool encode(const OBJECT_IDENTIFIER& value) = 0;
+	virtual bool encode(const BIT_STRING& value) = 0;
+	virtual bool encode(const OCTET_STRING& value) = 0;
+	virtual bool encode(const ConstrainedString& value) = 0;
+	virtual bool encode(const BMPString& value) = 0;
+	virtual bool encode(const CHOICE& value) = 0;
+	virtual bool encode(const OpenData& value) = 0;
+	virtual bool encode(const GeneralizedTime& value) = 0;
+	virtual bool encode(const SEQUENCE_OF_Base& value) = 0;
+	virtual bool encode(const SEQUENCE& value) ;
 private:
-	virtual bool do_encode(const AbstractData& value) { return true; }
-	virtual bool do_encode(const Null& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const BOOLEAN& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const INTEGER& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const IntegerWithNamedNumber& value) { return do_encode(static_cast<const INTEGER&>(value));}
-	virtual bool do_encode(const ENUMERATED& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const OBJECT_IDENTIFIER& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const BIT_STRING& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const OCTET_STRING& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const ConstrainedString& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const BMPString& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const CHOICE& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const OpenData& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const GeneralizedTime& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const SEQUENCE_OF_Base& value) { return do_encode(static_cast<const AbstractData&>(value)); }
+	virtual bool do_encode(const AbstractData& value) { return true; } //???
 
 	virtual bool preEncodeExtensionRoots(const SEQUENCE& value) { return do_encode(static_cast<const AbstractData&>(value)); }
 	virtual bool encodeExtensionRoot(const SEQUENCE& value, int index) { return false; }
@@ -2488,21 +2457,20 @@ public:
 	void encodeContentsLength(unsigned len);
 	void encodeHeader(const AbstractData & obj);
 
+   	virtual bool encode(const Null& value);
+	virtual bool encode(const BOOLEAN& value);
+	virtual bool encode(const INTEGER& value);
+	virtual bool encode(const ENUMERATED& value);
+	virtual bool encode(const OBJECT_IDENTIFIER& value);
+	virtual bool encode(const BIT_STRING& value);
+	virtual bool encode(const OCTET_STRING& value);
+	virtual bool encode(const ConstrainedString& value);
+	virtual bool encode(const BMPString& value);
+	virtual bool encode(const CHOICE& value);
+	virtual bool encode(const SEQUENCE_OF_Base& value);
+	virtual bool encode(const OpenData& value);
+	virtual bool encode(const GeneralizedTime& value);
 private:
-   	virtual bool do_encode(const Null& value);
-	virtual bool do_encode(const BOOLEAN& value);
-	virtual bool do_encode(const INTEGER& value);
-	virtual bool do_encode(const ENUMERATED& value);
-	virtual bool do_encode(const OBJECT_IDENTIFIER& value);
-	virtual bool do_encode(const BIT_STRING& value);
-	virtual bool do_encode(const OCTET_STRING& value);
-	virtual bool do_encode(const ConstrainedString& value);
-	virtual bool do_encode(const BMPString& value);
-	virtual bool do_encode(const CHOICE& value);
-	virtual bool do_encode(const SEQUENCE_OF_Base& value);
-	virtual bool do_encode(const OpenData& value);
-	virtual bool do_encode(const GeneralizedTime& value);
-
 	virtual bool preEncodeExtensionRoots(const SEQUENCE& value) ;
 	virtual bool encodeExtensionRoot(const SEQUENCE& value, int index);
 	virtual bool encodeKnownExtension(const SEQUENCE& value, int index);
@@ -2550,23 +2518,22 @@ public:
 	virtual VISIT_SEQ_RESULT decodeKnownExtension(SEQUENCE& value, int index, int optional_id);
 	virtual bool decodeUnknownExtensions(SEQUENCE& value);
 
+	virtual bool decode(Null& value);
+	virtual bool decode(BOOLEAN& value);
+	virtual bool decode(INTEGER& value);
+	virtual bool decode(ENUMERATED& value);
+	virtual bool decode(OBJECT_IDENTIFIER& value);
+	virtual bool decode(BIT_STRING& value);
+	virtual bool decode(OCTET_STRING& value);
+	virtual bool decode(ConstrainedString& value);
+	virtual bool decode(BMPString& value);
+	virtual bool decode(CHOICE& value);
+	virtual bool decode(SEQUENCE_OF_Base& value);
+	virtual bool decode(OpenData& value);
+	virtual bool redecode(OpenData& value);
+	virtual bool decode(TypeConstrainedOpenData& value);
+	virtual bool decode(GeneralizedTime& value);
 private:
-	virtual bool do_decode(Null& value);
-	virtual bool do_decode(BOOLEAN& value);
-	virtual bool do_decode(INTEGER& value);
-	virtual bool do_decode(ENUMERATED& value);
-	virtual bool do_decode(OBJECT_IDENTIFIER& value);
-	virtual bool do_decode(BIT_STRING& value);
-	virtual bool do_decode(OCTET_STRING& value);
-	virtual bool do_decode(ConstrainedString& value);
-	virtual bool do_decode(BMPString& value);
-	virtual bool do_decode(CHOICE& value);
-	virtual bool do_decode(SEQUENCE_OF_Base& value);
-	virtual bool do_decode(OpenData& value);
-	virtual bool do_redecode(OpenData& value);
-	virtual bool do_decode(TypeConstrainedOpenData& value);
-	virtual bool do_decode(GeneralizedTime& value);
-
 	bool atEnd();
 	unsigned char decodeByte();
 	unsigned decodeBlock(char * bufptr, unsigned nBytes);
@@ -2595,21 +2562,20 @@ public:
 	 */
 	bool aligned() const { return alignedFlag; }
 
+	virtual bool encode(const Null& value);
+	virtual bool encode(const BOOLEAN& value);
+	virtual bool encode(const INTEGER& value);
+	virtual bool encode(const ENUMERATED& value);
+	virtual bool encode(const OBJECT_IDENTIFIER& value);
+	virtual bool encode(const BIT_STRING& value);
+	virtual bool encode(const OCTET_STRING& value);
+	virtual bool encode(const ConstrainedString& value);
+	virtual bool encode(const BMPString& value);
+	virtual bool encode(const CHOICE& value);
+	virtual bool encode(const OpenData& value);
+	virtual bool encode(const GeneralizedTime& value);
+	virtual bool encode(const SEQUENCE_OF_Base& value);
 private:
-	virtual bool do_encode(const Null& value);
-	virtual bool do_encode(const BOOLEAN& value);
-	virtual bool do_encode(const INTEGER& value);
-	virtual bool do_encode(const ENUMERATED& value);
-	virtual bool do_encode(const OBJECT_IDENTIFIER& value);
-	virtual bool do_encode(const BIT_STRING& value);
-	virtual bool do_encode(const OCTET_STRING& value);
-	virtual bool do_encode(const ConstrainedString& value);
-	virtual bool do_encode(const BMPString& value);
-	virtual bool do_encode(const CHOICE& value);
-	virtual bool do_encode(const OpenData& value);
-	virtual bool do_encode(const GeneralizedTime& value);
-	virtual bool do_encode(const SEQUENCE_OF_Base& value);
-
 	virtual bool preEncodeExtensionRoots(const SEQUENCE& value) ;
 	virtual bool encodeExtensionRoot(const SEQUENCE& value, int index);
 	virtual bool preEncodeExtensions(const SEQUENCE& value) ;
@@ -2690,24 +2656,22 @@ public:
 	virtual VISIT_SEQ_RESULT decodeKnownExtension(SEQUENCE& value, int index, int optional_id);
 	virtual bool decodeUnknownExtensions(SEQUENCE& value);
 
+	virtual bool decode(Null& value);
+	virtual bool decode(BOOLEAN& value);
+	virtual bool decode(INTEGER& value);
+	virtual bool decode(ENUMERATED& value);
+	virtual bool decode(OBJECT_IDENTIFIER& value);
+	virtual bool decode(BIT_STRING& value);
+	virtual bool decode(OCTET_STRING& value);
+	virtual bool decode(ConstrainedString& value);
+	virtual bool decode(BMPString& value);
+	virtual bool decode(CHOICE& value);
+	virtual bool decode(SEQUENCE_OF_Base& value);
+	virtual bool decode(OpenData& value);
+	virtual bool redecode(OpenData& value);
+	virtual bool decode(TypeConstrainedOpenData& value);
+	virtual bool decode(GeneralizedTime& value);
 private:
-
-	virtual bool do_decode(Null& value);
-	virtual bool do_decode(BOOLEAN& value);
-	virtual bool do_decode(INTEGER& value);
-	virtual bool do_decode(ENUMERATED& value);
-	virtual bool do_decode(OBJECT_IDENTIFIER& value);
-	virtual bool do_decode(BIT_STRING& value);
-	virtual bool do_decode(OCTET_STRING& value);
-	virtual bool do_decode(ConstrainedString& value);
-	virtual bool do_decode(BMPString& value);
-	virtual bool do_decode(CHOICE& value);
-	virtual bool do_decode(SEQUENCE_OF_Base& value);
-	virtual bool do_decode(OpenData& value);
-	virtual bool do_redecode(OpenData& value);
-	virtual bool do_decode(TypeConstrainedOpenData& value);
-	virtual bool do_decode(GeneralizedTime& value);
-
 	void byteAlign();
 	bool atEnd();
 	unsigned getBitsLeft() const;
@@ -2734,23 +2698,22 @@ class AVNEncoder : public ConstVisitor
 public:
 	AVNEncoder(std::ostream& os) 
 		: strm(os), indent(0) {}
+
+	virtual bool encode(const Null& value);
+	virtual bool encode(const BOOLEAN& value);
+	virtual bool encode(const INTEGER& value);
+	virtual bool encode(const IntegerWithNamedNumber& value);
+	virtual bool encode(const ENUMERATED& value);
+	virtual bool encode(const OBJECT_IDENTIFIER& value);
+	virtual bool encode(const BIT_STRING& value);
+	virtual bool encode(const OCTET_STRING& value);
+	virtual bool encode(const ConstrainedString& value);
+	virtual bool encode(const BMPString& value);
+	virtual bool encode(const CHOICE& value);
+	virtual bool encode(const OpenData& value);
+	virtual bool encode(const GeneralizedTime& value);
+	virtual bool encode(const SEQUENCE_OF_Base& value);
 private:
-
-	virtual bool do_encode(const Null& value);
-	virtual bool do_encode(const BOOLEAN& value);
-	virtual bool do_encode(const INTEGER& value);
-	virtual bool do_encode(const IntegerWithNamedNumber& value);
-	virtual bool do_encode(const ENUMERATED& value);
-	virtual bool do_encode(const OBJECT_IDENTIFIER& value);
-	virtual bool do_encode(const BIT_STRING& value);
-	virtual bool do_encode(const OCTET_STRING& value);
-	virtual bool do_encode(const ConstrainedString& value);
-	virtual bool do_encode(const BMPString& value);
-	virtual bool do_encode(const CHOICE& value);
-	virtual bool do_encode(const OpenData& value);
-	virtual bool do_encode(const GeneralizedTime& value);
-	virtual bool do_encode(const SEQUENCE_OF_Base& value);
-
 	virtual bool preEncodeExtensionRoots(const SEQUENCE& value) ;
 	virtual bool encodeExtensionRoot(const SEQUENCE& value, int index);
 	virtual bool encodeKnownExtension(const SEQUENCE& value, int index);
@@ -2767,24 +2730,23 @@ public:
 	AVNDecoder(std::istream& is, CoderEnv* coder = NULL) 
 		: Visitor(coder), strm(is) {}
 
+	virtual bool decode(Null& value);
+	virtual bool decode(BOOLEAN& value);
+	virtual bool decode(INTEGER& value);
+	virtual bool decode(IntegerWithNamedNumber& value);
+	virtual bool decode(ENUMERATED& value);
+	virtual bool decode(OBJECT_IDENTIFIER& value);
+	virtual bool decode(BIT_STRING& value);
+	virtual bool decode(OCTET_STRING& value);
+	virtual bool decode(ConstrainedString& value);
+	virtual bool decode(BMPString& value);
+	virtual bool decode(CHOICE& value);
+	virtual bool decode(SEQUENCE_OF_Base& value);
+	virtual bool decode(OpenData& value);
+	virtual bool redecode(OpenData& value);
+	virtual bool decode(TypeConstrainedOpenData& value);
+	virtual bool decode(GeneralizedTime& value);
 private:
-	virtual bool do_decode(Null& value);
-	virtual bool do_decode(BOOLEAN& value);
-	virtual bool do_decode(INTEGER& value);
-	virtual bool do_decode(IntegerWithNamedNumber& value);
-	virtual bool do_decode(ENUMERATED& value);
-	virtual bool do_decode(OBJECT_IDENTIFIER& value);
-	virtual bool do_decode(BIT_STRING& value);
-	virtual bool do_decode(OCTET_STRING& value);
-	virtual bool do_decode(ConstrainedString& value);
-	virtual bool do_decode(BMPString& value);
-	virtual bool do_decode(CHOICE& value);
-	virtual bool do_decode(SEQUENCE_OF_Base& value);
-	virtual bool do_decode(OpenData& value);
-	virtual bool do_redecode(OpenData& value);
-	virtual bool do_decode(TypeConstrainedOpenData& value);
-	virtual bool do_decode(GeneralizedTime& value);
-
 	virtual VISIT_SEQ_RESULT preDecodeExtensionRoots(SEQUENCE& value);
 	virtual VISIT_SEQ_RESULT decodeExtensionRoot(SEQUENCE& value, int index, int optional_id);
 	virtual VISIT_SEQ_RESULT decodeKnownExtension(SEQUENCE& value, int index, int optional_id);

@@ -87,7 +87,7 @@ bool ENUMERATED::setFromName(const std::string& str)
 		return false;
 }
 
-bool AVNDecoder::do_decode(Null& value)
+bool AVNDecoder::decode(Null& value)
 {
 	std::string tmp;
     char c;
@@ -106,7 +106,7 @@ bool AVNDecoder::do_decode(Null& value)
 	return true;
 }
 
-bool AVNDecoder::do_decode(BOOLEAN& value)
+bool AVNDecoder::decode(BOOLEAN& value)
 {
 	std::string tmp;
     char c;
@@ -129,7 +129,7 @@ bool AVNDecoder::do_decode(BOOLEAN& value)
 	return true;
 }
 
-bool AVNDecoder::do_decode(INTEGER& value)
+bool AVNDecoder::decode(INTEGER& value)
 {
 	unsigned tmp;
 	if (!value.constrained() || value.getLowerLimit() < 0)
@@ -140,7 +140,7 @@ bool AVNDecoder::do_decode(INTEGER& value)
 	return input_success(strm);
 }
 
-bool AVNDecoder::do_decode(IntegerWithNamedNumber& value)
+bool AVNDecoder::decode(IntegerWithNamedNumber& value)
 {
 	char c;
 	if (strm >> c)
@@ -156,7 +156,7 @@ bool AVNDecoder::do_decode(IntegerWithNamedNumber& value)
 	return false;
 }
 
-bool AVNDecoder::do_decode(ENUMERATED& value)
+bool AVNDecoder::decode(ENUMERATED& value)
 {
 	std::string tmp;
 	if (strm >> tmp)
@@ -164,7 +164,7 @@ bool AVNDecoder::do_decode(ENUMERATED& value)
 	return false;
 }
 
-bool AVNDecoder::do_decode(OBJECT_IDENTIFIER& value)
+bool AVNDecoder::decode(OBJECT_IDENTIFIER& value)
 {
 	char c;
 	if (strm >> c )
@@ -288,12 +288,12 @@ bool get_value_from(std::istream& strm, std::vector<char>& value, unsigned int& 
 	return false;
 }
 
-bool AVNDecoder::do_decode(BIT_STRING& value)
+bool AVNDecoder::decode(BIT_STRING& value)
 {
 	return get_value_from(strm, value.bitData, value.totalBits);
 }
 
-bool AVNDecoder::do_decode(OCTET_STRING& value)
+bool AVNDecoder::decode(OCTET_STRING& value)
 {
 	unsigned totalBits;
 	return get_value_from(strm, value, totalBits);
@@ -310,12 +310,12 @@ bool get_string(std::istream& strm, std::string& str)
 	return false;
 }
 
-bool AVNDecoder::do_decode(ConstrainedString& value)
+bool AVNDecoder::decode(ConstrainedString& value)
 {
 	return get_string(strm, value);
 }
 
-bool AVNDecoder::do_decode(BMPString& value)
+bool AVNDecoder::decode(BMPString& value)
 {
 	std::string str;
 	if (get_string(strm, str))
@@ -341,7 +341,7 @@ bool get_id(const char** names, unsigned size, const std::string& name, int& id)
 	return false;
 }
 
-bool AVNDecoder::do_decode(CHOICE& value)
+bool AVNDecoder::decode(CHOICE& value)
 {
 	std::string identifier;
 	char c;
@@ -355,7 +355,7 @@ bool AVNDecoder::do_decode(CHOICE& value)
 	return false;
 }
 
-bool AVNDecoder::do_decode(SEQUENCE_OF_Base& value)
+bool AVNDecoder::decode(SEQUENCE_OF_Base& value)
 {
 	char c;
 	if (strm >> c)
@@ -385,25 +385,25 @@ bool AVNDecoder::do_decode(SEQUENCE_OF_Base& value)
 	return false;
 }
 
-bool AVNDecoder::do_decode(OpenData& value)
+bool AVNDecoder::decode(OpenData& value)
 {
 	// not implemented
 	return false;
 }
 
-bool AVNDecoder::do_redecode(OpenData& value)
+bool AVNDecoder::redecode(OpenData& value)
 {
 	// not implemented
 	return false;
 }
 
-bool AVNDecoder::do_decode(TypeConstrainedOpenData& value)
+bool AVNDecoder::decode(TypeConstrainedOpenData& value)
 {
 	assert(value.has_data());
 	return value.get_data().decode(*this);
 }
 
-bool AVNDecoder::do_decode(GeneralizedTime& value)
+bool AVNDecoder::decode(GeneralizedTime& value)
 {
 	std::string str;
 	if (get_string(strm, str))

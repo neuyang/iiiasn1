@@ -127,12 +127,12 @@ AbstractData* Null::create(const void* info)
 	return new Null(info);
 }
 
-bool Null::do_decode(Visitor& visitor)
+bool Null::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool Null::do_encode(ConstVisitor& visitor) const
+bool Null::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -179,12 +179,12 @@ AbstractData* BOOLEAN::create(const void* info)
 	return new BOOLEAN(info);
 }
 
-bool BOOLEAN::do_decode(Visitor& visitor)
+bool BOOLEAN::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool BOOLEAN::do_encode(ConstVisitor& visitor) const
+bool BOOLEAN::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -233,12 +233,12 @@ AbstractData* INTEGER::create(const void* info)
 	return new INTEGER(info);
 }
 
-bool INTEGER::do_decode(Visitor& visitor)
+bool INTEGER::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool INTEGER::do_encode(ConstVisitor& visitor) const
+bool INTEGER::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -272,12 +272,12 @@ AbstractData* IntegerWithNamedNumber::create(const void* info)
 	return new IntegerWithNamedNumber(info);
 }
 
-bool IntegerWithNamedNumber::do_decode(Visitor& visitor)
+bool IntegerWithNamedNumber::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool IntegerWithNamedNumber::do_encode(ConstVisitor& visitor) const
+bool IntegerWithNamedNumber::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -301,12 +301,12 @@ ENUMERATED& ENUMERATED::operator = (const ENUMERATED& that)
 	return *this;
 }
 
-bool ENUMERATED::do_decode(Visitor& visitor)
+bool ENUMERATED::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool ENUMERATED::do_encode(ConstVisitor& visitor) const
+bool ENUMERATED::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -345,12 +345,12 @@ AbstractData* OBJECT_IDENTIFIER::create(const void* info)
 	return new OBJECT_IDENTIFIER(info);
 }
 
-bool OBJECT_IDENTIFIER::do_decode(Visitor& visitor)
+bool OBJECT_IDENTIFIER::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool OBJECT_IDENTIFIER::do_encode(ConstVisitor& visitor) const
+bool OBJECT_IDENTIFIER::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -510,12 +510,12 @@ AbstractData* BIT_STRING::create(const void* info)
 	return new BIT_STRING(info);
 }
 
-bool BIT_STRING::do_decode(Visitor& visitor)
+bool BIT_STRING::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool BIT_STRING::do_encode(ConstVisitor& visitor) const
+bool BIT_STRING::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -572,12 +572,12 @@ AbstractData* OCTET_STRING::create(const void* info)
 	return new OCTET_STRING(info);
 }
 
-bool OCTET_STRING::do_decode(Visitor& visitor)
+bool OCTET_STRING::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool OCTET_STRING::do_encode(ConstVisitor& visitor) const
+bool OCTET_STRING::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -614,12 +614,12 @@ ConstrainedString::ConstrainedString(const void* info, const char* str)
 {
 }
 
-bool ConstrainedString::do_decode(Visitor& visitor)
+bool ConstrainedString::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool ConstrainedString::do_encode(ConstVisitor& visitor) const
+bool ConstrainedString::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -790,12 +790,12 @@ AbstractData* BMPString::create(const void* info)
 	return new BMPString(info);
 }
 
-bool BMPString::do_decode(Visitor& visitor)
+bool BMPString::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool BMPString::do_encode(ConstVisitor& visitor) const
+bool BMPString::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -897,12 +897,12 @@ std::string GeneralizedTime::get() const
 	return std::string(buf); 
 }
 
-bool GeneralizedTime::do_decode(Visitor& visitor)
+bool GeneralizedTime::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool GeneralizedTime::do_encode(ConstVisitor& visitor) const
+bool GeneralizedTime::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -996,12 +996,12 @@ AbstractData* CHOICE::setSelection(int id, AbstractData* obj)
 	return obj;
 }
 
-bool CHOICE::do_decode(Visitor& visitor)
+bool CHOICE::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool CHOICE::do_encode(ConstVisitor& visitor) const
+bool CHOICE::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -1188,12 +1188,12 @@ void SEQUENCE::removeOptionalField(unsigned opt)
 	}
 }
 
-bool SEQUENCE::do_decode(Visitor& visitor)
+bool SEQUENCE::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool SEQUENCE::do_encode(ConstVisitor& visitor) const
+bool SEQUENCE::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -1269,12 +1269,12 @@ AbstractData* SEQUENCE_OF_Base::do_clone() const
 	return new SEQUENCE_OF_Base(*this);
 }
 
-bool SEQUENCE_OF_Base::do_decode(Visitor& visitor)
+bool SEQUENCE_OF_Base::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool SEQUENCE_OF_Base::do_encode(ConstVisitor& visitor) const
+bool SEQUENCE_OF_Base::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -1373,12 +1373,12 @@ void OpenData::swap(OpenData& other)
 	other.buf.reset(tmpBuf);
 }
 
-bool OpenData::do_decode(Visitor& visitor)
+bool OpenData::decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool OpenData::do_encode(ConstVisitor& visitor) const
+bool OpenData::encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
@@ -1403,7 +1403,7 @@ AbstractData* OpenData::do_clone() const
 
 /////////////////////////////////////////////////////////
 
-bool TypeConstrainedOpenData::do_decode(Visitor& v)
+bool TypeConstrainedOpenData::decode(Visitor& v)
 {
 	return v.decode(*this);
 }

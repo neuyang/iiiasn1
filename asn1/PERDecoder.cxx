@@ -69,12 +69,12 @@ inline bool PERDecoder::atEnd()
 	return beginPosition >= endPosition; 
 }
 
-bool PERDecoder::do_decode(Null& value)
+bool PERDecoder::decode(Null& value)
 {
 	return true;
 }
 
-bool PERDecoder::do_decode(BOOLEAN& value)
+bool PERDecoder::decode(BOOLEAN& value)
 {
 	if (atEnd())
 		return false;
@@ -84,7 +84,7 @@ bool PERDecoder::do_decode(BOOLEAN& value)
 	return true;
 }
 
-bool PERDecoder::do_decode(INTEGER& integer)
+bool PERDecoder::decode(INTEGER& integer)
 {
 	// X.931 Sections 12
 
@@ -115,7 +115,7 @@ bool PERDecoder::do_decode(INTEGER& integer)
 	return true;
 }
 
-bool PERDecoder::do_decode(ENUMERATED& value)
+bool PERDecoder::decode(ENUMERATED& value)
 {
 	// X.691 Section 13
 
@@ -140,7 +140,7 @@ bool PERDecoder::do_decode(ENUMERATED& value)
 }
 
 
-bool PERDecoder::do_decode(OBJECT_IDENTIFIER& value)
+bool PERDecoder::decode(OBJECT_IDENTIFIER& value)
 {
 	// X.691 Section 23
 
@@ -154,7 +154,7 @@ bool PERDecoder::do_decode(OBJECT_IDENTIFIER& value)
 	return value.decodeCommon(beginPosition-dataLen, dataLen);
 }
 
-bool PERDecoder::do_decode(BIT_STRING& value)
+bool PERDecoder::decode(BIT_STRING& value)
 {
 	// X.691 Section 15
 
@@ -180,7 +180,7 @@ bool PERDecoder::do_decode(BIT_STRING& value)
 	return decodeBitMap( value.bitData, value.size());
 }
 
-bool PERDecoder::do_decode(OCTET_STRING& value)
+bool PERDecoder::decode(OCTET_STRING& value)
 {
 	// X.691 Section 16
 
@@ -218,7 +218,7 @@ bool PERDecoder::do_decode(OCTET_STRING& value)
 	return true;
 }
 
-bool PERDecoder::do_decode(ConstrainedString& value)
+bool PERDecoder::decode(ConstrainedString& value)
 {
 	// X.691 Section 26
 
@@ -257,7 +257,7 @@ bool PERDecoder::do_decode(ConstrainedString& value)
 	return true;
 }
 
-bool PERDecoder::do_decode(BMPString& value)
+bool PERDecoder::decode(BMPString& value)
 {
 	// X.691 Section 26
 
@@ -321,7 +321,7 @@ bool PERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
 }
 
 
-bool PERDecoder::do_decode(CHOICE& value)
+bool PERDecoder::decode(CHOICE& value)
 {
 	memento_type memento;
 	if (decodeChoicePreamle(value,memento))
@@ -334,7 +334,7 @@ bool PERDecoder::do_decode(CHOICE& value)
 	return false;
 }
 
-bool PERDecoder::do_decode(SEQUENCE_OF_Base& value)
+bool PERDecoder::decode(SEQUENCE_OF_Base& value)
 {
 	unsigned size;
 	if (decodeConstrainedLength(value, size) < 0)
@@ -358,7 +358,7 @@ bool PERDecoder::do_decode(SEQUENCE_OF_Base& value)
 	return true;
 }
 
-bool PERDecoder::do_decode(OpenData& data)
+bool PERDecoder::decode(OpenData& data)
 {
 	OCTET_STRING value;
 	if (value.decode(*this))
@@ -371,7 +371,7 @@ bool PERDecoder::do_decode(OpenData& data)
 	return false;
 }
 
-bool PERDecoder::do_redecode(OpenData& value)
+bool PERDecoder::redecode(OpenData& value)
 {
 	if (!value.has_buf() || !value.has_data())
 		return false;
@@ -379,7 +379,7 @@ bool PERDecoder::do_redecode(OpenData& value)
 	return value.get_data().decode(decoder);
 }
 
-bool PERDecoder::do_decode(TypeConstrainedOpenData& value)
+bool PERDecoder::decode(TypeConstrainedOpenData& value)
 {
 	assert(value.has_data());
 	unsigned len;
@@ -391,7 +391,7 @@ bool PERDecoder::do_decode(TypeConstrainedOpenData& value)
 	return ok;
 }
 
-bool PERDecoder::do_decode(GeneralizedTime& value)
+bool PERDecoder::decode(GeneralizedTime& value)
 {
 	unsigned len;
 	if (decodeLength(0, INT_MAX, len))

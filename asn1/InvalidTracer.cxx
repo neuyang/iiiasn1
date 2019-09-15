@@ -35,38 +35,38 @@ public:
 	{
 		return os << tracer.strm.str();
 	}
-private:
-	bool do_encode(const Null& value);
-	bool do_encode(const BOOLEAN& value);
-	bool do_encode(const INTEGER& value);
-	bool do_encode(const ENUMERATED& value);
-	bool do_encode(const OBJECT_IDENTIFIER& value);
-	bool do_encode(const BIT_STRING& value) ;
-	bool do_encode(const OCTET_STRING& value);
-	bool do_encode(const ConstrainedString& value);
-	bool do_encode(const BMPString& value);
-	bool do_encode(const CHOICE& value);
-	bool do_encode(const OpenData& value);
-	bool do_encode(const GeneralizedTime& value);
-	bool do_encode(const SEQUENCE_OF_Base& value);
 
+	bool encode(const Null& value);
+	bool encode(const BOOLEAN& value);
+	bool encode(const INTEGER& value);
+	bool encode(const ENUMERATED& value);
+	bool encode(const OBJECT_IDENTIFIER& value);
+	bool encode(const BIT_STRING& value) ;
+	bool encode(const OCTET_STRING& value);
+	bool encode(const ConstrainedString& value);
+	bool encode(const BMPString& value);
+	bool encode(const CHOICE& value);
+	bool encode(const OpenData& value);
+	bool encode(const GeneralizedTime& value);
+	bool encode(const SEQUENCE_OF_Base& value);
+private:
 	bool encodeExtensionRoot(const SEQUENCE& value, int index);
 	bool encodeKnownExtension(const SEQUENCE& value, int index);
 
 	std::stringstream strm;
 };
 
-bool InvalidTracer::do_encode(const Null& value) 
+bool InvalidTracer::encode(const Null& value) 
 { 
 	return true;
 }
 
-bool InvalidTracer::do_encode(const BOOLEAN& value) 
+bool InvalidTracer::encode(const BOOLEAN& value) 
 { 
 	return true;
 }
 
-bool InvalidTracer::do_encode(const INTEGER& value) { 
+bool InvalidTracer::encode(const INTEGER& value) { 
 	if (value.getLowerLimit() >= 0)
 	{
 		unsigned v = static_cast<unsigned>(value.getValue());
@@ -88,7 +88,7 @@ bool InvalidTracer::do_encode(const INTEGER& value) {
 	return false;
 }
 
-bool InvalidTracer::do_encode(const ENUMERATED& value)
+bool InvalidTracer::encode(const ENUMERATED& value)
 { 
 	if (value.asInt() > value.getMaximum())
 	{
@@ -98,7 +98,7 @@ bool InvalidTracer::do_encode(const ENUMERATED& value)
 	return true; 
 }
 
-bool InvalidTracer::do_encode(const OBJECT_IDENTIFIER& value) 
+bool InvalidTracer::encode(const OBJECT_IDENTIFIER& value) 
 { 
 	if (value.levels() == 0)
 	{
@@ -108,7 +108,7 @@ bool InvalidTracer::do_encode(const OBJECT_IDENTIFIER& value)
 	return true; 
 }
 
-bool InvalidTracer::do_encode(const BIT_STRING& value) 
+bool InvalidTracer::encode(const BIT_STRING& value) 
 { 
 	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
 	{
@@ -122,7 +122,7 @@ bool InvalidTracer::do_encode(const BIT_STRING& value)
 	return false; 
 }
 
-bool InvalidTracer::do_encode(const OCTET_STRING& value) 
+bool InvalidTracer::encode(const OCTET_STRING& value) 
 { 
 	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
 	{
@@ -136,7 +136,7 @@ bool InvalidTracer::do_encode(const OCTET_STRING& value)
 	return false; 
 }
 
-bool InvalidTracer::do_encode(const ConstrainedString& value)
+bool InvalidTracer::encode(const ConstrainedString& value)
 { 
 	int pos;
 	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
@@ -154,7 +154,7 @@ bool InvalidTracer::do_encode(const ConstrainedString& value)
 	return false; 
 }
 
-bool InvalidTracer::do_encode(const BMPString& value)
+bool InvalidTracer::encode(const BMPString& value)
 {
 	unsigned pos;
 	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
@@ -172,7 +172,7 @@ bool InvalidTracer::do_encode(const BMPString& value)
 	return false; 
 }
 
-bool InvalidTracer::do_encode(const CHOICE& value)
+bool InvalidTracer::encode(const CHOICE& value)
 {
 	if (value.currentSelection() == CHOICE::unselected_)
 		strm << " This CHOICE is not selected";
@@ -185,7 +185,7 @@ bool InvalidTracer::do_encode(const CHOICE& value)
 	return false;
 }
 
-bool InvalidTracer::do_encode(const OpenData& value)
+bool InvalidTracer::encode(const OpenData& value)
 { 
 	if (value.has_data())
 		return value.get_data().encode(*this);
@@ -198,7 +198,7 @@ bool InvalidTracer::do_encode(const OpenData& value)
 	return true; 
 }
 
-bool InvalidTracer::do_encode(const GeneralizedTime& value)  
+bool InvalidTracer::encode(const GeneralizedTime& value)  
 { 
 	if (value.isStrictlyValid())
 	{
@@ -208,7 +208,7 @@ bool InvalidTracer::do_encode(const GeneralizedTime& value)
 	return true;
 }
 
-bool InvalidTracer::do_encode(const SEQUENCE_OF_Base& value)
+bool InvalidTracer::encode(const SEQUENCE_OF_Base& value)
 { 
 	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
 	{

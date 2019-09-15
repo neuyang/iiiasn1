@@ -84,7 +84,7 @@ inline unsigned char BERDecoder::decodeByte()
 	return *beginPosition++; 
 }
 
-bool BERDecoder::do_decode(Null& value)
+bool BERDecoder::decode(Null& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))
@@ -94,7 +94,7 @@ bool BERDecoder::do_decode(Null& value)
 	return true;
 }
 
-bool BERDecoder::do_decode(BOOLEAN& value)
+bool BERDecoder::decode(BOOLEAN& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))
@@ -109,7 +109,7 @@ bool BERDecoder::do_decode(BOOLEAN& value)
 	return true;
 }
 
-bool BERDecoder::do_decode(INTEGER& value)
+bool BERDecoder::decode(INTEGER& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len) || len == 0 || atEnd())
@@ -126,7 +126,7 @@ bool BERDecoder::do_decode(INTEGER& value)
 	return true;
 }
 
-bool BERDecoder::do_decode(ENUMERATED& value)
+bool BERDecoder::decode(ENUMERATED& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len) || len == 0 || atEnd())
@@ -144,7 +144,7 @@ bool BERDecoder::do_decode(ENUMERATED& value)
 }
 
 
-bool BERDecoder::do_decode(OBJECT_IDENTIFIER& value)
+bool BERDecoder::decode(OBJECT_IDENTIFIER& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))
@@ -156,7 +156,7 @@ bool BERDecoder::do_decode(OBJECT_IDENTIFIER& value)
 	return value.decodeCommon(beginPosition-len, len);
 }
 
-bool BERDecoder::do_decode(BIT_STRING& value)
+bool BERDecoder::decode(BIT_STRING& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len) || len == 0 || atEnd())
@@ -167,7 +167,7 @@ bool BERDecoder::do_decode(BIT_STRING& value)
 	return decodeBlock(&*value.bitData.begin(), nBytes) == nBytes;
 }
 
-bool BERDecoder::do_decode(OCTET_STRING& value)
+bool BERDecoder::decode(OCTET_STRING& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))
@@ -176,7 +176,7 @@ bool BERDecoder::do_decode(OCTET_STRING& value)
 	return decodeBlock(&*value.begin(), len) == len;
 }
 
-bool BERDecoder::do_decode(ConstrainedString& value)
+bool BERDecoder::decode(ConstrainedString& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))
@@ -185,7 +185,7 @@ bool BERDecoder::do_decode(ConstrainedString& value)
 	return decodeBlock(&*value.begin(), len) == len;
 }
 
-bool BERDecoder::do_decode(BMPString& value)
+bool BERDecoder::decode(BMPString& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))
@@ -225,7 +225,7 @@ bool BERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
 	return false;
 }
 
-bool BERDecoder::do_decode(CHOICE& value)
+bool BERDecoder::decode(CHOICE& value)
 {
 	memento_type memento;
 	if (decodeChoicePreamle(value,memento))
@@ -239,7 +239,7 @@ bool BERDecoder::do_decode(CHOICE& value)
 	return false;
 }
 
-bool BERDecoder::do_decode(SEQUENCE_OF_Base& value)
+bool BERDecoder::decode(SEQUENCE_OF_Base& value)
 {
 	value.clear();
 
@@ -278,7 +278,7 @@ bool BERDecoder::do_decode(SEQUENCE_OF_Base& value)
 	return true;
 }
 
-bool BERDecoder::do_decode(OpenData& value)
+bool BERDecoder::decode(OpenData& value)
 {
 	const char* savedPosition = beginPosition;
 
@@ -298,7 +298,7 @@ bool BERDecoder::do_decode(OpenData& value)
 	return true;
 }
 
-bool BERDecoder::do_redecode(OpenData& value)
+bool BERDecoder::redecode(OpenData& value)
 {
 	if (!value.has_buf() || !value.has_data())
 		return false;
@@ -306,7 +306,7 @@ bool BERDecoder::do_redecode(OpenData& value)
 	return value.get_data().decode(decoder);
 }
 
-bool BERDecoder::do_decode(TypeConstrainedOpenData& value)
+bool BERDecoder::decode(TypeConstrainedOpenData& value)
 {
 	assert(value.has_data());
 	const char* savedPosition = beginPosition;
@@ -323,7 +323,7 @@ bool BERDecoder::do_decode(TypeConstrainedOpenData& value)
 }
 
 
-bool BERDecoder::do_decode(GeneralizedTime& value)
+bool BERDecoder::decode(GeneralizedTime& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))

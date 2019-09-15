@@ -3157,7 +3157,7 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
   {
 
       hdr << indent << "    static ASN1::AbstractData* create(const void*);\n"
-		  << indent << "    bool do_decode(ASN1::Visitor& visitor);\n";
+		  << indent << "    bool decode(ASN1::Visitor& visitor);\n";
 
       cxx << GetTemplatePrefix()
 		  << "ASN1::AbstractData* "<< GetClassNameString() << "::create(const void* info)\n"
@@ -3166,9 +3166,9 @@ void SequenceType::GenerateCplusplus(std::ostream & hdr, std::ostream & cxx, std
 		  << "}\n"
 		  << "\n"
           << GetTemplatePrefix()
-		  << "bool "<< GetClassNameString() << "::do_decode(ASN1::Visitor& visitor)\n"
+		  << "bool "<< GetClassNameString() << "::decode(ASN1::Visitor& visitor)\n"
           << "{\n"
-          << "  if (Inherited::do_decode(visitor))\n"
+          << "  if (Inherited::decode(visitor))\n"
           << "  {\n"
           << "    if (!visitor.get_env())\n"
 	      << "      return true;\n"

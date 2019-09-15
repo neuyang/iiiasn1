@@ -59,19 +59,19 @@ inline void PEREncoder::byteAlign()
 	bitOffset = 8;
 }
 
-bool PEREncoder::do_encode(const Null&)
+bool PEREncoder::encode(const Null&)
 {
 	return true;
 }
 
-bool PEREncoder::do_encode(const BOOLEAN& value)
+bool PEREncoder::encode(const BOOLEAN& value)
 {
 	// X.931 Section 11
 	encodeSingleBit((bool)value);
 	return true;
 }
 
-bool PEREncoder::do_encode(const INTEGER& integer)
+bool PEREncoder::encode(const INTEGER& integer)
 {
 	// X.931 Sections 12
 
@@ -103,7 +103,7 @@ bool PEREncoder::do_encode(const INTEGER& integer)
 	return encodeUnsigned(value, integer.getLowerLimit(), integer.getUpperLimit());
 }
 
-bool PEREncoder::do_encode(const ENUMERATED& value)
+bool PEREncoder::encode(const ENUMERATED& value)
 {
 	if (value.extendable()) {  // 13.3
 		bool extended = value.asInt() > value.getMaximum();
@@ -116,7 +116,7 @@ bool PEREncoder::do_encode(const ENUMERATED& value)
 	return encodeUnsigned(value.asInt(), 0, value.getMaximum());  // 13.2
 }
 
-bool PEREncoder::do_encode(const OBJECT_IDENTIFIER& value)
+bool PEREncoder::encode(const OBJECT_IDENTIFIER& value)
 {
 	// X.691 Section 23
 
@@ -128,7 +128,7 @@ bool PEREncoder::do_encode(const OBJECT_IDENTIFIER& value)
 	return true;
 }
 
-bool PEREncoder::do_encode(const BIT_STRING& value)
+bool PEREncoder::encode(const BIT_STRING& value)
 {
 	// X.691 Section 15
 
@@ -146,7 +146,7 @@ bool PEREncoder::do_encode(const BIT_STRING& value)
 	return true;
 }
 
-bool PEREncoder::do_encode(const OCTET_STRING& value)
+bool PEREncoder::encode(const OCTET_STRING& value)
 {
 	// X.691 Section 16
 	unsigned nBytes = value.size();
@@ -172,8 +172,7 @@ bool PEREncoder::do_encode(const OCTET_STRING& value)
 	return true;
 }
 
-
-bool PEREncoder::do_encode(const ConstrainedString& value)
+bool PEREncoder::encode(const ConstrainedString& value)
 {
 	// X.691 Section 26
 
@@ -206,7 +205,7 @@ bool PEREncoder::do_encode(const ConstrainedString& value)
 	return true;
 }
 
-bool PEREncoder::do_encode(const BMPString& value)
+bool PEREncoder::encode(const BMPString& value)
 {
 	// X.691 Section 26
 
@@ -225,7 +224,7 @@ bool PEREncoder::do_encode(const BMPString& value)
 	return true;
 }
 
-bool PEREncoder::do_encode(const CHOICE& value)
+bool PEREncoder::encode(const CHOICE& value)
 {
 	if (value.currentSelection() < 0)
 		return false;
@@ -246,7 +245,7 @@ bool PEREncoder::do_encode(const CHOICE& value)
 	return value.getSelection()->encode(*this);
 }
 
-bool PEREncoder::do_encode(const SEQUENCE_OF_Base& value)
+bool PEREncoder::encode(const SEQUENCE_OF_Base& value)
 {
 	unsigned sz = value.size();
 	if (!encodeConstrainedLength(value, sz))
@@ -259,12 +258,12 @@ bool PEREncoder::do_encode(const SEQUENCE_OF_Base& value)
 	return true;
 }
 
-bool PEREncoder::do_encode(const OpenData& value)
+bool PEREncoder::encode(const OpenData& value)
 {
 	return encodeAnyType(&value.get_data());
 }
 
-bool PEREncoder::do_encode(const GeneralizedTime& value)
+bool PEREncoder::encode(const GeneralizedTime& value)
 {
 	std::string notion(value.get());
 	encodeLength(notion.size(), 0, UINT_MAX);

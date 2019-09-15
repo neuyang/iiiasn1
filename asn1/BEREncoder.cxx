@@ -43,16 +43,16 @@ extern unsigned CountBits(unsigned range);
 class PrimitiveChecker : public ConstVisitor
 {
 private:
-	bool do_encode(const AbstractData& value) { return true; }
-	bool do_encode(const CHOICE& value) { 
+	bool encode(const AbstractData& value) { return true; }
+	bool encode(const CHOICE& value) { 
 		assert(value.currentSelection() >= 0) ;
 		return value.getSelection()->encode(*this);
 	}
-	bool do_encode(const OpenData& value) { 
+	bool encode(const OpenData& value) { 
 		assert(value.has_data());
 		return value.get_data().encode(*this); 
 	}
-	bool do_encode(const SEQUENCE_OF_Base& value) { return false; }
+	bool encode(const SEQUENCE_OF_Base& value) { return false; }
 	bool preEncodeExtensionRoots(const SEQUENCE& value) { return false; }
 };
 
@@ -96,58 +96,58 @@ public:
 		return len + dataLen;
 	}
 private:
-	bool do_encode(const Null& value) {
+	bool encode(const Null& value) {
 		return true; 
 	}
-	bool do_encode(const BOOLEAN& value) { 
+	bool encode(const BOOLEAN& value) { 
 		++length;
 		return true; 
 	}
-	bool do_encode(const INTEGER& value) { 
+	bool encode(const INTEGER& value) { 
 		length += getIntegerDataLength(value.getValue());
 		return true; 
 	}
-	bool do_encode(const ENUMERATED& value) { 
+	bool encode(const ENUMERATED& value) { 
 		length += getIntegerDataLength(value.asInt());
 		return true; 
 	}
-	bool do_encode(const OBJECT_IDENTIFIER& value) { 
+	bool encode(const OBJECT_IDENTIFIER& value) { 
 		std::vector<char> dummy;
 		value.encodeCommon(dummy);
 		length += dummy.size();
 		return true; 
 	}
-	bool do_encode(const BIT_STRING& value) { 
+	bool encode(const BIT_STRING& value) { 
 		length += (value.size()+7)/8 + 1;
 		return true; 
 	}
-	bool do_encode(const OCTET_STRING& value) {
+	bool encode(const OCTET_STRING& value) {
 		length += value.size();
 		return true;
 	}
-	bool do_encode(const ConstrainedString& value) { 
+	bool encode(const ConstrainedString& value) { 
 		length += value.size();
 		return true; 
 	}
-	bool do_encode(const BMPString& value) { 
+	bool encode(const BMPString& value) { 
 		length += value.size()*2;
 		return true; 
 	}
-	bool do_encode(const CHOICE& value) { 
+	bool encode(const CHOICE& value) { 
 		if (value.currentSelection() >=0 ) {
 			length +=  getObjectLength(*value.getSelection(),value.getSelectionTag());
 		}
 		return true; 
 	}
-	bool do_encode(const OpenData& value) { 
+	bool encode(const OpenData& value) { 
 		length += (value.has_data() ? getDataLength(value.get_data()) : 0);
 		return true; 
 	}
-	bool do_encode(const GeneralizedTime& value) { 
+	bool encode(const GeneralizedTime& value) { 
 		length += value.get().size();
 		return true; 
 	}
-	bool do_encode(const SEQUENCE_OF_Base& value) {
+	bool encode(const SEQUENCE_OF_Base& value) {
 
 		SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
 		for (; first != last; ++first)
@@ -199,20 +199,20 @@ inline void BEREncoder::encodeBlock(const char * bufptr, unsigned nBytes)
 	encodedBuffer.insert(encodedBuffer.end(), bufptr, bufptr + nBytes);
 }
 
-bool BEREncoder::do_encode(const Null& value)
+bool BEREncoder::encode(const Null& value)
 {
 	encodeHeader(value);
 	return true;
 }
 
-bool BEREncoder::do_encode(const BOOLEAN& value)
+bool BEREncoder::encode(const BOOLEAN& value)
 {
 	encodeHeader(value);
 	encodeByte(!value ? '\x00' : '\xff');
 	return true;
 }
 
-bool BEREncoder::do_encode(const INTEGER& value)
+bool BEREncoder::encode(const INTEGER& value)
 {
 	encodeHeader(value);
 	// output the integer bits
@@ -221,7 +221,7 @@ bool BEREncoder::do_encode(const INTEGER& value)
 	return true;
 }
 
-bool BEREncoder::do_encode(const ENUMERATED& value)
+bool BEREncoder::encode(const ENUMERATED& value)
 {
 	encodeHeader(value);
 	// output the integer bits
@@ -230,8 +230,7 @@ bool BEREncoder::do_encode(const ENUMERATED& value)
 	return true;
 }
 
-
-bool BEREncoder::do_encode(const OBJECT_IDENTIFIER& value)
+bool BEREncoder::encode(const OBJECT_IDENTIFIER& value)
 {
 	encodeHeader(value);
 	std::vector<char> data;
@@ -240,7 +239,7 @@ bool BEREncoder::do_encode(const OBJECT_IDENTIFIER& value)
 	return true;
 }
 
-bool BEREncoder::do_encode(const BIT_STRING& value)
+bool BEREncoder::encode(const BIT_STRING& value)
 {
 	encodeHeader(value);
 	if (value.size() == 0)
@@ -252,21 +251,21 @@ bool BEREncoder::do_encode(const BIT_STRING& value)
 	return true;
 }
 
-bool BEREncoder::do_encode(const OCTET_STRING& value)
+bool BEREncoder::encode(const OCTET_STRING& value)
 {
 	encodeHeader(value);
 	encodeBlock(&value[0], value.size());
 	return true;
 }
 
-bool BEREncoder::do_encode(const ConstrainedString& value)
+bool BEREncoder::encode(const ConstrainedString& value)
 {
 	encodeHeader(value);
 	encodeBlock((const char*)value.c_str(), value.size());
 	return true;
 }
 
-bool BEREncoder::do_encode(const BMPString& value)
+bool BEREncoder::encode(const BMPString& value)
 {
 	encodeHeader(value);
 	for (unsigned i = 0; i < value.size(); ++i)
@@ -277,7 +276,7 @@ bool BEREncoder::do_encode(const BMPString& value)
 	return true;
 }
 
-bool BEREncoder::do_encode(const CHOICE& value)
+bool BEREncoder::encode(const CHOICE& value)
 {
 	if (value.currentSelection() != CHOICE::unselected_)
 	{
@@ -289,7 +288,7 @@ bool BEREncoder::do_encode(const CHOICE& value)
 	return false;
 }
 
-bool BEREncoder::do_encode(const SEQUENCE_OF_Base& value)
+bool BEREncoder::encode(const SEQUENCE_OF_Base& value)
 {
 	encodeHeader(value);
 	SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
@@ -302,7 +301,7 @@ bool BEREncoder::do_encode(const SEQUENCE_OF_Base& value)
 	return true;
 }
 
-bool BEREncoder::do_encode(const OpenData& value)
+bool BEREncoder::encode(const OpenData& value)
 {
 	if (tag == 0xFFFFFFFF) 
 		tag = value.getTag();
@@ -320,7 +319,7 @@ bool BEREncoder::do_encode(const OpenData& value)
 	return false;
 }
 
-bool BEREncoder::do_encode(const GeneralizedTime& value)
+bool BEREncoder::encode(const GeneralizedTime& value)
 {
 	encodeHeader(value);
 	std::string data(value.get());
