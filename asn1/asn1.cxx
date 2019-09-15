@@ -813,13 +813,10 @@ BMPString::BMPString(const BMPString & other)
 {
 }
 
-
 AbstractData* BMPString::create(const void* info)
 {
-    return new BMPString(info);
+	return new BMPString(info);
 }
-
-
 
 bool BMPString::do_decode(Visitor& visitor)
 {
@@ -833,7 +830,7 @@ bool BMPString::do_encode(ConstVisitor& visitor) const
 
 AbstractData * BMPString::do_clone() const
 {
-  return new BMPString(*this);
+	return new BMPString(*this);
 }
 
 int BMPString::do_compare(const AbstractData& other) const 
@@ -908,8 +905,7 @@ void GeneralizedTime::set(const char* valueNotion)
 	int pos = len - 5;
 	if (valueNotion[len-1] == 'Z')
 		utc = true;
-	else if (valueNotion[pos] == '+' ||
-		     valueNotion[pos] == '-' )
+	else if (valueNotion[pos] == '+' || valueNotion[pos] == '-' )
 		sscanf(&valueNotion[pos], "%d", &mindiff);
 }
 
@@ -1016,7 +1012,6 @@ CHOICE::~CHOICE()
 {
 }
 
-
 CHOICE & CHOICE::operator=(const CHOICE & other)
 {
   assert(info_ == other.info_);
@@ -1083,7 +1078,6 @@ bool CHOICE::createSelection()
     return false;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 SEQUENCE::FieldVector::~FieldVector()
 {
@@ -1134,7 +1128,6 @@ inline void SEQUENCE::BitMap::swap(BitMap& other)
 	std::swap(totalBits, other.totalBits);
 }
 
-
 const unsigned SEQUENCE::defaultTag =0;
 
 AbstractData* SEQUENCE::create(const void* info)
@@ -1167,7 +1160,6 @@ SEQUENCE::SEQUENCE(const void* information)
 
 }
 
-
 SEQUENCE::SEQUENCE(const SEQUENCE & other)
 : AbstractData(other),
     fields(other.fields),
@@ -1176,13 +1168,9 @@ SEQUENCE::SEQUENCE(const SEQUENCE & other)
 {	
 }
 
-
-
 SEQUENCE::~SEQUENCE()
 {
 }
-
-
 
 SEQUENCE & SEQUENCE::operator=(const SEQUENCE & other)
 {
@@ -1379,8 +1367,7 @@ void SEQUENCE_OF_Base::resize(Container::size_type sz)
         for (; i != last; ++i)
             delete *i;
         container.resize(sz); 
-    } 
-    else  
+    } else  
     {
         container.reserve(sz);
         for (unsigned i = size(); i < sz; ++i)
@@ -1519,7 +1506,7 @@ bool ConstVisitor::encode(const SEQUENCE& value)
 
 	unsigned i;
 	int lastOptionalId = -1;	
-	for (i = 0; i < value.info()->numFields ; ++i)
+	for (i = 0; i < value.info()->numFields; ++i)
 	{
 		int optionalId = value.info()->ids[i];
 		if (optionalId == -1 || value.hasOptionalField(optionalId))
