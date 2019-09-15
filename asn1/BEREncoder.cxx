@@ -125,7 +125,7 @@ private:
 		length += value.size();
 		return true;
 	}
-	bool do_encode(const AbstractString& value) { 
+	bool do_encode(const ConstrainedString& value) { 
 		length += value.size();
 		return true; 
 	}
@@ -259,7 +259,7 @@ bool BEREncoder::do_encode(const OCTET_STRING& value)
 	return true;
 }
 
-bool BEREncoder::do_encode(const AbstractString& value)
+bool BEREncoder::do_encode(const ConstrainedString& value)
 {
 	encodeHeader(value);
 	encodeBlock((const char*)value.c_str(), value.size());

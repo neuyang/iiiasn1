@@ -615,52 +615,52 @@ int OCTET_STRING::do_compare(const AbstractData& other) const
 }
 
 ///////////////////////////////////////////////////////////////////////
-AbstractString::AbstractString(const AbstractString& other)
+ConstrainedString::ConstrainedString(const ConstrainedString& other)
 : ConstrainedObject(other.info_), base_string(other)
 {
 }
 
 
-AbstractString::AbstractString(const void* info)
+ConstrainedString::ConstrainedString(const void* info)
 : ConstrainedObject(info)
 { 
 }
                  
-AbstractString::AbstractString(const void* info, const std::string& str)
+ConstrainedString::ConstrainedString(const void* info, const std::string& str)
 : ConstrainedObject(info), base_string(str) 
 { 
 }
 
-AbstractString::AbstractString(const void* info, const char* str)
+ConstrainedString::ConstrainedString(const void* info, const char* str)
 : ConstrainedObject(info), base_string(str) 
 {
 }
 
-bool AbstractString::do_decode(Visitor& visitor)
+bool ConstrainedString::do_decode(Visitor& visitor)
 {
 	return visitor.decode(*this);
 }
 
-bool AbstractString::do_encode(ConstVisitor& visitor) const
+bool ConstrainedString::do_encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
 
 
-AbstractData* AbstractString::do_clone() const
+AbstractData* ConstrainedString::do_clone() const
 {
-	return new AbstractString(*this);
+	return new ConstrainedString(*this);
 }
 
-int AbstractString::do_compare(const AbstractData& other) const
+int ConstrainedString::do_compare(const AbstractData& other) const
 {
-	const AbstractString& that = *std::static_cast<const AbstractString*>(&other);
+	const ConstrainedString& that = *std::static_cast<const ConstrainedString*>(&other);
 	return base_string::compare(that);
 }
 
-AbstractData* AbstractString::create(const void* info)
+AbstractData* ConstrainedString::create(const void* info)
 {
-    return new AbstractString(info);
+    return new ConstrainedString(info);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -705,7 +705,7 @@ static const char GeneralStringSet[]   = "\000\001\002\003\004\005\006\007"
 					 "\370\371\372\373\374\375\376\377";
 
 const NumericString::InfoType NumericString::theInfo = {
-    AbstractString::create,
+    ConstrainedString::create,
     UniversalTagClass << 16 | UniversalNumericString,
     Unconstrained,
     0, 
@@ -718,7 +718,7 @@ const NumericString::InfoType NumericString::theInfo = {
 };
 
 const PrintableString::InfoType PrintableString::theInfo = {
-    AbstractString::create,
+    ConstrainedString::create,
     UniversalTagClass << 16 | UniversalPrintableString,
     Unconstrained,
     0, 
@@ -732,7 +732,7 @@ const PrintableString::InfoType PrintableString::theInfo = {
 
 
 const VisibleString::InfoType VisibleString::theInfo = {
-    AbstractString::create,
+    ConstrainedString::create,
     UniversalTagClass << 16 | UniversalVisibleString,
     Unconstrained,
     0, 
@@ -745,7 +745,7 @@ const VisibleString::InfoType VisibleString::theInfo = {
 };
 
 const IA5String::InfoType IA5String::theInfo = {
-    AbstractString::create,
+    ConstrainedString::create,
     UniversalTagClass << 16 | UniversalIA5String,
     Unconstrained,
     0, 
@@ -759,7 +759,7 @@ const IA5String::InfoType IA5String::theInfo = {
 
 
 const GeneralString::InfoType GeneralString::theInfo = {
-    AbstractString::create,
+    ConstrainedString::create,
     UniversalTagClass << 16 | UniversalGeneralString,
     Unconstrained,
     0, 

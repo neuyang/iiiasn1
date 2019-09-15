@@ -175,7 +175,7 @@ bool PEREncoder::do_encode(const OCTET_STRING& value)
 }
 
 
-bool PEREncoder::do_encode(const AbstractString& value)
+bool PEREncoder::do_encode(const ConstrainedString& value)
 {
 	// X.691 Section 26
 

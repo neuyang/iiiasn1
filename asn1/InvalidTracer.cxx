@@ -50,7 +50,7 @@ private:
 	bool do_encode(const OBJECT_IDENTIFIER& value);
 	bool do_encode(const BIT_STRING& value) ;
 	bool do_encode(const OCTET_STRING& value);
-	bool do_encode(const AbstractString& value);
+	bool do_encode(const ConstrainedString& value);
 	bool do_encode(const BMPString& value);
 	bool do_encode(const CHOICE& value);
 	bool do_encode(const OpenData& value);
@@ -143,15 +143,15 @@ bool InvalidTracer::do_encode(const OCTET_STRING& value)
 	return false; 
 }
 
-bool InvalidTracer::do_encode(const AbstractString& value)
+bool InvalidTracer::do_encode(const ConstrainedString& value)
 { 
 	int pos;
 	if (value.size() < static_cast<unsigned>(value.getLowerLimit()))
 	{
-		strm << " This AbstractString has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
+		strm << " This ConstrainedString has size " << value.size() << " smaller than its lower bound " << value.getLowerLimit();
 	} else if (value.getConstraintType() == FixedConstraint && value.size() > value.getUpperLimit())
 	{
-		strm << " This AbstractString has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
+		strm << " This ConstrainedString has size " << value.size() << " greater than its upper bound " << value.getUpperLimit();
 	} else if ((pos = value.find_first_invalid()) != std::string::npos)
 	{
 		strm << " The character '" << value[pos]  << "' is not valid for the string";

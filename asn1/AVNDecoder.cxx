@@ -315,7 +315,7 @@ bool get_string(std::istream& strm, std::string& str)
 	return false;
 }
 
-bool AVNDecoder::do_decode(AbstractString& value)
+bool AVNDecoder::do_decode(ConstrainedString& value)
 {
 	return get_string(strm, value);
 }

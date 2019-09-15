@@ -4335,7 +4335,7 @@ void StringTypeBase::GenerateInfo(const TypeBase* type,std::ostream& hdr, std::o
 	hdr << indent << "static const InfoType theInfo;\n";
 	cxx << type->GetTemplatePrefix()
         << "const "<< type->GetClassNameString() << "::InfoType " <<  type->GetClassNameString() << "::theInfo = {\n"
-		<< "    ASN1::AbstractString::create,\n"
+		<< "    ASN1::ConstrainedString::create,\n"
 		<< "    ";
 	type->GenerateTags(cxx);
 	cxx << ",\n";

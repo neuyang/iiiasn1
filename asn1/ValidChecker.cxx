@@ -41,7 +41,7 @@ public:
 	bool do_encode(const OBJECT_IDENTIFIER& value) { return value.isStrictlyValid(); }
 	bool do_encode(const BIT_STRING& value) { return value.isStrictlyValid(); }
 	bool do_encode(const OCTET_STRING& value) { return value.isStrictlyValid(); }
-	bool do_encode(const AbstractString& value) { return value.isStrictlyValid(); }
+	bool do_encode(const ConstrainedString& value) { return value.isStrictlyValid(); }
 	bool do_encode(const BMPString& value) { return value.isStrictlyValid(); }
 	bool do_encode(const CHOICE& value) { return value.isStrictlyValid(); }
 	bool do_encode(const OpenData& value){ return value.isStrictlyValid(); }
@@ -66,7 +66,7 @@ public:
 	bool do_encode(const OBJECT_IDENTIFIER& value){ return value.isValid(); }
 	bool do_encode(const BIT_STRING& value){ return value.isValid(); }
 	bool do_encode(const OCTET_STRING& value){ return value.isValid(); }
-	bool do_encode(const AbstractString& value){ return value.isValid(); }
+	bool do_encode(const ConstrainedString& value){ return value.isValid(); }
 	bool do_encode(const BMPString& value){ return value.isValid(); }
 	bool do_encode(const CHOICE& value){ return value.isValid(); }
 	bool do_encode(const OpenData& value){ return value.isValid(); }
@@ -106,14 +106,14 @@ bool INTEGER::isStrictValid() const
 }
 
 
-bool AbstractString::isValid() const
+bool ConstrainedString::isValid() const
 {
 	return size() >= static_cast<unsigned>(getLowerLimit()) && 
 		(size() <= getUpperLimit() || extendable()) &&
 		(find_first_invalid() == std::string::npos);
 }
 
-bool AbstractString::isStrictlyValid() const
+bool ConstrainedString::isStrictlyValid() const
 {
 	return size() >= static_cast<unsigned>(getLowerLimit()) && 
 		size() <= getUpperLimit() &&

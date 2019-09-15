@@ -219,7 +219,7 @@ bool PERDecoder::do_decode(OCTET_STRING& value)
 	return true;
 }
 
-bool PERDecoder::do_decode(AbstractString& value)
+bool PERDecoder::do_decode(ConstrainedString& value)
 {
 	// X.691 Section 26
 

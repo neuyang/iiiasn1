@@ -164,7 +164,7 @@ bool AVNEncoder::do_encode(const OCTET_STRING& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_encode(const AbstractString& value)
+bool AVNEncoder::do_encode(const ConstrainedString& value)
 {
 	strm << '\"' << static_cast<const std::string&>(value) << '\"';
 	return strm.good();

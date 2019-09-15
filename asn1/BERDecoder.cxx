@@ -177,7 +177,7 @@ bool BERDecoder::do_decode(OCTET_STRING& value)
 	return decodeBlock(&*value.begin(), len) == len;
 }
 
-bool BERDecoder::do_decode(AbstractString& value)
+bool BERDecoder::do_decode(ConstrainedString& value)
 {
 	unsigned len;
 	if (!decodeHeader(value, len))

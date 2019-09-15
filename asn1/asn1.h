@@ -1041,12 +1041,12 @@ const typename Constrained_OCTET_STRING<Constraint>::InfoType Constrained_OCTET_
 
 /** Base class for ASN String types.
 */
-class AbstractString : public ConstrainedObject, public std::string, public detail::Allocator<AbstractString>
+class ConstrainedString : public ConstrainedObject, public std::string, public detail::Allocator<ConstrainedString>
 {
 protected:
 	typedef std::string base_string;
 public:
-	AbstractString(const AbstractString& other);
+	ConstrainedString(const ConstrainedString& other);
 	typedef base_string::value_type value_type;
 	typedef base_string::size_type size_type;
 	typedef base_string::difference_type difference_type;
@@ -1054,31 +1054,31 @@ public:
 	typedef base_string::const_reference const_reference;
 
 
-	AbstractString& operator=(const char * str) { assign(str);  return *this;} 
-	AbstractString& operator=(const std::string & str) { assign(str);  return *this;} 
-	AbstractString& operator=(char c) { assign(1, c); return *this;} 
-	AbstractString& operator+=(const std::string& rhs) { append(rhs);  return *this;}
-	AbstractString& operator+=(const char *s) { append(s);  return *this;}
-	AbstractString& operator+=(char c) { append(1, c);  return *this;}
-	AbstractString& append(const std::string& str) { base_string::append(str); return *this;}
-	AbstractString& append(const std::string& str, size_type pos, size_type n) { base_string::append(str,pos, n); return *this;}
-	AbstractString& append(const char *s, size_type n) { base_string::append(s,n); return *this;}
-	AbstractString& append(const char *s) { base_string::append(s); return *this;}
-	AbstractString& append(size_type n, char c) { base_string::append(n,c); return *this;}
-	AbstractString& append(const_iterator first, const_iterator last) { base_string::append(first, last); return *this;}
-	AbstractString& assign(const base_string& str) { base_string::assign(str); return *this;}
-	AbstractString& assign(const base_string& str,size_type pos, size_type n) { base_string::assign(str,pos,n); return *this;}
-	AbstractString& assign(const char *s, size_type n) { base_string::assign(s,n); return *this;}
-	AbstractString& assign(const char *s) { base_string::assign(s); return *this;}
-	AbstractString& assign(size_type n, char c) { base_string::assign(n,c); return *this;}
-	AbstractString& assign(const_iterator first, const_iterator last) { base_string::assign(first,last); return *this;}
-	AbstractString& insert(size_type p0, const base_string& str) { base_string::insert(p0, str); return *this;}
-	AbstractString& insert(size_type p0, const base_string& str, size_type pos, size_type n) { base_string::insert(p0, str, pos, n); return *this;}
-	AbstractString& insert(size_type p0, const char *s, size_type n) { base_string::insert(p0, s,n); return *this;}
-	AbstractString& insert(size_type p0, const char *s) { base_string::insert(p0, s); return *this;}
-	AbstractString& insert(size_type p0, size_type n, char c) { base_string::insert(p0, n,c); return *this;}
+	ConstrainedString& operator=(const char * str) { assign(str);  return *this;} 
+	ConstrainedString& operator=(const std::string & str) { assign(str);  return *this;} 
+	ConstrainedString& operator=(char c) { assign(1, c); return *this;} 
+	ConstrainedString& operator+=(const std::string& rhs) { append(rhs);  return *this;}
+	ConstrainedString& operator+=(const char *s) { append(s);  return *this;}
+	ConstrainedString& operator+=(char c) { append(1, c);  return *this;}
+	ConstrainedString& append(const std::string& str) { base_string::append(str); return *this;}
+	ConstrainedString& append(const std::string& str, size_type pos, size_type n) { base_string::append(str,pos, n); return *this;}
+	ConstrainedString& append(const char *s, size_type n) { base_string::append(s,n); return *this;}
+	ConstrainedString& append(const char *s) { base_string::append(s); return *this;}
+	ConstrainedString& append(size_type n, char c) { base_string::append(n,c); return *this;}
+	ConstrainedString& append(const_iterator first, const_iterator last) { base_string::append(first, last); return *this;}
+	ConstrainedString& assign(const base_string& str) { base_string::assign(str); return *this;}
+	ConstrainedString& assign(const base_string& str,size_type pos, size_type n) { base_string::assign(str,pos,n); return *this;}
+	ConstrainedString& assign(const char *s, size_type n) { base_string::assign(s,n); return *this;}
+	ConstrainedString& assign(const char *s) { base_string::assign(s); return *this;}
+	ConstrainedString& assign(size_type n, char c) { base_string::assign(n,c); return *this;}
+	ConstrainedString& assign(const_iterator first, const_iterator last) { base_string::assign(first,last); return *this;}
+	ConstrainedString& insert(size_type p0, const base_string& str) { base_string::insert(p0, str); return *this;}
+	ConstrainedString& insert(size_type p0, const base_string& str, size_type pos, size_type n) { base_string::insert(p0, str, pos, n); return *this;}
+	ConstrainedString& insert(size_type p0, const char *s, size_type n) { base_string::insert(p0, s,n); return *this;}
+	ConstrainedString& insert(size_type p0, const char *s) { base_string::insert(p0, s); return *this;}
+	ConstrainedString& insert(size_type p0, size_type n, char c) { base_string::insert(p0, n,c); return *this;}
 
-	int compare(const AbstractString& other) const { return base_string::compare(other); } 
+	int compare(const ConstrainedString& other) const { return base_string::compare(other); } 
 
    	bool isValid() const;
 	bool isStrictlyValid() const;
@@ -1087,7 +1087,7 @@ public:
 	}
 
 #ifdef ASN1_HAS_IOSTREAM
-    friend std::ostream& operator << (std::ostream& os, const AbstractString& data)
+    friend std::ostream& operator << (std::ostream& os, const ConstrainedString& data)
     { return os << static_cast<const std::string&>(data); }
 #endif
 
@@ -1104,9 +1104,9 @@ public:
 	virtual bool do_encode(ConstVisitor&) const;
 
   protected:
-	AbstractString(const void* info);
-	AbstractString(const void* info, const std::string& str);
-	AbstractString(const void* info, const char* str);
+	ConstrainedString(const void* info);
+	ConstrainedString(const void* info, const std::string& str);
+	ConstrainedString(const void* info, const char* str);
 	  
 	struct InfoType
 	{
@@ -1124,20 +1124,20 @@ public:
 	const InfoType* info() const { return static_cast<const InfoType*>(info_);}
 };
 
-class NumericString : public AbstractString { 
+class NumericString : public ConstrainedString { 
 protected:
-	NumericString(const void* info) : AbstractString(info) { }
+	NumericString(const void* info) : ConstrainedString(info) { }
 public:
-	NumericString() : AbstractString(&theInfo) { }
-	NumericString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
-	NumericString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
+	NumericString() : ConstrainedString(&theInfo) { }
+	NumericString(const std::string& str, const void* info = &theInfo) : ConstrainedString(info, str) { }
+	NumericString(const char* str, const void* info = &theInfo) : ConstrainedString(info,str) { }
 
 	NumericString& operator = (const NumericString& other) { assign(other); return *this;}
 	NumericString& operator=(const char * str) { assign(str);  return *this;} 
 	NumericString& operator=(const std::string & str) { assign(str);  return *this;} 
 	NumericString& operator=(char c) { assign(1, c); return *this;}
     
-	NumericString * clone() const { return static_cast<NumericString *>(AbstractString::clone()); } 
+	NumericString * clone() const { return static_cast<NumericString *>(ConstrainedString::clone()); } 
 	static AbstractData* create();
 	void swap(NumericString& other) { base_string::swap(other); }
 
@@ -1146,19 +1146,19 @@ public:
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
 
-class PrintableString : public AbstractString { 
+class PrintableString : public ConstrainedString { 
 protected:
-	PrintableString(const void* info) : AbstractString(info) { }
+	PrintableString(const void* info) : ConstrainedString(info) { }
 public:
-	PrintableString() : AbstractString(&theInfo) { }
-	PrintableString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
-	PrintableString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
+	PrintableString() : ConstrainedString(&theInfo) { }
+	PrintableString(const std::string& str, const void* info = &theInfo) : ConstrainedString(info, str) { }
+	PrintableString(const char* str, const void* info = &theInfo) : ConstrainedString(info,str) { }
 
 	PrintableString& operator = (const PrintableString& other) { assign(other); return *this;}
 	PrintableString& operator=(const char * str) { assign(str);  return *this;} 
 	PrintableString& operator=(const std::string & str) { assign(str);  return *this;} 
 	PrintableString& operator=(char c) { assign(1, c); return *this;} 
-	PrintableString * clone() const { return static_cast<PrintableString *>(AbstractString::clone()); } 
+	PrintableString * clone() const { return static_cast<PrintableString *>(ConstrainedString::clone()); } 
 	static AbstractData* create();
 	void swap(PrintableString& other) { base_string::swap(other); }
 	static const InfoType theInfo;
@@ -1166,19 +1166,19 @@ public:
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
 
-class VisibleString : public AbstractString { 
+class VisibleString : public ConstrainedString { 
 protected:
-	VisibleString(const void* info) : AbstractString(info) { }
+	VisibleString(const void* info) : ConstrainedString(info) { }
 public:
-	VisibleString() : AbstractString(&theInfo) { }
-	VisibleString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
-	VisibleString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
+	VisibleString() : ConstrainedString(&theInfo) { }
+	VisibleString(const std::string& str, const void* info = &theInfo) : ConstrainedString(info, str) { }
+	VisibleString(const char* str, const void* info = &theInfo) : ConstrainedString(info,str) { }
 
 	VisibleString& operator = (const VisibleString& other) { assign(other); return *this;}
 	VisibleString& operator=(const char * str) { assign(str);  return *this;} 
 	VisibleString& operator=(const std::string & str) { assign(str);  return *this;} 
 	VisibleString& operator=(char c) { assign(1, c); return *this;} 
-	VisibleString * clone() const { return static_cast<VisibleString *>(AbstractString::clone()); } 
+	VisibleString * clone() const { return static_cast<VisibleString *>(ConstrainedString::clone()); } 
 	static AbstractData* create();
 	void swap(VisibleString& other) { base_string::swap(other); }
 
@@ -1187,19 +1187,19 @@ public:
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
 
-class IA5String : public AbstractString { 
+class IA5String : public ConstrainedString { 
 protected:
-	IA5String(const void* info) : AbstractString(info) { }
+	IA5String(const void* info) : ConstrainedString(info) { }
 public:
-	IA5String() : AbstractString(&theInfo) { }
-	IA5String(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
-	IA5String(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
+	IA5String() : ConstrainedString(&theInfo) { }
+	IA5String(const std::string& str, const void* info = &theInfo) : ConstrainedString(info, str) { }
+	IA5String(const char* str, const void* info = &theInfo) : ConstrainedString(info,str) { }
 
 	IA5String& operator = (const IA5String& other) { assign(other); return *this;}
 	IA5String& operator=(const char * str) { assign(str);  return *this;} 
 	IA5String& operator=(const std::string & str) { assign(str);  return *this;} 
 	IA5String& operator=(char c) { assign(1, c); return *this;} 
-	IA5String * clone() const { return static_cast<IA5String *>(AbstractString::clone()); } 
+	IA5String * clone() const { return static_cast<IA5String *>(ConstrainedString::clone()); } 
 	static AbstractData* create();
 	void swap(IA5String& other) { base_string::swap(other); }
 
@@ -1208,19 +1208,19 @@ public:
 	{return type.info() == reinterpret_cast<const ASN1::AbstractData::InfoType*>(&theInfo);}
 };
 
-class GeneralString : public AbstractString { 
+class GeneralString : public ConstrainedString { 
 protected:
-	GeneralString(const void* info) : AbstractString(info) { }
+	GeneralString(const void* info) : ConstrainedString(info) { }
 public:
-	GeneralString() : AbstractString(&theInfo) { }
-	GeneralString(const std::string& str, const void* info = &theInfo) : AbstractString(info, str) { }
-	GeneralString(const char* str, const void* info = &theInfo) : AbstractString(info,str) { }
+	GeneralString() : ConstrainedString(&theInfo) { }
+	GeneralString(const std::string& str, const void* info = &theInfo) : ConstrainedString(info, str) { }
+	GeneralString(const char* str, const void* info = &theInfo) : ConstrainedString(info,str) { }
 
 	GeneralString& operator = (const GeneralString& other) { assign(other); return *this;}
 	GeneralString& operator=(const char * str) { assign(str);  return *this;} 
 	GeneralString& operator=(const std::string & str) { assign(str);  return *this;} 
 	GeneralString& operator=(char c) { assign(1, c); return *this;} 
-	GeneralString * clone() const { return static_cast<GeneralString *>(AbstractString::clone()); } 
+	GeneralString * clone() const { return static_cast<GeneralString *>(ConstrainedString::clone()); } 
 	static AbstractData* create();
 	void swap(GeneralString& other) { base_string::swap(other); }
 
@@ -2352,7 +2352,7 @@ public:
 	bool decode(OBJECT_IDENTIFIER& value) { return do_decode(value); }
 	bool decode(OCTET_STRING& value)  { return do_decode(value); }
 	bool decode(BIT_STRING& value) { return do_decode(value); }
-	bool decode(AbstractString& value) { return do_decode(value); }
+	bool decode(ConstrainedString& value) { return do_decode(value); }
 	bool decode(BMPString& value) { return do_decode(value); }
 	bool decode(CHOICE& value) { return do_decode(value); }
 	bool decode(SEQUENCE_OF_Base& value) { return do_decode(value); }
@@ -2383,7 +2383,7 @@ private:
 	virtual bool do_decode(OBJECT_IDENTIFIER& value)=0;
 	virtual bool do_decode(OCTET_STRING& value) =0;
 	virtual bool do_decode(BIT_STRING& value)=0;
-	virtual bool do_decode(AbstractString& value)=0;
+	virtual bool do_decode(ConstrainedString& value)=0;
 	virtual bool do_decode(BMPString& value)=0;
 	virtual bool do_decode(CHOICE& value)=0;
 	virtual bool do_decode(SEQUENCE_OF_Base& value)=0;
@@ -2484,7 +2484,7 @@ public:
 	bool encode(const OBJECT_IDENTIFIER& value) { return do_encode(value); }
 	bool encode(const BIT_STRING& value) { return do_encode(value); }
 	bool encode(const OCTET_STRING& value) { return do_encode(value); }
-	bool encode(const AbstractString& value) { return do_encode(value); }
+	bool encode(const ConstrainedString& value) { return do_encode(value); }
 	bool encode(const BMPString& value) { return do_encode(value); }
 	bool encode(const CHOICE& value) { return do_encode(value); }
 	bool encode(const OpenData& value) { return do_encode(value); }
@@ -2501,7 +2501,7 @@ private:
 	virtual bool do_encode(const OBJECT_IDENTIFIER& value) { return do_encode(static_cast<const AbstractData&>(value)); }
 	virtual bool do_encode(const BIT_STRING& value) { return do_encode(static_cast<const AbstractData&>(value)); }
 	virtual bool do_encode(const OCTET_STRING& value) { return do_encode(static_cast<const AbstractData&>(value)); }
-	virtual bool do_encode(const AbstractString& value) { return do_encode(static_cast<const AbstractData&>(value)); }
+	virtual bool do_encode(const ConstrainedString& value) { return do_encode(static_cast<const AbstractData&>(value)); }
 	virtual bool do_encode(const BMPString& value) { return do_encode(static_cast<const AbstractData&>(value)); }
 	virtual bool do_encode(const CHOICE& value) { return do_encode(static_cast<const AbstractData&>(value)); }
 	virtual bool do_encode(const OpenData& value) { return do_encode(static_cast<const AbstractData&>(value)); }
@@ -2559,7 +2559,7 @@ private:
 	virtual bool do_encode(const OBJECT_IDENTIFIER& value);
 	virtual bool do_encode(const BIT_STRING& value);
 	virtual bool do_encode(const OCTET_STRING& value);
-	virtual bool do_encode(const AbstractString& value);
+	virtual bool do_encode(const ConstrainedString& value);
 	virtual bool do_encode(const BMPString& value);
 	virtual bool do_encode(const CHOICE& value);
 	virtual bool do_encode(const SEQUENCE_OF_Base& value);
@@ -2636,7 +2636,7 @@ private:
 	virtual bool do_decode(OBJECT_IDENTIFIER& value);
 	virtual bool do_decode(BIT_STRING& value);
 	virtual bool do_decode(OCTET_STRING& value);
-	virtual bool do_decode(AbstractString& value);
+	virtual bool do_decode(ConstrainedString& value);
 	virtual bool do_decode(BMPString& value);
 	virtual bool do_decode(CHOICE& value);
 	virtual bool do_decode(SEQUENCE_OF_Base& value);
@@ -2705,7 +2705,7 @@ private:
 	virtual bool do_encode(const OBJECT_IDENTIFIER& value);
 	virtual bool do_encode(const BIT_STRING& value);
 	virtual bool do_encode(const OCTET_STRING& value);
-	virtual bool do_encode(const AbstractString& value);
+	virtual bool do_encode(const ConstrainedString& value);
 	virtual bool do_encode(const BMPString& value);
 	virtual bool do_encode(const CHOICE& value);
 	virtual bool do_encode(const OpenData& value);
@@ -2816,7 +2816,7 @@ private:
 	virtual bool do_decode(OBJECT_IDENTIFIER& value);
 	virtual bool do_decode(BIT_STRING& value);
 	virtual bool do_decode(OCTET_STRING& value);
-	virtual bool do_decode(AbstractString& value);
+	virtual bool do_decode(ConstrainedString& value);
 	virtual bool do_decode(BMPString& value);
 	virtual bool do_decode(CHOICE& value);
 	virtual bool do_decode(SEQUENCE_OF_Base& value);
@@ -2876,7 +2876,7 @@ private:
 	virtual bool do_encode(const OBJECT_IDENTIFIER& value);
 	virtual bool do_encode(const BIT_STRING& value);
 	virtual bool do_encode(const OCTET_STRING& value);
-	virtual bool do_encode(const AbstractString& value);
+	virtual bool do_encode(const ConstrainedString& value);
 	virtual bool do_encode(const BMPString& value);
 	virtual bool do_encode(const CHOICE& value);
 	virtual bool do_encode(const OpenData& value);
@@ -2922,7 +2922,7 @@ private:
 	virtual bool do_decode(OBJECT_IDENTIFIER& value);
 	virtual bool do_decode(BIT_STRING& value);
 	virtual bool do_decode(OCTET_STRING& value);
-	virtual bool do_decode(AbstractString& value);
+	virtual bool do_decode(ConstrainedString& value);
 	virtual bool do_decode(BMPString& value);
 	virtual bool do_decode(CHOICE& value);
 	virtual bool do_decode(SEQUENCE_OF_Base& value);
