@@ -1902,7 +1902,7 @@ void TypeBase::RemovePERInvisibleConstraint(const ParameterPtr& vp)
 {
 	constraints.erase(
 		std::remove_if(constraints.begin(), constraints.end(),
-			boost::bind(&Constraint::HasPERInvisibleConstraint, _1, boost::ref(*vp))),
+			boost::bind(&Constraint::HasPERInvisibleConstraint, _1, std::ref(*vp))),
 		constraints.end());
 }
 
@@ -5746,7 +5746,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 	  
 
 	  for_all(imports, boost::bind(&ImportModule::GenerateCplusplus, _1,
-			boost::ref(hdrFile), boost::ref(cxxFile), boost::ref(inl)));
+			std::ref(hdrFile), std::ref(cxxFile), std::ref(inl)));
 
 	  if (!imports.empty()) {
 		  hdrFile << "\n\n";
@@ -5762,7 +5762,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 		  "\n";
 	  for_all(imports, boost::bind(&ImportModule::GenerateUsingDirectives, 
 									_1, 
-									boost::ref(hdrFile)));
+									std::ref(hdrFile)));
 	  
 	  cxxFile << "namespace " << cModuleName << "{\n"
 		  "\n";   
@@ -5799,7 +5799,7 @@ void ModuleDefinition::GenerateCplusplus(const std::string & dir,
 			  
 			  
 			  for_all(imports, boost::bind(&ImportModule::GenerateCplusplus, _1,
-				  boost::ref(hdrFile), boost::ref(cxxFile), boost::ref(inl)));
+				  std::ref(hdrFile), std::ref(cxxFile), std::ref(inl)));
 			  
 			  
 			  if (!imports.empty()) {
@@ -5972,7 +5972,7 @@ void ModuleDefinition::GenerateClassModule(std::ostream& hdrFile, std::ostream& 
 
 
 	  std::for_each(informationObjectSets.begin(), informationObjectSets.end(),
-		  boost::bind(&InformationObjectSet::GenerateInstanceCode, _1, boost::ref(cxxFile)));
+		  boost::bind(&InformationObjectSet::GenerateInstanceCode, _1, std::ref(cxxFile)));
 
 	  cxxFile << "}\n\n";
   }
@@ -7074,7 +7074,7 @@ void ObjectClassDefn::ResolveKey()
 	{
 
 		std::find_if(fieldSpecs->begin(), fieldSpecs->end(),
-			boost::bind(&FieldSpec::GetKey, _1, boost::ref(keyType), boost::ref(keyName)));
+			boost::bind(&FieldSpec::GetKey, _1, std::ref(keyType), std::ref(keyName)));
 	}
 }
 
@@ -7116,19 +7116,19 @@ void ObjectClassDefn::GenerateCplusplus(std::ostream& hdr, std::ostream& cxx, st
 			<< "{\n";
 
 		std::for_each(fieldSpecs->begin(), fieldSpecs->end(),
-			boost::bind(&FieldSpec::Generate_info_type_constructor, _1, boost::ref(cxx)) );
+			boost::bind(&FieldSpec::Generate_info_type_constructor, _1, std::ref(cxx)) );
 
 		cxx	<< "}\n\n";
 	}
 	hdr << std::setprecision(4);
 
 	std::for_each(fieldSpecs->begin(), fieldSpecs->end(),
-		boost::bind(&FieldSpec::Generate_info_type_memfun, _1, boost::ref(hdr)) );
+		boost::bind(&FieldSpec::Generate_info_type_memfun, _1, std::ref(hdr)) );
 
 	hdr << "      protected:\n";
 
 	std::for_each(fieldSpecs->begin(), fieldSpecs->end(),
-		boost::bind(&FieldSpec::Generate_info_type_mem, _1, boost::ref(hdr)) );
+		boost::bind(&FieldSpec::Generate_info_type_mem, _1, std::ref(hdr)) );
 
 	hdr << "    };\n\n"
 		<< "    typedef const info_type* mapped_type;\n\n"
@@ -7139,7 +7139,7 @@ void ObjectClassDefn::GenerateCplusplus(std::ostream& hdr, std::ostream& cxx, st
 		   "        value_type(const key_type& key, mapped_type mt) : Inherited(key,mt) {}\n";
 
 	std::for_each(fieldSpecs->begin(), fieldSpecs->end(),
-		boost::bind(&FieldSpec::Generate_value_type, _1, boost::ref(hdr)) );
+		boost::bind(&FieldSpec::Generate_value_type, _1, std::ref(hdr)) );
 
 	hdr << "    };\n\n"
 		   "    typedef value_type& reference;\n"
@@ -7742,7 +7742,7 @@ void DefaultObjectDefn::GenerateCplusplus(std::ostream& hdr , std::ostream & cxx
 			    << std::setprecision(16);
 
 			std::for_each(settings->begin(), settings->end(),
-				boost::bind(&FieldSetting::GenerateInfo, _1, boost::ref(hdr)));
+				boost::bind(&FieldSetting::GenerateInfo, _1, std::ref(hdr)));
 			hdr << indent +4 << "}\n";
 			hdr << indent << "};\n";
 		}
@@ -7799,7 +7799,7 @@ void DefaultObjectDefn::GenerateInstanceCode(std::ostream& cxx) const
 
    std::for_each(settings->begin(), settings->end(), 
 	                boost::bind(&FieldSetting::GenerateInstanceCode, 
-								  _1, nam, boost::ref(cxx)) );
+								  _1, nam, std::ref(cxx)) );
 
 }
 /////////////////////////////////////////////////////////////////////////////////
