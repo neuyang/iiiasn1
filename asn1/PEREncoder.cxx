@@ -59,12 +59,12 @@ inline void PEREncoder::byteAlign()
         bitOffset = 8;
 }
 
-bool PEREncoder::do_visit(const Null&)
+bool PEREncoder::do_encode(const Null&)
 {
 	return true;
 }
 
-bool PEREncoder::do_visit(const BOOLEAN& value)
+bool PEREncoder::do_encode(const BOOLEAN& value)
 {
   // X.931 Section 11
   encodeSingleBit((bool)value);
@@ -72,7 +72,7 @@ bool PEREncoder::do_visit(const BOOLEAN& value)
 }
 
 
-bool PEREncoder::do_visit(const INTEGER& integer)
+bool PEREncoder::do_encode(const INTEGER& integer)
 {
   // X.931 Sections 12
 
@@ -104,7 +104,7 @@ bool PEREncoder::do_visit(const INTEGER& integer)
   return encodeUnsigned(value, integer.getLowerLimit(), integer.getUpperLimit());
 }
 
-bool PEREncoder::do_visit(const ENUMERATED& value)
+bool PEREncoder::do_encode(const ENUMERATED& value)
 {
   if (value.extendable()) {  // 13.3
     bool extended = value.asInt() > value.getMaximum();
@@ -118,7 +118,7 @@ bool PEREncoder::do_visit(const ENUMERATED& value)
 }
 
 
-bool PEREncoder::do_visit(const OBJECT_IDENTIFIER& value)
+bool PEREncoder::do_encode(const OBJECT_IDENTIFIER& value)
 {
   // X.691 Section 23
 
@@ -130,7 +130,7 @@ bool PEREncoder::do_visit(const OBJECT_IDENTIFIER& value)
   return true;
 }
 
-bool PEREncoder::do_visit(const BIT_STRING& value)
+bool PEREncoder::do_encode(const BIT_STRING& value)
 {
   // X.691 Section 15
 
@@ -149,7 +149,7 @@ bool PEREncoder::do_visit(const BIT_STRING& value)
   return true;
 }
 
-bool PEREncoder::do_visit(const OCTET_STRING& value)
+bool PEREncoder::do_encode(const OCTET_STRING& value)
 {
   // X.691 Section 16
   unsigned nBytes = value.size();
@@ -177,7 +177,7 @@ bool PEREncoder::do_visit(const OCTET_STRING& value)
 }
 
 
-bool PEREncoder::do_visit(const AbstractString& value)
+bool PEREncoder::do_encode(const AbstractString& value)
 {
   // X.691 Section 26
 
@@ -210,7 +210,7 @@ bool PEREncoder::do_visit(const AbstractString& value)
   return true;
 }
 
-bool PEREncoder::do_visit(const BMPString& value)
+bool PEREncoder::do_encode(const BMPString& value)
 {
   // X.691 Section 26
 
@@ -229,7 +229,7 @@ bool PEREncoder::do_visit(const BMPString& value)
   return true;
 }
 
-bool PEREncoder::do_visit(const CHOICE& value)
+bool PEREncoder::do_encode(const CHOICE& value)
 {
   if (value.currentSelection() < 0)
     return false;
@@ -250,7 +250,7 @@ bool PEREncoder::do_visit(const CHOICE& value)
   return value.getSelection()->accept(*this);
 }
 
-bool PEREncoder::do_visit(const SEQUENCE_OF_Base& value)
+bool PEREncoder::do_encode(const SEQUENCE_OF_Base& value)
 {
   unsigned sz = value.size();
   if (!encodeConstrainedLength(value, sz))
@@ -258,17 +258,17 @@ bool PEREncoder::do_visit(const SEQUENCE_OF_Base& value)
 
   SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
 	for (; first != last; ++first)
-		if (!(*first)->accept(*this))
+		if (!(*first)->encode(*this))
 			return false;
   return true;
 }
 
-bool PEREncoder::do_visit(const OpenData& value)
+bool PEREncoder::do_encode(const OpenData& value)
 {
 	return encodeAnyType(&value.get_data());
 }
 
-bool PEREncoder::do_visit(const GeneralizedTime& value)
+bool PEREncoder::do_encode(const GeneralizedTime& value)
 {
 	std::string notion(value.get());
 	encodeLength(notion.size(), 0, UINT_MAX);
@@ -276,7 +276,7 @@ bool PEREncoder::do_visit(const GeneralizedTime& value)
 	return true;
 }
 
-bool PEREncoder::preVisitExtensionRoots(const SEQUENCE& value) 
+bool PEREncoder::preEncodeExtensionRoots(const SEQUENCE& value) 
 {
   // X.691 Section 18
   if (value.extendable()) {
@@ -293,12 +293,12 @@ bool PEREncoder::preVisitExtensionRoots(const SEQUENCE& value)
   return true;
 }
 
-bool PEREncoder::visitExtensionRoot(const SEQUENCE& value, int index)
+bool PEREncoder::encodeExtensionRoot(const SEQUENCE& value, int index)
 {
-	return value.fields[index]->accept(*this);
+	return value.fields[index]->encode(*this);
 }
 
-bool PEREncoder::preVisitExtensions(const SEQUENCE& value)
+bool PEREncoder::preEncodeExtensions(const SEQUENCE& value)
 {
   int totalExtensions = value.extensionMap.size();
   encodeSmallUnsigned(totalExtensions-1);
@@ -306,7 +306,7 @@ bool PEREncoder::preVisitExtensions(const SEQUENCE& value)
   return true;
 }
 
-bool PEREncoder::visitKnownExtension(const SEQUENCE& value, int index)
+bool PEREncoder::encodeKnownExtension(const SEQUENCE& value, int index)
 {
   return encodeAnyType(value.fields[index]);
 }

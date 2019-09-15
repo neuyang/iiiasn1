@@ -39,14 +39,14 @@ std::string AbstractData::asValueNotation() const
 {
     std::ostringstream strm;
     AVNEncoder encoder(strm);
-    accept(encoder);
+    encode(encoder);
     return strm.str();
 }
 
 std::ios_base::iostate AbstractData::print_on(std::ostream & strm) const
 {
     AVNEncoder encoder(strm);
-    if (accept(encoder))
+    if (encode(encoder))
         return std::ios_base::goodbit;
     return std::ios_base::failbit;
 }
@@ -79,13 +79,13 @@ const char* ENUMERATED::getName() const
 	return 0;
 }
 
-bool AVNEncoder::do_visit(const Null& value)
+bool AVNEncoder::do_encode(const Null& value)
 {
 	strm << "NULL";
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const BOOLEAN& value)
+bool AVNEncoder::do_encode(const BOOLEAN& value)
 {
 	if (value) 
 		strm << "TRUE";
@@ -94,7 +94,7 @@ bool AVNEncoder::do_visit(const BOOLEAN& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const INTEGER& value)
+bool AVNEncoder::do_encode(const INTEGER& value)
 {
 	if (!value.constrained() || value.getLowerLimit() < 0)
 		strm << (int)value.getValue();
@@ -103,17 +103,17 @@ bool AVNEncoder::do_visit(const INTEGER& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const IntegerWithNamedNumber& value)
+bool AVNEncoder::do_encode(const IntegerWithNamedNumber& value)
 {
 	std::string str;
 	if (value.getName(str))
 		strm << str;
 	else 
-		return visit(static_cast<const INTEGER&>(value));
+		return encode(static_cast<const INTEGER&>(value));
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const ENUMERATED& value)
+bool AVNEncoder::do_encode(const ENUMERATED& value)
 {
 	const char* name = value.getName();
 	if (name != 0)
@@ -123,7 +123,7 @@ bool AVNEncoder::do_visit(const ENUMERATED& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const OBJECT_IDENTIFIER& value)
+bool AVNEncoder::do_encode(const OBJECT_IDENTIFIER& value)
 {
 	strm << "{ ";
 	for (unsigned i = 0;  i < value.levels() && strm.good(); ++i) 
@@ -132,7 +132,7 @@ bool AVNEncoder::do_visit(const OBJECT_IDENTIFIER& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const BIT_STRING& value)
+bool AVNEncoder::do_encode(const BIT_STRING& value)
 {
 	strm << '\'';
 	for (unsigned i = 0; i < value.size() && strm.good(); ++i)
@@ -145,7 +145,7 @@ bool AVNEncoder::do_visit(const BIT_STRING& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const OCTET_STRING& value)
+bool AVNEncoder::do_encode(const OCTET_STRING& value)
 {
 	std::ios_base::fmtflags flags = strm.flags();
 	strm << '\'';
@@ -164,13 +164,13 @@ bool AVNEncoder::do_visit(const OCTET_STRING& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const AbstractString& value)
+bool AVNEncoder::do_encode(const AbstractString& value)
 {
 	strm << '\"' << static_cast<const std::string&>(value) << '\"';
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const BMPString& value)
+bool AVNEncoder::do_encode(const BMPString& value)
 {
 	boost::scoped_array<char> tmp(new char[value.size()*2+1]);
 	int len = wcstombs(tmp.get(), &*value.begin(), value.size());
@@ -194,37 +194,37 @@ bool AVNEncoder::do_visit(const BMPString& value)
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const CHOICE& value)
+bool AVNEncoder::do_encode(const CHOICE& value)
 {
 	if (value.currentSelection() >= 0)
 	{
 		strm << value.getSelectionName() << " : ";
-		return value.getSelection()->accept(*this);
+		return value.getSelection()->encode(*this);
 	}
 	return false;
 }
 
-bool AVNEncoder::do_visit(const OpenData& value)
+bool AVNEncoder::do_encode(const OpenData& value)
 {
 	if (value.has_data())
 	{
-		return value.get_data().accept(*this);
+		return value.get_data().encode(*this);
 	}
 	else if (value.has_buf())
 	{
 		OCTET_STRING ostr(value.get_buf());
-		return ostr.accept(*this);
+		return ostr.encode(*this);
 	}
 	return false;
 }
 
-bool AVNEncoder::do_visit(const GeneralizedTime& value)
+bool AVNEncoder::do_encode(const GeneralizedTime& value)
 {
 	strm << '\"' << value.get() << '\"';
 	return strm.good();
 }
 
-bool AVNEncoder::do_visit(const SEQUENCE_OF_Base& value)
+bool AVNEncoder::do_encode(const SEQUENCE_OF_Base& value)
 {
 	strm << "{\n";
     SEQUENCE_OF_Base::const_iterator first = value.begin(), last = value.end();
@@ -232,7 +232,7 @@ bool AVNEncoder::do_visit(const SEQUENCE_OF_Base& value)
 	for (; first != last && strm.good(); ++first)
 	{
 		strm << std::setw(indent) << " ";
-		if (!(*first)->accept(*this))
+		if (!(*first)->encode(*this))
 			return false;
 		if (first != last-1)
 			strm << ",\n";
@@ -244,33 +244,33 @@ bool AVNEncoder::do_visit(const SEQUENCE_OF_Base& value)
 	return strm.good();
 }
 
-bool AVNEncoder::preVisitExtensionRoots(const SEQUENCE& value) 
+bool AVNEncoder::preEncodeExtensionRoots(const SEQUENCE& value) 
 {
 	outputSeparators.push_back(false);
 	strm << "{\n";
 	return strm.good();
 }
 
-bool AVNEncoder::visitExtensionRoot(const SEQUENCE& value, int index)
+bool AVNEncoder::encodeExtensionRoot(const SEQUENCE& value, int index)
 {
 	if (outputSeparators.back())
 		strm << ",\n";
 	strm << std::setw(strlen(value.getFieldName(index)) + indent +2) 
 		<< value.getFieldName(index) << ' ';
     indent +=2;
-	if (!value.getField(index)->accept(*this))
+	if (!value.getField(index)->encode(*this))
 		return false;
     indent -=2;
 	outputSeparators.back() = true;
 	return true;
 }
 
-bool AVNEncoder::visitKnownExtension(const SEQUENCE& value, int index)
+bool AVNEncoder::encodeKnownExtension(const SEQUENCE& value, int index)
 {
-	return visitExtensionRoot(value, index);
+	return encodeExtensionRoot(value, index);
 }
 
-bool AVNEncoder::afterVisitSequence(const SEQUENCE& value)
+bool AVNEncoder::afterEncodeSequence(const SEQUENCE& value)
 {
 	if (outputSeparators.back())
 		strm  << '\n';
