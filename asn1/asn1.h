@@ -650,12 +650,7 @@ class Constrained_INTEGER : public INTEGER
 };
 
 template <ConstraintType contraint, int lower, unsigned upper >
-#if defined (__IBMCPP__)
-// I don't know, why the else-part doesn't work on VAC++5/AiX...
-const typename ConstrainedObject::InfoType Constrained_INTEGER<contraint, lower, upper>::theInfo = {
-#else
 const typename Constrained_INTEGER<contraint, lower, upper>::InfoType Constrained_INTEGER<contraint, lower, upper>::theInfo = {
-#endif //!defined (__IBMCPP__)
     &INTEGER::create,
     2,  
     contraint,
