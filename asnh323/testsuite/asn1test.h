@@ -21,10 +21,10 @@
 
 using namespace ASN1;
 extern bool CoderTest(const char* str,
-					  CoderEnv& env, 
-                      const AbstractData& v1, 
-                      AbstractData& v2, 
-                      const char* encodedStrm,
-					  int lineno);
+			CoderEnv& env, 
+			const AbstractData& v1, 
+			AbstractData& v2, 
+			const char* encodedStrm,
+			int lineno);
 
 #endif
