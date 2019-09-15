@@ -236,7 +236,7 @@ bool BERDecoder::do_decode(CHOICE& value)
 	if (decodeChoicePreamle(value,memento))
 	{
 		if (!value.isUnknownSelection() && 
-			!value.getSelection()->accept(*this))
+			!value.getSelection()->decode(*this))
 			return false;
 		rollback(memento);
 		return true;
@@ -303,7 +303,7 @@ bool BERDecoder::do_decode(OpenData& value)
   return true;
 }
 
-bool BERDecoder::do_revisit(OpenData& value)
+bool BERDecoder::do_redecode(OpenData& value)
 {
 	if (!value.has_buf() || !value.has_data())
 		return false;

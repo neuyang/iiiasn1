@@ -247,7 +247,7 @@ bool PEREncoder::do_encode(const CHOICE& value)
     if (!encodeUnsigned(value.currentSelection(), 0, value.getNumChoices()-1))
       return false;
 
-  return value.getSelection()->accept(*this);
+  return value.getSelection()->encode(*this);
 }
 
 bool PEREncoder::do_encode(const SEQUENCE_OF_Base& value)
@@ -484,7 +484,7 @@ bool PEREncoder::encodeAnyType(const AbstractData * value)
   PEREncoder subEncoder(buf);
 
   if (value != NULL)
-    if (!value->accept(subEncoder))
+    if (!value->encode(subEncoder))
 		return false;
 
   if (buf.size() == 0)				   // Make sure extension has at least one

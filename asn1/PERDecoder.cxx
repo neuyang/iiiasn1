@@ -378,7 +378,7 @@ bool PERDecoder::do_decode(OpenData& data)
 	return false;
 }
 
-bool PERDecoder::do_revisit(OpenData& value)
+bool PERDecoder::do_redecode(OpenData& value)
 {
     if (!value.has_buf() || !value.has_data())
         return false;

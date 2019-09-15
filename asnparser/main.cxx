@@ -4865,7 +4865,7 @@ void ObjectClassFieldType::GenerateDecoder(std::ostream& cxx)
           << indent << "  {\n"
           << indent << "    ref_" << GetName() << "().grab(objSet->find(get_" <<  keyname
                             << "())->get_" << fieldIdentifier << "());\n"
-          << indent << "    return visitor.revisit(ref_" << GetName() << "());\n"
+          << indent << "    return visitor.redecode(ref_" << GetName() << "());\n"
           << indent << "  }\n"
 		  << indent << "  else\n" 
 		  << indent << "    return objSet.extensible();\n"

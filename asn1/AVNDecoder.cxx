@@ -396,7 +396,7 @@ bool AVNDecoder::do_decode(OpenData& value)
 	return false;
 }
 
-bool AVNDecoder::do_revisit(OpenData& value)
+bool AVNDecoder::do_redecode(OpenData& value)
 {
 	// not implemented
 	return false;

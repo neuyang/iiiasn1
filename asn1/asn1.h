@@ -2362,7 +2362,7 @@ public:
 	bool decode(CHOICE& value) { return do_decode(value); }
 	bool decode(SEQUENCE_OF_Base& value) { return do_decode(value); }
 	bool decode(OpenData& value) { return do_decode(value); }
-	bool revisit(OpenData& value) { return do_revisit(value); }
+	bool redecode(OpenData& value) { return do_redecode(value); }
 	bool decode(TypeConstrainedOpenData& value) { return do_decode(value); }
 	bool decode(GeneralizedTime& value) { return do_decode(value); }
 	bool decode(SEQUENCE& value) ;
@@ -2393,7 +2393,7 @@ private:
 	virtual bool do_decode(CHOICE& value)=0;
 	virtual bool do_decode(SEQUENCE_OF_Base& value)=0;
 	virtual bool do_decode(OpenData& value)=0;
-	virtual bool do_revisit(OpenData& value)=0;
+	virtual bool do_redecode(OpenData& value)=0;
 	virtual bool do_decode(TypeConstrainedOpenData& value)=0;
 	virtual bool do_decode(GeneralizedTime& value)=0;
 
@@ -2642,7 +2642,7 @@ private:
 	virtual bool do_decode(CHOICE& value);
 	virtual bool do_decode(SEQUENCE_OF_Base& value);
 	virtual bool do_decode(OpenData& value);
-	virtual bool do_revisit(OpenData& value);
+	virtual bool do_redecode(OpenData& value);
 	virtual bool do_decode(TypeConstrainedOpenData& value);
 	virtual bool do_decode(GeneralizedTime& value);
 
@@ -2822,7 +2822,7 @@ private:
 	virtual bool do_decode(CHOICE& value);
 	virtual bool do_decode(SEQUENCE_OF_Base& value);
 	virtual bool do_decode(OpenData& value);
-	virtual bool do_revisit(OpenData& value);
+	virtual bool do_redecode(OpenData& value);
 	virtual bool do_decode(TypeConstrainedOpenData& value);
 	virtual bool do_decode(GeneralizedTime& value);
 
@@ -2928,7 +2928,7 @@ private:
 	virtual bool do_decode(CHOICE& value);
 	virtual bool do_decode(SEQUENCE_OF_Base& value);
 	virtual bool do_decode(OpenData& value);
-	virtual bool do_revisit(OpenData& value);
+	virtual bool do_redecode(OpenData& value);
 	virtual bool do_decode(TypeConstrainedOpenData& value);
 	virtual bool do_decode(GeneralizedTime& value);
 
