@@ -84,7 +84,6 @@ inline unsigned char BERDecoder::decodeByte()
 	return *beginPosition++; 
 }
 
-
 bool BERDecoder::do_decode(Null& value)
 {
 	unsigned len;
@@ -225,7 +224,6 @@ bool BERDecoder::decodeChoicePreamle(CHOICE& value, memento_type& nextPosition)
 	}
 	return false;
 }
-
 
 bool BERDecoder::do_decode(CHOICE& value)
 {
@@ -484,7 +482,6 @@ bool BERDecoder::decodeHeader(AbstractData & obj, unsigned & len)
 
 unsigned BERDecoder::decodeBlock(char * bufptr, unsigned nBytes)
 {
-
 	if (beginPosition+nBytes > endPosition)
 		nBytes = endPosition - beginPosition;
 

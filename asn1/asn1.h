@@ -2318,28 +2318,6 @@ const typename Constrained_OpenData<T>::InfoType Constrained_OpenData<T>::theInf
 //////////////////////////////////////////////////////////////////////////////
 class CoderEnv;
 
-/**
- * Visitor is base class for defining a new mutable operation for ASN.1 types without 
- * changing the classes of the ASN.1 types it operates.
- *
- * This class is the role "Visitor" in the Visitor design pattern (Gamma et al. 1995). 
- * It allows us to add a new operation to the ASN.1 types without changing the classes
- * of the ASN.1 types; furthermore, it avoids linking the object code of the new operation
- * when it is not used, which is why this library can be so small and lean. 
- *
- * This class \c Visitor differs from the class \c ConstVistor in that a \c Visitor operates on mutable
- * objects; in other words, it will change the value of the ASN.1 objects it operates on. For 
- * example, \c BERDecoder and \c PERDecoder ,which both inherit from \c Visitor, are used to decode
- * a byte stream into a ASN.1 value; that is to say, they modify the ASN.1 objects they visit to
- * some specific values.
- *
- * All classes inherit from shall override the do_decode() member functions, which are called
- * by their corresponding decode() member functions. The do_decode() member functions are all
- * declared private for they should not be called by their derivatives.
- *
- * @see BERDecoder, PERDecoder, AVNDecoder
- */
-
 class Visitor
 {
 public:
@@ -2451,27 +2429,6 @@ private:
    	CoderEnv* env;
 };
 
-/**
- * ConstVisitor is base class for defining a new non-mutable operation for ASN.1 types without 
- * changing the classes of the ASN.1 types it operates.
- *
- * This class is the role "Visitor" in the Visitor design pattern (Gamma et al. 1995). 
- * It allows us to add a new operation to the ASN.1 types without changing the classes
- * of the ASN.1 types; furthermore, it avoids linking the object code of the new operation
- * when it is not used, which is why this library can be so small and lean. 
- *
- * This class \c ConstVistor differs from the class \c Visitor in that a \c ConstVistor operates 
- * on non-mutable objects; in other words, it cannot change the value of the ASN.1 objects it 
- * operates on. For example, \c BEREncoder and \c PEREncoder ,which both inherit from 
- * \c ConstVisitor, are used to encode an ASN.1 value into a byte stream; that is to say, the  
- * \c BEREncoder and PEREncoder do not modify the ASN.1 objects they visit.
- *
- * All classes inherit from shall override the do_encode() member functions, which are called
- * by their corresponding encode() member functions. The do_encode() member functions are all
- * declared private for they should not be called by their derivatives.
- *
- *@see BEREncoder, PEREncoder, AVNEncoder
- */
 class ConstVisitor
 {
 public:
@@ -2517,29 +2474,9 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * This class is used to encode an ASN.1 object into a byte stream using Basic Encoding Rule (BER),
- * defined in ITU X.690.
- *
- * The following example shows how to use this class.
- * \code
- *    ASN1::INGEGER obj(5);
- *	  ASN1::OpenBuf buf; // the encoded buffer
- *    ASN1::BEREncoder encoder(buf);
- *
- *    obj.encode(encoder); // now buf contains the encoded BER stream.
- * \endcode
- *
- * @see BERDecoder
- */
 class BEREncoder : public ConstVisitor
 {
 public:
-	/**
-	 * Constructor.
-	 *
-	 * @param buf The buffer used to holds the encoded BER stream.
-	 */
 	BEREncoder(OpenBuf& buf)
 		: encodedBuffer(buf), tag(0xffffffff)
 	{ 
@@ -2575,21 +2512,6 @@ private:
 	OpenBuf& encodedBuffer;
 	unsigned tag;
 };
-
-/**
- * This class is used to decode a byte stream encoded using Basic Encoding Rule (BER) back
- * to an ASN.1 object.
- *
- * The following example shows how to use this class.
- * \code
- *    ASN1::INGEGER obj;
- *    ASN1::BERDecoder decoder(buf, buf+5);
- *
- *    obj.decode(decoder); // now obj holds the value which the buf represents.
- * \endcode
- *
- * @see BEREncoder
- */
 
 class BERDecoder  : public Visitor
 {
@@ -2655,33 +2577,9 @@ private:
 	int dontCheckTag;
 };
 
-/**
- * This class is used to encode an ASN.1 object into a byte stream using Packed Encoding Rule (PER),
- * defined in ITU X.691.
- *
- * The following example shows how to use this class.
- * \code
- *    ASN1::INGEGER obj(5);
- *	  ASN1::OpenBuf buf; // the encoded buffer
- *    ASN1::PEREncoder encoder(buf);
- *
- *    obj.encode(encoder); // now buf contains the encoded PER stream.
- * \endcode
- *
- * @see PERDecoder
- */
-
 class PEREncoder : public ConstVisitor
 {
 public:
-	/**
-	 * Constructor
-	 *
-	 * @param buf The buffer used to holds the encoded PER stream.
-	 * @param isAligned Indicates whether using the aligned PER. 
-	 *
-	 * @warning The unaligned PER has never been fully tested in current version.
-	 */
 	PEREncoder(OpenBuf& buf, bool isAligned = true) 
 		: encodedBuffer(buf)
 		, bitOffset (8)
@@ -2734,21 +2632,6 @@ private:
 	unsigned short bitOffset;
 	bool alignedFlag;
 };
-
-/**
- * This class is used to decode a byte stream encoded using Packed Encoding Rule (PER) back
- * to an ASN.1 object.
- *
- * The following example shows how to use this class.
- * \code
- *    ASN1::INGEGER obj;
- *    ASN1::PERDecoder encoder(buf, buf+5);
- *
- *    obj.decode(encoder); // now obj holds the value which the buf represents.
- * \endcode
- *
- * @see PEREncoder
- */
 
 class PERDecoder  : public Visitor
 {
@@ -2846,21 +2729,6 @@ private:
 
 #ifdef ASN1_HAS_IOSTREAM
 
-/**
- * This class is used to encode an ASN.1 object into a byte stream using Abstract Value Notation,
- * defined in ITU X.680.
- *
- * The following example shows how to use this class.
- * \code
- *    ASN1::INGEGER obj(5);
- *    ASN1::AVNEncoder encoder(std::cout);
- *
- *    obj.encode(encoder); // now the object is printed to std::cout.
- * \endcode
- *
- * @see AVNDecoder
- */
-
 class AVNEncoder : public ConstVisitor
 {
 public:
@@ -2893,20 +2761,6 @@ private:
 	std::vector<bool> outputSeparators; // used to indicate whether to output separator while parsing SEQUENCE
 };
 
-/**
- * This class is used to decode an Abstract Value Notation encoded byte stream 
- * to an ASN.1 object.
- *
- * The following example shows how to use this class.
- * \code
- *    ASN1::INGEGER obj;
- *    ASN1::AVNDecoder encoder(std::cin);
- *
- *    obj.decode(encoder); // now obj holds the value which it read from std::cin.
- * \endcode
- *
- * @see PEREncoder
- */
 class AVNDecoder  : public Visitor
 {
 public:
@@ -2940,21 +2794,6 @@ private:
 	std::vector<std::string> identifiers; // used to indicate the last parsed idetifier while parsing SEQUENCE.
 };
 
-
-/**
- * The trace_invalid() is used to find the first component of a complex 
- * ASN1::AbstactData object which doesn't satisfy its own constraint. It 
- * output a string which describe where the AbstractData object is invalid
- * to the \c os. 
- *
- * If the ASN1::AbstactData object is entirely valid, no string is outputted to \c os.
- *
- * @param os The stream where the result is outputted.
- * @param str The string to be inserted in the front of the result when the first
- *       invalid component is found.
- * @param data The ASN1::AbstactData object to be check for validity.
- * @return true if the ASN1::AbstactData object is valid.
- */
 
 bool trace_invalid(std::ostream& os, const char* str, const AbstractData& data);
 

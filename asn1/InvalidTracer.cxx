@@ -28,13 +28,6 @@
 
 namespace ASN1 {
 
-/**
- * The InvalidTracer class defines the opertions to find the first component of a constructed 
- * ASN1::AbstactData object which doesn't meet its own constraint.
- *
- * @see trace_invalid()
- */
-
 class InvalidTracer : public ConstVisitor
 {
 public:

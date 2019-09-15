@@ -33,7 +33,6 @@
 #include <sstream>
 #include "ios_helper.h"
 
-
 namespace ASN1 {
 
 bool AbstractData::setFromValueNotation(const std::string& valueString)
@@ -57,12 +56,10 @@ std::istream & operator >>(std::istream &is, AbstractData & arg)
     return g_extractor(is, arg);
 }
 
-
 inline bool input_success(std::istream& strm)
 {
 	return !(strm.rdstate() & (std::ios_base::badbit | std::ios_base::failbit));
 }
-
 
 bool IntegerWithNamedNumber::setFromName(const std::string& str)
 {
@@ -75,7 +72,6 @@ bool IntegerWithNamedNumber::setFromName(const std::string& str)
 		}
 	return false;
 }
-
 
 bool ENUMERATED::setFromName(const std::string& str)
 {
@@ -167,7 +163,6 @@ bool AVNDecoder::do_decode(ENUMERATED& value)
 		return value.setFromName(tmp);
 	return false;
 }
-
 
 bool AVNDecoder::do_decode(OBJECT_IDENTIFIER& value)
 {
@@ -408,7 +403,6 @@ bool AVNDecoder::do_decode(TypeConstrainedOpenData& value)
 	return value.get_data().decode(*this);
 }
 
-
 bool AVNDecoder::do_decode(GeneralizedTime& value)
 {
 	std::string str;
@@ -419,7 +413,6 @@ bool AVNDecoder::do_decode(GeneralizedTime& value)
 	}
 	return false;
 }
-
 
 Visitor::VISIT_SEQ_RESULT AVNDecoder::preDecodeExtensionRoots(SEQUENCE& value)
 {
@@ -481,7 +474,5 @@ bool AVNDecoder::decodeUnknownExtensions(SEQUENCE& value)
 	identifiers.pop_back();
 	return true;
 }
-
-
 }
 #endif
