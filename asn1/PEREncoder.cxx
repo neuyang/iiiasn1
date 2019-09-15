@@ -71,7 +71,6 @@ bool PEREncoder::do_encode(const BOOLEAN& value)
 	return true;
 }
 
-
 bool PEREncoder::do_encode(const INTEGER& integer)
 {
 	// X.931 Sections 12
@@ -116,7 +115,6 @@ bool PEREncoder::do_encode(const ENUMERATED& value)
 	}               	
 	return encodeUnsigned(value.asInt(), 0, value.getMaximum());  // 13.2
 }
-
 
 bool PEREncoder::do_encode(const OBJECT_IDENTIFIER& value)
 {

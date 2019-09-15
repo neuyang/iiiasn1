@@ -1351,9 +1351,6 @@ const OpenData::InfoType OpenData::theInfo = {
     0
 };
 
-
-
-
 OpenData::OpenData(const OpenData& that)
 : AbstractData(that)
 , data(that.has_data() ? that.get_data().clone() : NULL)
@@ -1364,7 +1361,6 @@ AbstractData* OpenData::create(const void* info)
 {
 	return new OpenData(info);
 }
-
 
 void OpenData::swap(OpenData& other)	
 {
@@ -1419,7 +1415,6 @@ AbstractData* TypeConstrainedOpenData::create(const void* info)
 		info);
 }
 
-
 /////////////////////////////////////////////////////////
 
 bool Visitor::decode(SEQUENCE& value) 
@@ -1455,7 +1450,6 @@ bool Visitor::decode(SEQUENCE& value)
 		if (result != CONTINUE )
 			return result != FAIL;
 	}
-
 	return decodeUnknownExtensions(value);
 }
 

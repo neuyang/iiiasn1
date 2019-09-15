@@ -69,7 +69,6 @@ inline bool PERDecoder::atEnd()
 	return beginPosition >= endPosition; 
 }
 
-
 bool PERDecoder::do_decode(Null& value)
 {
 	return true;
