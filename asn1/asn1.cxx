@@ -84,20 +84,19 @@ namespace ASN1 {
 
 unsigned CountBits(unsigned range)
 {
-  if (range == 0)
-    return sizeof(unsigned)*8;
+	if (range == 0)
+		return sizeof(unsigned)*8;
 
-  unsigned nBits = 0;
-  while (nBits < (sizeof(unsigned)*8) && range > (unsigned)(1 << nBits))
-    nBits++;
-  return nBits;
+	unsigned nBits = 0;
+	while (nBits < (sizeof(unsigned)*8) && range > (unsigned)(1 << nBits))
+		nBits++;
+	return nBits;
 }
 
 int lexicographic_compare_bytes(const char* first1, const char* last1, 
 				const char* first2, const char* last2)
 {
 	int r;
-
 	for (; first1 != last1 && first2 != last2; ++first1, ++first2)
 	{
 		r = *first1 - *first2;
@@ -123,12 +122,10 @@ const Null::InfoType Null::theInfo = {
     UniversalTagClass << 16 | UniversalNull
 };
 
-
 AbstractData* Null::create(const void* info)
 {
-    return new Null(info);
+	return new Null(info);
 }
-
 
 bool Null::do_decode(Visitor& visitor)
 {
@@ -142,15 +139,15 @@ bool Null::do_encode(ConstVisitor& visitor) const
 
 AbstractData * Null::do_clone() const
 {
-  assert(typeid(*this) == typeid(Null));
-  return new Null(*this);
+	assert(typeid(*this) == typeid(Null));
+	return new Null(*this);
 }
 
 
 int Null::do_compare(const AbstractData& other) const
 {
-  assert(typeid(other) == typeid(Null));
-  return 0;
+	assert(typeid(other) == typeid(Null));
+	return 0;
 }
 
 
@@ -160,7 +157,6 @@ const BOOLEAN::InfoType BOOLEAN::theInfo = {
     BOOLEAN::create,
     UniversalTagClass << 16 | UniversalBoolean 
 };
-
 
 BOOLEAN::BOOLEAN(const void* info)
 : AbstractData(info), value(false)
@@ -180,9 +176,8 @@ BOOLEAN::BOOLEAN(const BOOLEAN& that)
 
 AbstractData* BOOLEAN::create(const void* info)
 {
-    return new BOOLEAN(info);
+	return new BOOLEAN(info);
 }
-
 
 bool BOOLEAN::do_decode(Visitor& visitor)
 {
@@ -196,8 +191,8 @@ bool BOOLEAN::do_encode(ConstVisitor& visitor) const
 
 AbstractData * BOOLEAN::do_clone() const
 {
-  assert(typeid(*this) == typeid(BOOLEAN));
-  return new BOOLEAN(*this);
+	assert(typeid(*this) == typeid(BOOLEAN));
+	return new BOOLEAN(*this);
 }
 
 
@@ -207,9 +202,7 @@ int BOOLEAN::do_compare(const AbstractData& data) const
 	return value - that.value;
 }
 
-
 ///////////////////////////////////////////////////////////////////////
-
 
 const INTEGER::InfoType INTEGER::theInfo = {
     &INTEGER::create,
@@ -229,7 +222,6 @@ INTEGER::INTEGER(int_type val, const void* info)
 { 
 }
 
-
 INTEGER::INTEGER(const INTEGER& other)
 : ConstrainedObject(other), value(other.value)
 {
@@ -238,9 +230,8 @@ INTEGER::INTEGER(const INTEGER& other)
 
 AbstractData* INTEGER::create(const void* info)
 {
-    return new INTEGER(info);
+	return new INTEGER(info);
 }
-
 
 bool INTEGER::do_decode(Visitor& visitor)
 {
@@ -252,10 +243,9 @@ bool INTEGER::do_encode(ConstVisitor& visitor) const
 	return visitor.encode(*this);
 }
 
-
 AbstractData * INTEGER::do_clone() const
 {
-  return new INTEGER(*this);
+	return new INTEGER(*this);
 }
 
 int INTEGER::do_compare(const AbstractData& data) const
@@ -263,8 +253,7 @@ int INTEGER::do_compare(const AbstractData& data) const
 	const INTEGER& that = *std::static_cast<const INTEGER*>(&data);
 	if (getLowerLimit() >= 0)
 		return value - that.value;
-	else
-		return (int) value - (int) that.value;
+	else	return (int) value - (int) that.value;
 }
 
 ///////////////////////////////////////////////////////
@@ -278,10 +267,9 @@ IntegerWithNamedNumber::IntegerWithNamedNumber(int val, const void* info)
 {
 }
 
-
 AbstractData* IntegerWithNamedNumber::create(const void* info)
 {
-    return new IntegerWithNamedNumber(info);
+	return new IntegerWithNamedNumber(info);
 }
 
 bool IntegerWithNamedNumber::do_decode(Visitor& visitor)
@@ -294,20 +282,17 @@ bool IntegerWithNamedNumber::do_encode(ConstVisitor& visitor) const
 	return visitor.encode(*this);
 }
 
-
 //////////////////////////////////////////////////////
 ENUMERATED::ENUMERATED(const void* info)
 : AbstractData(info), value(0)
 {
-    assert(getMaximum() > 0);
+	assert(getMaximum() > 0);
 }
-
 
 ENUMERATED::ENUMERATED(const ENUMERATED& that)
 : AbstractData(that), value(that.value)
 { 
 }
-
 
 ENUMERATED& ENUMERATED::operator = (const ENUMERATED& that) 
 {
@@ -328,9 +313,8 @@ bool ENUMERATED::do_encode(ConstVisitor& visitor) const
 
 AbstractData * ENUMERATED::do_clone() const
 {
-  return new ENUMERATED(*this);
+	return new ENUMERATED(*this);
 }
-
 
 int ENUMERATED::do_compare(const AbstractData& other) const
 {
@@ -341,11 +325,10 @@ int ENUMERATED::do_compare(const AbstractData& other) const
 
 AbstractData* ENUMERATED::create(const void* info)
 {
-    return new ENUMERATED(info);
+	return new ENUMERATED(info);
 }
 
 ///////////////////////////////////////////////////////////////////////
-
 
 const OBJECT_IDENTIFIER::InfoType OBJECT_IDENTIFIER::theInfo = {
     OBJECT_IDENTIFIER::create,
@@ -359,9 +342,8 @@ OBJECT_IDENTIFIER::OBJECT_IDENTIFIER(const OBJECT_IDENTIFIER & other)
 
 AbstractData* OBJECT_IDENTIFIER::create(const void* info)
 {
-    return new OBJECT_IDENTIFIER(info);
+	return new OBJECT_IDENTIFIER(info);
 }
-
 
 bool OBJECT_IDENTIFIER::do_decode(Visitor& visitor)
 {
@@ -431,7 +413,6 @@ bool OBJECT_IDENTIFIER::decodeCommon(const char* strm, unsigned dataLen)
   return true;
 }
 
-
 void OBJECT_IDENTIFIER::encodeCommon(std::vector<char> & encodecObjectId) const
 {
   unsigned length = value.size();
@@ -490,9 +471,8 @@ void OBJECT_IDENTIFIER::encodeCommon(std::vector<char> & encodecObjectId) const
 
 AbstractData * OBJECT_IDENTIFIER::do_clone() const
 {
-  return new OBJECT_IDENTIFIER(*this);
+	return new OBJECT_IDENTIFIER(*this);
 }
-
 
 int OBJECT_IDENTIFIER::do_compare(const AbstractData& other) const
 {
@@ -527,7 +507,7 @@ BIT_STRING::BIT_STRING(const BIT_STRING & other)
 
 AbstractData* BIT_STRING::create(const void* info)
 {
-    return new BIT_STRING(info);
+	return new BIT_STRING(info);
 }
 
 bool BIT_STRING::do_decode(Visitor& visitor)
@@ -589,7 +569,7 @@ OCTET_STRING::OCTET_STRING(const OCTET_STRING & other)
 
 AbstractData* OCTET_STRING::create(const void* info)
 {
-    return new OCTET_STRING(info);
+	return new OCTET_STRING(info);
 }
 
 bool OCTET_STRING::do_decode(Visitor& visitor)
@@ -602,10 +582,9 @@ bool OCTET_STRING::do_encode(ConstVisitor& visitor) const
 	return visitor.encode(*this);
 }
 
-
 AbstractData * OCTET_STRING::do_clone() const
 {
-  return new OCTET_STRING(*this);
+	return new OCTET_STRING(*this);
 }
 
 int OCTET_STRING::do_compare(const AbstractData& other) const
@@ -619,7 +598,6 @@ ConstrainedString::ConstrainedString(const ConstrainedString& other)
 : ConstrainedObject(other.info_), base_string(other)
 {
 }
-
 
 ConstrainedString::ConstrainedString(const void* info)
 : ConstrainedObject(info)
@@ -646,7 +624,6 @@ bool ConstrainedString::do_encode(ConstVisitor& visitor) const
 	return visitor.encode(*this);
 }
 
-
 AbstractData* ConstrainedString::do_clone() const
 {
 	return new ConstrainedString(*this);
@@ -660,11 +637,10 @@ int ConstrainedString::do_compare(const AbstractData& other) const
 
 AbstractData* ConstrainedString::create(const void* info)
 {
-    return new ConstrainedString(info);
+	return new ConstrainedString(info);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
 
 static const char NumericStringSet[]   = " 0123456789";
 static const char PrintableStringSet[] = " '()+,-./0123456789:=?"
@@ -730,7 +706,6 @@ const PrintableString::InfoType PrintableString::theInfo = {
     8
 };
 
-
 const VisibleString::InfoType VisibleString::theInfo = {
     ConstrainedString::create,
     UniversalTagClass << 16 | UniversalVisibleString,
@@ -757,7 +732,6 @@ const IA5String::InfoType IA5String::theInfo = {
     8
 };
 
-
 const GeneralString::InfoType GeneralString::theInfo = {
     ConstrainedString::create,
     UniversalTagClass << 16 | UniversalGeneralString,
@@ -770,8 +744,6 @@ const GeneralString::InfoType GeneralString::theInfo = {
     8,
     8
 };
-
-
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -850,7 +822,6 @@ AbstractData* GeneralizedTime::create(const void* info)
 	return new GeneralizedTime(info);
 }
 
-
 GeneralizedTime::GeneralizedTime(const void* info)
 : AbstractData(info), year(1), month(1), day(1), hour(0), minute(0), second(0), millisec(0), mindiff(0)
 , utc(false)
@@ -864,9 +835,8 @@ GeneralizedTime::GeneralizedTime()
 GeneralizedTime::GeneralizedTime(const char* value) 
 : AbstractData(&theInfo)
 { 
-    set(value); 
+	set(value); 
 }
-
 
 GeneralizedTime::GeneralizedTime(int yr, int mon, int dy, 
 		int hr , int mn, int sc,
@@ -883,7 +853,6 @@ GeneralizedTime& GeneralizedTime::operator = (const GeneralizedTime& other )
 	millisec = other.millisec; mindiff = other.mindiff; utc = other.utc;
 	return *this;
 }
-
 
 GeneralizedTime::GeneralizedTime(const GeneralizedTime& other)
 : AbstractData(other), year(other.year), month(other.month), day(other.day)
@@ -986,7 +955,7 @@ void GeneralizedTime::set_time_t(time_t gmt)
 
 AbstractData* GeneralizedTime::do_clone() const 
 {
-    return new GeneralizedTime(*this);
+	return new GeneralizedTime(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1014,17 +983,17 @@ CHOICE::~CHOICE()
 
 CHOICE & CHOICE::operator=(const CHOICE & other)
 {
-  assert(info_ == other.info_);
-  choice.reset(other.choice.get() == NULL ? NULL : other.choice->clone());
-  choiceID = other.choiceID;
-  return *this;
+	assert(info_ == other.info_);
+	choice.reset(other.choice.get() == NULL ? NULL : other.choice->clone());
+	choiceID = other.choiceID;
+	return *this;
 }
 
 AbstractData* CHOICE::setSelection(int id, AbstractData* obj)
 {
-    choice.reset(obj);
-    choiceID= id;   
-    return obj;
+	choice.reset(obj);
+	choiceID= id;   
+	return obj;
 }
 
 bool CHOICE::do_decode(Visitor& visitor)
@@ -1037,11 +1006,10 @@ bool CHOICE::do_encode(ConstVisitor& visitor) const
 	return visitor.encode(*this);
 }
 
-
 void CHOICE::swap(CHOICE& other)
 {
-  assert(info_ == other.info_);
-    AbstractData* tmp = other.choice.release();
+	assert(info_ == other.info_);
+	AbstractData* tmp = other.choice.release();
 	other.choice.reset(choice.release());
 	choice.reset(tmp);
 	std::swap(choiceID, other.choiceID);
@@ -1057,25 +1025,25 @@ int CHOICE::do_compare(const AbstractData& other) const
 
 AbstractData* CHOICE::do_clone() const
 {
-    return new CHOICE(*this);
+	return new CHOICE(*this);
 }
     
 bool CHOICE::createSelection()
 {
-    if (choiceID >= 0 && static_cast<unsigned>(choiceID) < info()->totalChoices )
-    {
-        const AbstractData::InfoType* selectionInfo = 
+	if (choiceID >= 0 && static_cast<unsigned>(choiceID) < info()->totalChoices )
+	{
+		const AbstractData::InfoType* selectionInfo = 
 			static_cast<const AbstractData::InfoType*>(info()->selectionInfos[choiceID]);
         
-        if (selectionInfo)
-        {
-            choice.reset(selectionInfo->create(selectionInfo));
-            return true;
-        }
-    }
-    choiceID = unknownSelection_;
-    choice.reset();
-    return false;
+		if (selectionInfo)
+		{
+			choice.reset(selectionInfo->create(selectionInfo));
+			return true;
+		}
+	}
+	choiceID = unknownSelection_;
+	choice.reset();
+	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -1209,7 +1177,6 @@ void SEQUENCE::includeOptionalField(unsigned opt, unsigned pos)
 		fields[pos] = AbstractData::create(info()->fieldInfos[pos]);
 }
 
-
 void SEQUENCE::removeOptionalField(unsigned opt)
 {
 	if (opt < (unsigned)optionMap.size())
@@ -1230,7 +1197,6 @@ bool SEQUENCE::do_encode(ConstVisitor& visitor) const
 {
 	return visitor.encode(*this);
 }
-
 
 AbstractData * SEQUENCE::do_clone() const
 {
@@ -1273,38 +1239,34 @@ int SEQUENCE::do_compare(const AbstractData& other) const
 
 ///////////////////////////////////////////////////////
 
-
 SEQUENCE_OF_Base::SEQUENCE_OF_Base(const void* info)
 : ConstrainedObject(info)
 {
 }
 
-
-
 SEQUENCE_OF_Base::SEQUENCE_OF_Base(const SEQUENCE_OF_Base & other)
   : ConstrainedObject(other)
 {
 	Container::const_iterator first = other.container.begin(), last = other.container.end();
-    container.reserve(other.container.size());
+	container.reserve(other.container.size());
 	for (; first != last; ++ first)
 		container.push_back( (*first)->clone());
 }
 
-
 SEQUENCE_OF_Base & SEQUENCE_OF_Base::operator=(const SEQUENCE_OF_Base & other)
 {
-    Container temp;
-    Container::const_iterator first = other.container.begin(), last = other.container.end();
-    temp.reserve(other.container.size());
-    for (; first != last; ++ first)
-        temp.push_back( (*first)->clone());
-    temp.swap(container);
-    return *this;
+	Container temp;
+	Container::const_iterator first = other.container.begin(), last = other.container.end();
+	temp.reserve(other.container.size());
+	for (; first != last; ++ first)
+		temp.push_back( (*first)->clone());
+	temp.swap(container);
+	return *this;
 }
 
 AbstractData* SEQUENCE_OF_Base::do_clone() const
 {
-    return new SEQUENCE_OF_Base(*this);
+	return new SEQUENCE_OF_Base(*this);
 }
 
 bool SEQUENCE_OF_Base::do_decode(Visitor& visitor)
@@ -1317,27 +1279,26 @@ bool SEQUENCE_OF_Base::do_encode(ConstVisitor& visitor) const
 	return visitor.encode(*this);
 }
 
-
 void SEQUENCE_OF_Base::clear()
 {
-  Container::const_iterator first = container.begin(), last = container.end();
-  for (;first != last; ++first)
-	  delete *first;
-  container.clear();
+	Container::const_iterator first = container.begin(), last = container.end();
+	for (;first != last; ++first)
+		delete *first;
+	container.clear();
 }
 
 int SEQUENCE_OF_Base::do_compare(const AbstractData& other) const
 {
-  const SEQUENCE_OF_Base& that = *std::static_cast<const SEQUENCE_OF_Base*>(&other);
-  Container::const_iterator first1 = container.begin(), last1 = container.end();
-  Container::const_iterator first2 = that.container.begin(), last2 = that.container.end();
-  for (; first1 != last1 && first2 != last2; ++first1, ++first2)
-  {
-	  int r = (*first1)->compare(*(*first2));
-	  if (r != 0)
-		  return r;
-  }
-  return container.size() - that.container.size();	  
+	const SEQUENCE_OF_Base& that = *std::static_cast<const SEQUENCE_OF_Base*>(&other);
+	Container::const_iterator first1 = container.begin(), last1 = container.end();
+	Container::const_iterator first2 = that.container.begin(), last2 = that.container.end();
+	for (; first1 != last1 && first2 != last2; ++first1, ++first2)
+	{
+		int r = (*first1)->compare(*(*first2));
+		if (r != 0)
+			return r;
+	}
+	return container.size() - that.container.size();	  
 }
 
 void SEQUENCE_OF_Base::insert(iterator position, SEQUENCE_OF_Base::Container::size_type n, const AbstractData& x)	
@@ -1356,31 +1317,31 @@ void SEQUENCE_OF_Base::insert(iterator position, const_iterator first, const_ite
 
 AbstractData* SEQUENCE_OF_Base::create(const void* info)
 {
-    return new SEQUENCE_OF_Base(info);
+	return new SEQUENCE_OF_Base(info);
 }
 
 void SEQUENCE_OF_Base::resize(Container::size_type sz)
 {
-    if (sz < size())
-    {
-        iterator i = begin()+sz, last = end();
-        for (; i != last; ++i)
-            delete *i;
-        container.resize(sz); 
-    } else  
-    {
-        container.reserve(sz);
-        for (unsigned i = size(); i < sz; ++i)
-            container.push_back(createElement());
-    }
+	if (sz < size())
+	{
+		iterator i = begin()+sz, last = end();
+		for (; i != last; ++i)
+			delete *i;
+		container.resize(sz); 
+	} else  
+	{
+		container.reserve(sz);
+		for (unsigned i = size(); i < sz; ++i)
+			container.push_back(createElement());
+	}
 }
 
 void SEQUENCE_OF_Base::erase(iterator first, iterator last)
 {
-    iterator f = first;
-    for (;f != last; ++f)
-        delete *f;
-    container.erase(first, last);
+	iterator f = first;
+	for (;f != last; ++f)
+		delete *f;
+	container.erase(first, last);
 }
 
 //////////////////////////////////////////////////////
@@ -1401,7 +1362,7 @@ OpenData::OpenData(const OpenData& that)
 
 AbstractData* OpenData::create(const void* info)
 {
-    return new OpenData(info);
+	return new OpenData(info);
 }
 
 
@@ -1426,7 +1387,6 @@ bool OpenData::do_encode(ConstVisitor& visitor) const
 	return visitor.encode(*this);
 }
 
-
 int OpenData::do_compare(const AbstractData& other) const
 {
 	const OpenData& that = *std::static_cast<const OpenData*>(&other);
@@ -1442,21 +1402,21 @@ int OpenData::do_compare(const AbstractData& other) const
 
 AbstractData* OpenData::do_clone() const 
 {
-    return new OpenData(*this);
+	return new OpenData(*this);
 }
 
 /////////////////////////////////////////////////////////
 
 bool TypeConstrainedOpenData::do_decode(Visitor& v)
 {
-    return v.decode(*this);
+	return v.decode(*this);
 }
 
 AbstractData* TypeConstrainedOpenData::create(const void* info)
 {
-    return new TypeConstrainedOpenData( 
-        AbstractData::create(static_cast<const InfoType*>(info)->typeInfo), 
-        info);
+	return new TypeConstrainedOpenData( 
+		AbstractData::create(static_cast<const InfoType*>(info)->typeInfo), 
+		info);
 }
 
 
